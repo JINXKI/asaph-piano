@@ -7,14 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/4.2.2/vexflow.js"></script>
+<script src="vexflow.js"></script>
 <style>
-  :root{--cream:#FBF7EF;--ink:#3a342c;--do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
+  :root{--cream:#FFFFFF;--ink:#3a342c;--do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
     --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;}
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{background:#e9e4d8;}
+  html,body{background:#F5EDD6;}
   body{font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
-  .page{width:794px;height:1123px;background:var(--cream);padding:44px 42px;position:relative;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+  .page{width:794px;min-height:1123px;background:var(--cream);padding:44px 42px;position:relative;box-shadow:0 6px 28px rgba(0,0,0,.16);}
   .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:4px dashed #cbbfa6;border-radius:24px;color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
   .ph .big{font-family:'Jua',sans-serif;font-size:32px;} .ph .sm{font-size:19px;}
 
@@ -53,22 +53,40 @@
   .cell{flex:1;display:flex;align-items:center;justify-content:center;}
 
   /* SCALE PAGES */
-  .scalepage{padding:40px 40px;}
-  .scalepage h2{font-family:'Jua',sans-serif;font-size:30px;text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .scalepage h2 small{font-size:19px;color:#7a6f5d;}
-  .keyblock{margin-bottom:8px;}
-  .keylabel{display:inline-block;border:2px solid #6a6a6a;border-radius:7px;padding:1px 12px;font-family:'Jua',sans-serif;font-size:18px;background:#fff;}
-  .staves{margin-top:-2px;} .staves svg{display:block;}
-  .scalehint{position:absolute;top:40px;right:40px;background:#FFF6DC;border:2px solid #E3C657;border-radius:14px;padding:6px 12px;font-size:14px;text-align:center;max-width:200px;line-height:1.3;}
+  .scalepage{padding:28px 40px 36px;}
+  .scalepage h2{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .scalepage h2 small{font-size:15px;color:#7a6f5d;}
+  .cont-h2{font-size:15px!important;margin-bottom:7px!important;color:#a99a82!important;}
+  .cont-h2 small{font-size:12px!important;}
+  .keyblock{margin-bottom:10px;border:2px solid #E3D8C0;border-radius:10px;overflow:hidden;background:#fff;}
+  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1px solid #E3D8C0;}
+  .keylabel .keyname{font-size:19px;font-weight:bold;}
+  .keylabel .keysig{font-size:12px;opacity:.65;}
+  .staves svg{display:block;}
+  .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FAFAF5;border-top:1px dashed #D8CFC0;}
 
   /* PDF IMAGE PAGES */
-  .imgpage{padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-  .imgpage img{width:100%;height:100%;object-fit:contain;display:block;}
+  .imgpage{padding:0;overflow:hidden;height:1123px;display:flex;align-items:center;justify-content:center;}
+  .imgpage img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;}
+
+  /* PAGE NUMBERS */
+  body{counter-reset:pgnum;}
+  .page{counter-increment:pgnum;}
+  .page::after{
+    content:counter(pgnum);
+    position:absolute;bottom:0;left:0;right:0;
+    height:28px;line-height:28px;
+    text-align:center;
+    font-family:'Jua',sans-serif;font-size:14px;
+    border-top:1px solid #E3D8C0;
+    color:#7a6f5d;z-index:99;
+  }
 
   @media print{
     @page{size:A4;margin:0;}
     html,body{background:#fff;gap:0;padding:0;}
-    .page{box-shadow:none;width:210mm;height:297mm;padding:12mm 10mm;page-break-after:always;}
+    .page{box-shadow:none;width:210mm;min-height:297mm;height:auto;padding:12mm 10mm;page-break-after:always;overflow:visible;}
+    .imgpage{height:297mm;overflow:hidden;}
     .page:last-child{page-break-after:auto;}
   }
 </style>
@@ -101,18 +119,27 @@
   <div class="barchart" id="barchart"></div>
 </div>
 
-<!-- PAGES 8-10 : 12-KEY SCALE / DIATONIC CHORD -->
+<!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
 <div class="page scalepage">
-  <div class="scalehint">⭐ 12키 (예: C, G 강조)<br>연주·앙상블 때 코드를 활용해요.</div>
-  <h2>🎼 음계와 다이어토닉 코드 <small>(12키)</small></h2>
+  <h2>🎼 음계와 다이어토닉 코드 <small>(12 Keys · 5도권 순서)</small></h2>
   <div class="kbwrap" data-page="0"></div>
 </div>
-<div class="page scalepage"><div class="kbwrap" data-page="1"></div></div>
-<div class="page scalepage"><div class="kbwrap" data-page="2"></div></div>
+<div class="page scalepage">
+  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ②</small></h2>
+  <div class="kbwrap" data-page="1"></div>
+</div>
+<div class="page scalepage">
+  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ③</small></h2>
+  <div class="kbwrap" data-page="2"></div>
+</div>
+<div class="page scalepage">
+  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ④</small></h2>
+  <div class="kbwrap" data-page="3"></div>
+</div>
 
 <!-- PAGES 11-12 : PRAISE SONGS (image sheets) -->
-<div class="page"><div class="ph"><div class="big">찬양 ① · 빛나는 왕의 왕</div><div class="sm">How Great Is Our God — 악보 이미지<br>(이미지 파일 업로드 시 삽입)</div></div></div>
-<div class="page"><div class="ph"><div class="big">찬양 ② · 주 이름 찬양</div><div class="sm">악보 이미지<br>(이미지 파일 업로드 시 삽입)</div></div></div>
+<div class="page imgpage"><img src="pages/praise1.png" alt="찬양 ① · 빛나는 왕의 왕"></div>
+<div class="page imgpage"><img src="pages/praise2.jpg" alt="찬양 ② · 주 이름 찬양"></div>
 
 <script>
 /* ---------- NOTE GLYPHS ---------- */
@@ -184,19 +211,20 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   if(!VF){console.warn('VexFlow not loaded');return;}
   const LET=['c','d','e','f','g','a','b'];
   const keys=[
-    {name:'C', tonic:'c', sig:'C',  chords:['C','Dm','Em','F','G','Am','Bdim','C']},
-    {name:'F', tonic:'f', sig:'F',  chords:['F','Gm','Am','Bb','C','Dm','Edim','F']},
-    {name:'G', tonic:'g', sig:'G',  chords:['G','Am','Bm','C','D','Em','F#dim','G']},
-    {name:'Bb',tonic:'b', sig:'Bb', chords:['Bb','Cm','Dm','Eb','F','Gm','Adim','Bb']},
-    {name:'D', tonic:'d', sig:'D',  chords:['D','Em','F#m','G','A','Bm','C#dim','D']},
-    {name:'Eb',tonic:'e', sig:'Eb', chords:['Eb','Fm','Gm','Ab','Bb','Cm','Ddim','Eb']},
-    {name:'A', tonic:'a', sig:'A',  chords:['A','Bm','C#m','D','E','F#m','G#dim','A']},
-    {name:'Ab',tonic:'a', sig:'Ab', chords:['Ab','Bbm','Cm','Db','Eb','Fm','Gdim','Ab']},
-    {name:'E', tonic:'e', sig:'E',  chords:['E','F#m','G#m','A','B','C#m','D#dim','E']},
-    {name:'Db',tonic:'d', sig:'Db', chords:['Db','Ebm','Fm','Gb','Ab','Bbm','Cdim','Db']},
-    {name:'B', tonic:'b', sig:'B',  chords:['B','C#m','D#m','E','F#','G#m','A#dim','B']},
-    {name:'Gb',tonic:'g', sig:'Gb', chords:['Gb','Abm','Bbm','Cb','Db','Ebm','Fdim','Gb']},
+    {name:'C',  tonic:'c', sig:'C',  acc:'',   color:'#E24B4A', chords:['C','Dm','Em','F','G','Am','Bdim','C']},
+    {name:'G',  tonic:'g', sig:'G',  acc:'1♯', color:'#EF8A3C', chords:['G','Am','Bm','C','D','Em','F#dim','G']},
+    {name:'D',  tonic:'d', sig:'D',  acc:'2♯', color:'#C8A000', chords:['D','Em','F#m','G','A','Bm','C#dim','D']},
+    {name:'A',  tonic:'a', sig:'A',  acc:'3♯', color:'#7FB23E', chords:['A','Bm','C#m','D','E','F#m','G#dim','A']},
+    {name:'E',  tonic:'e', sig:'E',  acc:'4♯', color:'#3C90DD', chords:['E','F#m','G#m','A','B','C#m','D#dim','E']},
+    {name:'B',  tonic:'b', sig:'B',  acc:'5♯', color:'#7E6BC4', chords:['B','C#m','D#m','E','F#','G#m','A#dim','B']},
+    {name:'Gb', tonic:'g', sig:'Gb', acc:'6♭', color:'#C060A0', chords:['Gb','Abm','Bbm','Cb','Db','Ebm','Fdim','Gb']},
+    {name:'Db', tonic:'d', sig:'Db', acc:'5♭', color:'#E24B4A', chords:['Db','Ebm','Fm','Gb','Ab','Bbm','Cdim','Db']},
+    {name:'Ab', tonic:'a', sig:'Ab', acc:'4♭', color:'#EF8A3C', chords:['Ab','Bbm','Cm','Db','Eb','Fm','Gdim','Ab']},
+    {name:'Eb', tonic:'e', sig:'Eb', acc:'3♭', color:'#C8A000', chords:['Eb','Fm','Gm','Ab','Bb','Cm','Ddim','Eb']},
+    {name:'Bb', tonic:'b', sig:'Bb', acc:'2♭', color:'#7FB23E', chords:['Bb','Cm','Dm','Eb','F','Gm','Adim','Bb']},
+    {name:'F',  tonic:'f', sig:'F',  acc:'1♭', color:'#3C90DD', chords:['F','Gm','Am','Bb','C','Dm','Edim','F']},
   ];
+  const ROMAN=['I','ii','iii','IV','V','vi','vii°','(I)'];
   function build(tonic){const s=LET.indexOf(tonic);const letters=[];for(let i=0;i<7;i++)letters.push(LET[(s+i)%7]);
     const notes=[];let oct=4,prev=-1;for(let i=0;i<7;i++){const idx=LET.indexOf(letters[i]);if(i>0&&idx<prev)oct++;notes.push({l:letters[i],o:oct});prev=idx;}return{letters,notes};}
   function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
@@ -214,12 +242,16 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
     drawVoice(ctx,st2,cn,W-150);
   }
   document.querySelectorAll('.kbwrap').forEach(wrap=>{
-    const pg=+wrap.dataset.page;const slice=keys.slice(pg*4,pg*4+4);
+    const pg=+wrap.dataset.page;const slice=keys.slice(pg*3,pg*3+3);
     slice.forEach(key=>{
       const block=document.createElement('div');block.className='keyblock';
-      const lab=document.createElement('div');lab.className='keylabel';lab.textContent=key.name+' Key';
+      const lab=document.createElement('div');lab.className='keylabel';
+      lab.style.background=key.color+'18';
+      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key</span><span class="keysig">${key.acc||'무조표 (0)'}</span>`;
       const st=document.createElement('div');st.className='staves';
-      block.appendChild(lab);block.appendChild(st);wrap.appendChild(block);
+      const rom=document.createElement('div');rom.className='roman-row';
+      rom.innerHTML=ROMAN.map(r=>`<span>${r}</span>`).join('');
+      block.appendChild(lab);block.appendChild(st);block.appendChild(rom);wrap.appendChild(block);
       try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' 렌더 오류</div>';console.error(key.name,e);}
     });
   });
