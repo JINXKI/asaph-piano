@@ -61,6 +61,10 @@
   .staves{margin-top:-2px;} .staves svg{display:block;}
   .scalehint{position:absolute;top:40px;right:40px;background:#FFF6DC;border:2px solid #E3C657;border-radius:14px;padding:6px 12px;font-size:14px;text-align:center;max-width:200px;line-height:1.3;}
 
+  /* PDF IMAGE PAGES */
+  .imgpage{padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .imgpage img{width:100%;height:100%;object-fit:contain;display:block;}
+
   @media print{
     @page{size:A4;margin:0;}
     html,body{background:#fff;gap:0;padding:0;}
@@ -71,12 +75,12 @@
 </head>
 <body>
 
-<!-- ORIGINAL 5 PAGES (uploaded PDF; real images inserted at PDF conversion) -->
-<div class="page"><div class="ph"><div class="big">원본 1쪽 · 표지</div><div class="sm">ASAPH PIANO (PDF 변환 시 삽입)</div></div></div>
-<div class="page"><div class="ph"><div class="big">원본 2쪽 · 퀴즈</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
-<div class="page"><div class="ph"><div class="big">원본 3쪽 · 건반과 음이름</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
-<div class="page"><div class="ph"><div class="big">원본 4쪽 · 손가락 번호</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
-<div class="page"><div class="ph"><div class="big">원본 5쪽 · 샵과 플랫</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
+<!-- ORIGINAL 5 PAGES from PDF -->
+<div class="page imgpage"><img src="pages/page1.jpg" alt="1쪽 표지"></div>
+<div class="page imgpage"><img src="pages/page2.jpg" alt="2쪽 퀴즈"></div>
+<div class="page imgpage"><img src="pages/page3.jpg" alt="3쪽 건반과 음이름"></div>
+<div class="page imgpage"><img src="pages/page4.jpg" alt="4쪽 손가락 번호"></div>
+<div class="page imgpage"><img src="pages/page5.jpg" alt="5쪽 샵과 플랫"></div>
 
 <!-- PAGE 6 : APPLE TABLE + PIZZA ACTIVITY -->
 <div class="page">
