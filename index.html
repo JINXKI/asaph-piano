@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASAPH PIANO 교육자료</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/4.2.2/vexflow.js"></script>
+<style>
+  :root{--cream:#FBF7EF;--ink:#3a342c;--do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
+    --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#e9e4d8;}
+  body{font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
+  .page{width:794px;height:1123px;background:var(--cream);padding:44px 42px;position:relative;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+  .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:4px dashed #cbbfa6;border-radius:24px;color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
+  .ph .big{font-family:'Jua',sans-serif;font-size:32px;} .ph .sm{font-size:19px;}
+
+  h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;line-height:1.1;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  h1 small{font-size:24px;color:#7a6f5d;}
+  .callout{position:absolute;top:38px;right:42px;background:#FFF6DC;border:2px solid #E3C657;border-radius:16px;padding:7px 13px;font-size:15px;line-height:1.25;text-align:center;max-width:210px;}
+
+  .tablewrap{margin-top:12px;border:3px solid #E3D8C0;border-radius:20px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;text-align:center;table-layout:fixed;}
+  thead th{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:10px 4px;line-height:1.15;}
+  th.h1c{background:#ED7A8E;} th.h2c{background:#F0A94E;} th.h3c{background:#9FCB5C;} th.h4c{background:#5BA7E0;} th.h5c{background:#A98FD0;}
+  tbody td{border-top:2px solid #EDE4D2;padding:6px 4px;vertical-align:middle;}
+  td.nm{background:#FCEFF1;} td.nm .ko{font-family:'Jua',sans-serif;font-size:21px;} td.nm .en{font-size:14px;color:#9a8f7d;}
+  td.beat{font-family:'Jua',sans-serif;font-size:28px;color:#2f7dc0;}
+  .applecell{display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .applerow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:3px;min-height:56px;}
+  .applecap{font-family:'Jua',sans-serif;font-size:15px;color:#6f5fae;}
+  .act{margin-top:16px;background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:14px 18px;}
+  .act-h{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:10px;}
+  .pizrow{display:flex;justify-content:space-around;align-items:flex-start;}
+  .pizcell{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .pizcell .nm{font-family:'Jua',sans-serif;font-size:18px;}
+  .ansrow{display:flex;align-items:center;gap:6px;font-family:'Jua',sans-serif;font-size:20px;}
+  .ansblank{width:46px;height:30px;border:2.5px solid var(--ink);border-radius:8px;background:#fff;}
+
+  /* BARS */
+  .bars-hint{text-align:center;font-family:'Jua',sans-serif;font-size:21px;color:#7a6f5d;margin-bottom:6px;}
+  .legend{text-align:center;font-size:17px;color:#8a7d68;margin-bottom:18px;}
+  .sw-solid{display:inline-block;width:26px;border-top:3px solid var(--ink);vertical-align:middle;margin-right:4px;}
+  .sw-dot{display:inline-block;width:26px;border-top:3px dotted #9a8f7d;vertical-align:middle;margin:0 4px 0 12px;}
+  .barchart{display:flex;flex-direction:column;gap:18px;}
+  .bar{display:flex;align-items:center;gap:14px;}
+  .blbl{width:170px;display:flex;align-items:center;gap:8px;font-family:'Jua',sans-serif;font-size:22px;}
+  .blbl .emo{font-size:30px;}
+  .track{flex:1;display:flex;height:84px;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#fff;}
+  .cell{flex:1;display:flex;align-items:center;justify-content:center;}
+
+  /* SCALE PAGES */
+  .scalepage{padding:40px 40px;}
+  .scalepage h2{font-family:'Jua',sans-serif;font-size:30px;text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .scalepage h2 small{font-size:19px;color:#7a6f5d;}
+  .keyblock{margin-bottom:8px;}
+  .keylabel{display:inline-block;border:2px solid #6a6a6a;border-radius:7px;padding:1px 12px;font-family:'Jua',sans-serif;font-size:18px;background:#fff;}
+  .staves{margin-top:-2px;} .staves svg{display:block;}
+  .scalehint{position:absolute;top:40px;right:40px;background:#FFF6DC;border:2px solid #E3C657;border-radius:14px;padding:6px 12px;font-size:14px;text-align:center;max-width:200px;line-height:1.3;}
+
+  @media print{
+    @page{size:A4;margin:0;}
+    html,body{background:#fff;gap:0;padding:0;}
+    .page{box-shadow:none;width:210mm;height:297mm;padding:12mm 10mm;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ORIGINAL 5 PAGES (uploaded PDF; real images inserted at PDF conversion) -->
+<div class="page"><div class="ph"><div class="big">원본 1쪽 · 표지</div><div class="sm">ASAPH PIANO (PDF 변환 시 삽입)</div></div></div>
+<div class="page"><div class="ph"><div class="big">원본 2쪽 · 퀴즈</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
+<div class="page"><div class="ph"><div class="big">원본 3쪽 · 건반과 음이름</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
+<div class="page"><div class="ph"><div class="big">원본 4쪽 · 손가락 번호</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
+<div class="page"><div class="ph"><div class="big">원본 5쪽 · 샵과 플랫</div><div class="sm">(PDF 변환 시 삽입)</div></div></div>
+
+<!-- PAGE 6 : APPLE TABLE + PIZZA ACTIVITY -->
+<div class="page">
+  <h1><span style="color:var(--re)">⭐</span> 음표와 <span style="color:var(--fa)">쉼표</span>, <span style="color:var(--sol)">박자</span></h1>
+  <div class="tablewrap"><table>
+    <colgroup><col style="width:15%"><col style="width:13%"><col style="width:13%"><col style="width:11%"><col style="width:48%"></colgroup>
+    <thead><tr><th class="h1c">이름</th><th class="h2c">음표</th><th class="h3c">쉼표</th><th class="h4c">박자(길이)</th><th class="h5c">1마디(4박)를 사과로!</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+  <div class="act"><div class="act-h">🍕 피자를 잘라보아요</div><div class="pizrow" id="pizrow"></div></div>
+</div>
+
+<!-- PAGE 7 : DIVISION BARS (CLAP) -->
+<div class="page">
+  <h1>👏 박수치기</h1>
+  <div class="bars-hint">모두 <b>같은 길이(4박)</b>예요! 한 칸에 손뼉 한 번 쳐요.</div>
+  <div class="legend"><span class="sw-solid"></span>음표가 시작돼요 <span class="sw-dot"></span>박자를 나눠요</div>
+  <div class="barchart" id="barchart"></div>
+</div>
+
+<!-- PAGES 8-10 : 12-KEY SCALE / DIATONIC CHORD -->
+<div class="page scalepage">
+  <div class="scalehint">⭐ 12키 (예: C, G 강조)<br>연주·앙상블 때 코드를 활용해요.</div>
+  <h2>🎼 음계와 다이어토닉 코드 <small>(12키)</small></h2>
+  <div class="kbwrap" data-page="0"></div>
+</div>
+<div class="page scalepage"><div class="kbwrap" data-page="1"></div></div>
+<div class="page scalepage"><div class="kbwrap" data-page="2"></div></div>
+
+<!-- PAGES 11-12 : PRAISE SONGS (image sheets) -->
+<div class="page"><div class="ph"><div class="big">찬양 ① · 빛나는 왕의 왕</div><div class="sm">How Great Is Our God — 악보 이미지<br>(이미지 파일 업로드 시 삽입)</div></div></div>
+<div class="page"><div class="ph"><div class="big">찬양 ② · 주 이름 찬양</div><div class="sm">악보 이미지<br>(이미지 파일 업로드 시 삽입)</div></div></div>
+
+<script>
+/* ---------- NOTE GLYPHS ---------- */
+function head(o,cx,cy){return o?`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" transform="rotate(-20 ${cx} ${cy})" fill="#fff" stroke="#2b2620" stroke-width="2.4"/>`:`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" transform="rotate(-20 ${cx} ${cy})" fill="#2b2620"/>`;}
+function stem(cx,cy){return `<line x1="${cx+6}" y1="${cy-2}" x2="${cx+6}" y2="${cy-34}" stroke="#2b2620" stroke-width="2.4"/>`;}
+function flag(cx,cy,n){let f='';for(let i=0;i<n;i++){const y=cy-34+i*8;f+=`<path d="M${cx+6} ${y} q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>`;}return f;}
+function note(t,w=46){const cx=18,cy=40;let g='';
+  if(t==='whole'){g=`<ellipse cx="${cx}" cy="${cy}" rx="8.5" ry="6" fill="none" stroke="#2b2620" stroke-width="3.2"/><ellipse cx="${cx}" cy="${cy}" rx="3.5" ry="5.5" transform="rotate(-25 ${cx} ${cy})" fill="#fff"/>`;}
+  else if(t==='half'){g=head(true,cx,cy)+stem(cx,cy);}
+  else if(t==='quarter'){g=head(false,cx,cy)+stem(cx,cy);}
+  else if(t==='eighth'){g=head(false,cx,cy)+stem(cx,cy)+flag(cx,cy,1);}
+  else if(t==='sixteenth'){g=head(false,cx,cy)+stem(cx,cy)+flag(cx,cy,2);}
+  return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 40 58">${g}</svg>`;}
+function rest(t,w=40){let g='';
+  if(t==='whole'){g=`<line x1="6" y1="30" x2="30" y2="30" stroke="#2b2620" stroke-width="2"/><rect x="14" y="22" width="13" height="8" fill="#2b2620"/>`;}
+  else if(t==='half'){g=`<line x1="6" y1="34" x2="30" y2="34" stroke="#2b2620" stroke-width="2"/><rect x="14" y="26" width="13" height="8" fill="#2b2620"/>`;}
+  else if(t==='quarter'){g=`<path d="M14 18 L24 28 L15 34 L24 44 Q12 40 19 50" fill="none" stroke="#2b2620" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;}
+  else if(t==='eighth'){g=`<circle cx="15" cy="26" r="4" fill="#2b2620"/><path d="M18 24 L13 46" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
+  else if(t==='sixteenth'){g=`<circle cx="14" cy="22" r="3.6" fill="#2b2620"/><circle cx="16" cy="33" r="3.6" fill="#2b2620"/><path d="M19 20 L12 48" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
+  return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 36 58">${g}</svg>`;}
+
+/* ---------- APPLE GLYPHS ---------- */
+function appleWhole(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 24 Q53 14 49 8" fill="none" stroke="var(--stem)" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="14" rx="10" ry="5.5" fill="var(--leaf)" transform="rotate(-22 60 14)"/><path d="M50 30 C39 18 19 22 18 43 C17 63 33 86 50 90 C67 86 83 63 82 43 C81 22 61 18 50 30 Z" fill="var(--skin)"/><ellipse cx="36" cy="40" rx="7" ry="10" fill="#fff" opacity=".25" transform="rotate(-20 36 40)"/><circle cx="41" cy="54" r="3.4" fill="#3a2a2a"/><circle cx="59" cy="54" r="3.4" fill="#3a2a2a"/><path d="M42 62 Q50 70 58 62" fill="none" stroke="#3a2a2a" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="32" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/><ellipse cx="68" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/></svg>`;}
+function appleCut(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 22 Q52 13 49 8" fill="none" stroke="var(--stem)" stroke-width="3.5" stroke-linecap="round"/><ellipse cx="59" cy="13" rx="8" ry="4.5" fill="var(--leaf)" transform="rotate(-22 59 13)"/><circle cx="50" cy="57" r="34" fill="var(--skin)"/><circle cx="50" cy="57" r="25" fill="var(--flesh)"/><circle cx="44" cy="55" r="2.6" fill="#3a2a2a"/><circle cx="56" cy="55" r="2.6" fill="#3a2a2a"/><path d="M45 61 Q50 66 55 61" fill="none" stroke="#3a2a2a" stroke-width="2" stroke-linecap="round"/><ellipse cx="39" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/><ellipse cx="61" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/></svg>`;}
+function appleSlice(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M40 14 C62 34 62 66 40 86 C36 66 36 34 40 14 Z" fill="var(--flesh)" stroke="#E7C9A0" stroke-width="1.5"/><path d="M40 14 C62 34 62 66 40 86" fill="none" stroke="var(--skin)" stroke-width="6" stroke-linecap="round"/><circle cx="46" cy="44" r="2" fill="var(--seed)"/><circle cx="47" cy="58" r="2" fill="var(--seed)"/></svg>`;}
+function pizza(size){const c=size/2,r=size*0.40,crust=size*0.455;return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${crust}" fill="#E8B879" stroke="#C98A3E" stroke-width="${size*0.05}"/><circle cx="${c}" cy="${c}" r="${r}" fill="#FFF7E3" stroke="#E7A23C" stroke-width="2.5"/><circle cx="${c}" cy="${c}" r="${size*0.045}" fill="#E7A23C"/></svg>`;}
+
+/* ---------- APPLES: whole apples (1/2/4) + cut rounds (8) + slices (16) ---------- */
+const rows=[
+  {ko:'온음표',en:'Whole',note:'whole',beat:'4박',apple:'whole',n:1,asz:56},
+  {ko:'2분음표',en:'Half',note:'half',beat:'2박',apple:'whole',n:2,asz:48},
+  {ko:'4분음표',en:'Quarter',note:'quarter',beat:'1박',apple:'whole',n:4,asz:36},
+  {ko:'8분음표',en:'Eighth',note:'eighth',beat:'½박',apple:'cut',n:8,asz:30},
+  {ko:'16분음표',en:'Sixteenth',note:'sixteenth',beat:'¼박',apple:'slice',n:16,asz:18},
+];
+function ag(t,w){return t==='whole'?appleWhole(w):t==='cut'?appleCut(w):appleSlice(w);}
+document.getElementById('tbody').innerHTML=rows.map(r=>{let a='';for(let i=0;i<r.n;i++)a+=ag(r.apple,r.asz);
+  return `<tr><td class="nm"><div class="ko">${r.ko}</div><div class="en">(${r.en})</div></td><td>${note(r.note,38)}</td><td>${rest(r.note,36)}</td><td class="beat">${r.beat}</td><td><div class="applecell"><div class="applerow">${a}</div></div></td></tr>`;}).join('');
+
+/* ---------- PIZZA ACTIVITY ---------- */
+const pacts=['half','quarter','eighth'];
+document.getElementById('pizrow').innerHTML=pacts.map(t=>`<div class="pizcell"><div class="nm">${note(t,42)}</div>${pizza(122)}<div class="ansrow"><span class="ansblank"></span> 조각</div></div>`).join('');
+
+/* ---------- BARS (solid = note onset, dotted = beat grid) ---------- */
+const bars=[
+  {type:'whole',name:'온음표',col:'#E24B4A',cells:4,notes:[0],solid:[],dotted:[1,2,3],emo:''},
+  {type:'half',name:'2분음표',col:'#EF8A3C',cells:4,notes:[0,2],solid:[2],dotted:[1,3],emo:''},
+  {type:'quarter',name:'4분음표',col:'#7FB23E',cells:4,notes:[0,1,2,3],solid:[1,2,3],dotted:[],emo:''},
+  {type:'eighth',name:'8분음표',col:'#3C90DD',cells:8,notes:[0,1,2,3,4,5,6,7],solid:[2,4,6],dotted:[1,3,5,7],emo:''},
+  {type:'sixteenth',name:'16분음표',col:'#D9B11E',cells:16,notes:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],solid:[4,8,12],dotted:[1,2,3,5,6,7,9,10,11,13,14,15],emo:''},
+];
+const cellSz={4:46,8:26,16:15};
+document.getElementById('barchart').innerHTML=bars.map(b=>{
+  let cells='';
+  for(let i=0;i<b.cells;i++){
+    let bd='none';
+    if(i<b.cells-1){ const div=i+1; bd = b.solid.includes(div)?'2.5px solid var(--ink)':(b.dotted.includes(div)?'2px dotted #9a8f7d':'none'); }
+    const content = b.notes.includes(i)?note(b.type,cellSz[b.cells]):'';
+    cells+=`<div class="cell" style="border-right:${bd}">${content}</div>`;
+  }
+  return `<div class="bar"><div class="blbl" style="color:${b.col}">${b.emo?`<span class="emo">${b.emo}</span>`:''}${note(b.type,30)} ${b.name}</div><div class="track">${cells}</div></div>`;
+}).join('');
+</script>
+
+<script>
+/* ---------- 12-KEY SCALE / DIATONIC CHORD (VexFlow) ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded');return;}
+  const LET=['c','d','e','f','g','a','b'];
+  const keys=[
+    {name:'C', tonic:'c', sig:'C',  chords:['C','Dm','Em','F','G','Am','Bdim','C']},
+    {name:'F', tonic:'f', sig:'F',  chords:['F','Gm','Am','Bb','C','Dm','Edim','F']},
+    {name:'G', tonic:'g', sig:'G',  chords:['G','Am','Bm','C','D','Em','F#dim','G']},
+    {name:'Bb',tonic:'b', sig:'Bb', chords:['Bb','Cm','Dm','Eb','F','Gm','Adim','Bb']},
+    {name:'D', tonic:'d', sig:'D',  chords:['D','Em','F#m','G','A','Bm','C#dim','D']},
+    {name:'Eb',tonic:'e', sig:'Eb', chords:['Eb','Fm','Gm','Ab','Bb','Cm','Ddim','Eb']},
+    {name:'A', tonic:'a', sig:'A',  chords:['A','Bm','C#m','D','E','F#m','G#dim','A']},
+    {name:'Ab',tonic:'a', sig:'Ab', chords:['Ab','Bbm','Cm','Db','Eb','Fm','Gdim','Ab']},
+    {name:'E', tonic:'e', sig:'E',  chords:['E','F#m','G#m','A','B','C#m','D#dim','E']},
+    {name:'Db',tonic:'d', sig:'Db', chords:['Db','Ebm','Fm','Gb','Ab','Bbm','Cdim','Db']},
+    {name:'B', tonic:'b', sig:'B',  chords:['B','C#m','D#m','E','F#','G#m','A#dim','B']},
+    {name:'Gb',tonic:'g', sig:'Gb', chords:['Gb','Abm','Bbm','Cb','Db','Ebm','Fdim','Gb']},
+  ];
+  function build(tonic){const s=LET.indexOf(tonic);const letters=[];for(let i=0;i<7;i++)letters.push(LET[(s+i)%7]);
+    const notes=[];let oct=4,prev=-1;for(let i=0;i<7;i++){const idx=LET.indexOf(letters[i]);if(i>0&&idx<prev)oct++;notes.push({l:letters[i],o:oct});prev=idx;}return{letters,notes};}
+  function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
+  function drawVoice(ctx,stave,notes,w){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
+  function renderKey(div,key){
+    const W=700,H=190;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const sc=build(key.tonic);
+    const sk=sc.notes.map(n=>n.l+'/'+n.o);sk.push(at(sc,7));
+    const st1=new VF.Stave(0,2,W-6);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
+    drawVoice(ctx,st1,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})),W-150);
+    const st2=new VF.Stave(0,100,W-6);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
+    const cn=[];for(let i=0;i<8;i++){const sn=new VF.StaveNote({keys:[at(sc,i),at(sc,i+2),at(sc,i+4)],duration:'w'});
+      const a=new VF.Annotation(key.chords[i]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);cn.push(sn);}
+    drawVoice(ctx,st2,cn,W-150);
+  }
+  document.querySelectorAll('.kbwrap').forEach(wrap=>{
+    const pg=+wrap.dataset.page;const slice=keys.slice(pg*4,pg*4+4);
+    slice.forEach(key=>{
+      const block=document.createElement('div');block.className='keyblock';
+      const lab=document.createElement('div');lab.className='keylabel';lab.textContent=key.name+' Key';
+      const st=document.createElement('div');st.className='staves';
+      block.appendChild(lab);block.appendChild(st);wrap.appendChild(block);
+      try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' 렌더 오류</div>';console.error(key.name,e);}
+    });
+  });
+})();
+</script>
+</body>
+</html>
