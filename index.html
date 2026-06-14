@@ -66,8 +66,8 @@
   .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FAFAF5;border-top:1px dashed #D8CFC0;}
 
   /* PDF IMAGE PAGES */
-  .imgpage{padding:0;overflow:hidden;height:1123px;display:flex;align-items:center;justify-content:center;}
-  .imgpage img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;}
+  .imgpage{padding:0;overflow:hidden;height:1123px;}
+  .imgpage img{width:100%;height:100%;object-fit:contain;display:block;}
 
   /* PAGE NUMBERS */
   body{counter-reset:pgnum;}
@@ -81,6 +81,40 @@
     border-top:1px solid #E3D8C0;
     color:#7a6f5d;z-index:99;
   }
+
+  /* PAGE 6 추가 : DOTTED NOTES + BEAM (compact) */
+  .p7-wrap{margin-top:8px;border:3px solid #E3D8C0;border-radius:16px;overflow:hidden;}
+  .p7-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:5px 16px;text-align:center;}
+  .p7-body{background:#FFFDF6;padding:7px 12px;}
+  .p7-rule{border-radius:10px;padding:4px 10px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;margin-bottom:6px;}
+  .p7-cards{display:flex;justify-content:space-around;gap:6px;}
+  .p7-card{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:2px solid #E3D8C0;border-top-width:4px;border-radius:10px;padding:6px;flex:1;}
+  .p7-feq{display:flex;align-items:center;gap:4px;}
+  .p7-dot{width:7px;height:7px;border-radius:50%;background:#2b2620;display:inline-block;flex-shrink:0;}
+  .p7-beats{font-family:'Jua',sans-serif;font-size:12px;color:var(--sol);}
+  .p7-fname{font-family:'Jua',sans-serif;font-size:13px;color:var(--ink);}
+  .p7-note-op{color:#9a8f7d;font-size:18px;font-family:'Jua',sans-serif;}
+  .p7-note-eq{color:var(--do);font-size:18px;font-family:'Jua',sans-serif;}
+  .p7-beam-cmp{display:flex;gap:8px;}
+  .p7-bcrd{flex:1;background:#fff;border:2px solid #E3D8C0;border-top-width:4px;border-radius:10px;padding:6px 8px;text-align:center;}
+  .p7-bctitle{font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d;margin-top:4px;margin-bottom:0;}
+
+  /* FOBEAT */
+  .fobeat{background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:18px 20px 22px;margin-top:20px;}
+  .fobeat-title{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:16px;}
+  .fob-grid{display:grid;grid-template-columns:80px repeat(4,1fr);}
+  .fob-hdr-space{border-bottom:2px solid #E3D8C0;margin-bottom:10px;}
+  .fob-hdr{display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:10px;border-bottom:2px solid #E3D8C0;margin-bottom:10px;}
+  .fob-num{font-family:'Jua',sans-serif;font-size:20px;color:#6a5f4d;}
+  .fob-pill{font-family:'Jua',sans-serif;font-size:16px;padding:3px 12px;border-radius:20px;color:#fff;}
+  .fob-lbl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-right:6px;}
+  .fob-emoji{font-size:36px;line-height:1;}
+  .fob-name{font-family:'Jua',sans-serif;font-size:15px;}
+  .fob-name.L{color:#3C90DD;} .fob-name.R{color:#EF8A3C;}
+  .fob-track{grid-column:2/6;height:88px;border:3px solid var(--ink);border-radius:13px;overflow:hidden;display:flex;background:#fff;margin-bottom:12px;}
+  .fob-cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:2px solid #EDE4D2;}
+  .fob-cell:last-child{border-right:none;}
+  .fob-cell.aL{background:#EAF4FF;} .fob-cell.aR{background:#FFF3E8;}
 
   @media print{
     @page{size:A4;margin:0;}
@@ -100,7 +134,7 @@
 <div class="page imgpage"><img src="pages/page4.jpg" alt="4쪽 손가락 번호"></div>
 <div class="page imgpage"><img src="pages/page5.jpg" alt="5쪽 샵과 플랫"></div>
 
-<!-- PAGE 6 : APPLE TABLE + PIZZA ACTIVITY -->
+<!-- PAGE 6 : APPLE TABLE + DOTTED NOTES + BEAM -->
 <div class="page">
   <h1><span style="color:var(--re)">⭐</span> 음표와 <span style="color:var(--fa)">쉼표</span>, <span style="color:var(--sol)">박자</span></h1>
   <div class="tablewrap"><table>
@@ -108,13 +142,131 @@
     <thead><tr><th class="h1c">이름</th><th class="h2c">음표</th><th class="h3c">쉼표</th><th class="h4c">박자(길이)</th><th class="h5c">1마디(4박)를 사과로!</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table></div>
-  <div class="act"><div class="act-h">🍕 피자를 잘라보아요</div><div class="pizrow" id="pizrow"></div></div>
+
+  <!-- 붓점 -->
+  <div class="p7-wrap">
+    <div class="p7-head" style="background:#ED7A8E">🔴 붓점 — 음표 뒤 ● 점 → 원래 길이 + ½ 더!</div>
+    <div class="p7-body">
+      <div class="p7-cards">
+
+        <div class="p7-card" style="border-top-color:#F0A94E">
+          <div class="p7-fname">붓점 2분음표</div>
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span>
+            <span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-beats">2박+1박=<span style="color:var(--do)">3박</span></div>
+        </div>
+
+        <div class="p7-card" style="border-top-color:#9FCB5C">
+          <div class="p7-fname">붓점 4분음표</div>
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span>
+            <span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-beats">1박+½박=<span style="color:var(--do)">1½박</span></div>
+        </div>
+
+        <div class="p7-card" style="border-top-color:#5BA7E0">
+          <div class="p7-fname">붓점 8분음표</div>
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span>
+            <span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-beats">½박+¼박=<span style="color:var(--do)">¾박</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 이어치기 (빔) -->
+  <div class="p7-wrap">
+    <div class="p7-head" style="background:#9FCB5C">🌿 이어치기(빔)</div>
+    <div class="p7-body">
+      <div class="p7-beam-cmp">
+
+        <div class="p7-bcrd" style="border-top-color:#5BA7E0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-bctitle">8분음표</div>
+        </div>
+
+        <div class="p7-bcrd" style="border-top-color:#A98FD0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-bctitle">16분음표</div>
+        </div>
+
+        <div class="p7-bcrd" style="border-top-color:#9FCB5C">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;">
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="6" width="120" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-bctitle">4개 묶음</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- PAGE 7 : DIVISION BARS (CLAP) -->
+<!-- PAGE 7 : PIZZA + CLAP -->
 <div class="page">
-  <h1>👏 박수치기</h1>
+  <h1><span style="color:var(--re)">🍕</span> 피자를 <span style="color:var(--fa)">잘라</span>보아요</h1>
+  <div class="act"><div class="pizrow" id="pizrow"></div></div>
+  <h1 style="margin-top:32px">👏 박수치기</h1>
   <div class="barchart" id="barchart"></div>
+
+  <!-- 포비트 연습 -->
+  <div class="fobeat">
+    <div class="fobeat-title">손 따라 박수치기</div>
+    <div class="fob-grid">
+      <!-- 헤더 -->
+      <div class="fob-hdr-space"></div>
+      <div class="fob-hdr"><span class="fob-num">1박</span><span class="fob-pill" style="background:#9B59B6;">양손</span></div>
+      <div class="fob-hdr"><span class="fob-num">2박</span><span class="fob-pill" style="background:#B8B0A4;">쉬기</span></div>
+      <div class="fob-hdr"><span class="fob-num">3박</span><span class="fob-pill" style="background:#EF8A3C;">오른손</span></div>
+      <div class="fob-hdr"><span class="fob-num">4박</span><span class="fob-pill" style="background:#3C90DD;">왼손</span></div>
+      <!-- 오른손 (위) -->
+      <div class="fob-lbl">
+        <span class="fob-emoji">🤚🏻</span>
+        <span class="fob-name R">오른손</span>
+      </div>
+      <div class="fob-track">
+        <div class="fob-cell aR"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/><line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/></svg></div>
+        <div class="fob-cell"><svg width="26" height="44" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fob-cell aR"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/><line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/></svg></div>
+        <div class="fob-cell"><svg width="26" height="44" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <!-- 왼손 (아래) -->
+      <div class="fob-lbl">
+        <span class="fob-emoji">✋🏻</span>
+        <span class="fob-name L">왼손</span>
+      </div>
+      <div class="fob-track" style="margin-bottom:0;">
+        <div class="fob-cell aL"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/><line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/></svg></div>
+        <div class="fob-cell"><svg width="26" height="44" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fob-cell"><svg width="26" height="44" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="fob-cell aL"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/><line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/></svg></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
