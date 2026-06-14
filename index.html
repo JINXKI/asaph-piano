@@ -58,8 +58,8 @@
   .scalepage h2 small{font-size:15px;color:#7a6f5d;}
   .cont-h2{font-size:15px!important;margin-bottom:7px!important;color:#a99a82!important;}
   .cont-h2 small{font-size:12px!important;}
-  .keyblock{margin-bottom:10px;border:2px solid #E3D8C0;border-radius:10px;overflow:hidden;background:#fff;}
-  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1px solid #E3D8C0;}
+  .keyblock{margin-bottom:10px;border:2px solid #E3D8C0;border-radius:10px;background:#fff;}
+  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1px solid #E3D8C0;border-radius:10px 10px 0 0;}
   .keylabel .keyname{font-size:19px;font-weight:bold;}
   .keylabel .keysig{font-size:12px;opacity:.65;}
   .staves svg{display:block;}
@@ -115,13 +115,12 @@
 <div class="page">
   <h1>👏 박수치기</h1>
   <div class="bars-hint">모두 <b>같은 길이(4박)</b>예요! 한 칸에 손뼉 한 번 쳐요.</div>
-  <div class="legend"><span class="sw-solid"></span>음표가 시작돼요 <span class="sw-dot"></span>박자를 나눠요</div>
   <div class="barchart" id="barchart"></div>
 </div>
 
 <!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
 <div class="page scalepage">
-  <h2>🎼 음계와 다이어토닉 코드 <small>(12 Keys · 5도권 순서)</small></h2>
+  <h2>🎼 음계와 다이어토닉 코드 </h2>
   <div class="kbwrap" data-page="0"></div>
 </div>
 <div class="page scalepage">
@@ -230,13 +229,13 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
   function drawVoice(ctx,stave,notes,w){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
   function renderKey(div,key){
-    const W=700,H=190;
+    const W=700,H=220;
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
     const sc=build(key.tonic);
     const sk=sc.notes.map(n=>n.l+'/'+n.o);sk.push(at(sc,7));
-    const st1=new VF.Stave(0,2,W-6);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
+    const st1=new VF.Stave(0,16,W-6);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
     drawVoice(ctx,st1,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})),W-150);
-    const st2=new VF.Stave(0,100,W-6);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
+    const st2=new VF.Stave(0,116,W-6);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
     const cn=[];for(let i=0;i<8;i++){const sn=new VF.StaveNote({keys:[at(sc,i),at(sc,i+2),at(sc,i+4)],duration:'w'});
       const a=new VF.Annotation(key.chords[i]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);cn.push(sn);}
     drawVoice(ctx,st2,cn,W-150);
