@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=794">
 <title>ASAPH PIANO 교육자료</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -241,7 +241,7 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
       const block=document.createElement('div');block.className='keyblock';
       const lab=document.createElement('div');lab.className='keylabel';
       lab.style.background=key.color+'18';
-      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key${key.acc ? ' ' + key.acc : ''}</span>`;
+      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key</span>`;
       const st=document.createElement('div');st.className='staves';
       const rom=document.createElement('div');rom.className='roman-row';
       rom.innerHTML=ROMAN.map(r=>`<span>${r}</span>`).join('');
@@ -251,39 +251,6 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   });
 })();
 </script>
-<script>
-(function(){
-  function scaleMobile(){
-    var pages=document.querySelectorAll('.page');
-    var vw=window.innerWidth;
-    if(vw<842){
-      var scale=(vw-16)/794;
-      document.body.style.padding='8px';
-      document.body.style.gap='8px';
-      for(var i=0;i<pages.length;i++){
-        var p=pages[i];
-        var h=p.offsetHeight;
-        var margin=-h*(1-scale)/2;
-        p.style.transform='scale('+scale+')';
-        p.style.transformOrigin='top center';
-        p.style.marginTop=margin+'px';
-        p.style.marginBottom=margin+'px';
-      }
-    } else {
-      document.body.style.padding='';
-      document.body.style.gap='';
-      for(var i=0;i<pages.length;i++){
-        var p=pages[i];
-        p.style.transform='';
-        p.style.transformOrigin='';
-        p.style.marginTop='';
-        p.style.marginBottom='';
-      }
-    }
-  }
-  window.addEventListener('resize',scaleMobile);
-  window.addEventListener('load',scaleMobile);
-})();
-</script>
+
 </body>
 </html>
