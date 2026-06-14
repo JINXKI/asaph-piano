@@ -114,25 +114,20 @@
 <!-- PAGE 7 : DIVISION BARS (CLAP) -->
 <div class="page">
   <h1>👏 박수치기</h1>
-  <div class="bars-hint">모두 <b>같은 길이(4박)</b>예요! 한 칸에 손뼉 한 번 쳐요.</div>
   <div class="barchart" id="barchart"></div>
 </div>
 
 <!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
 <div class="page scalepage">
-  <h2>🎼 음계와 다이어토닉 코드 </h2>
   <div class="kbwrap" data-page="0"></div>
 </div>
 <div class="page scalepage">
-  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ②</small></h2>
   <div class="kbwrap" data-page="1"></div>
 </div>
 <div class="page scalepage">
-  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ③</small></h2>
   <div class="kbwrap" data-page="2"></div>
 </div>
 <div class="page scalepage">
-  <h2 class="cont-h2">🎼 음계와 다이어토닉 코드 <small>계속 ④</small></h2>
   <div class="kbwrap" data-page="3"></div>
 </div>
 
@@ -227,18 +222,18 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   function build(tonic){const s=LET.indexOf(tonic);const letters=[];for(let i=0;i<7;i++)letters.push(LET[(s+i)%7]);
     const notes=[];let oct=4,prev=-1;for(let i=0;i<7;i++){const idx=LET.indexOf(letters[i]);if(i>0&&idx<prev)oct++;notes.push({l:letters[i],o:oct});prev=idx;}return{letters,notes};}
   function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
-  function drawVoice(ctx,stave,notes,w){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
+  function drawVoice(ctx,stave,notes){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);const w=stave.getNoteEndX()-stave.getNoteStartX()-10;new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
   function renderKey(div,key){
     const W=700,H=220;
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
     const sc=build(key.tonic);
     const sk=sc.notes.map(n=>n.l+'/'+n.o);sk.push(at(sc,7));
-    const st1=new VF.Stave(0,16,W-6);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
-    drawVoice(ctx,st1,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})),W-150);
-    const st2=new VF.Stave(0,116,W-6);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
+    const st1=new VF.Stave(6,16,W-12);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
+    drawVoice(ctx,st1,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})));
+    const st2=new VF.Stave(6,116,W-12);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
     const cn=[];for(let i=0;i<8;i++){const sn=new VF.StaveNote({keys:[at(sc,i),at(sc,i+2),at(sc,i+4)],duration:'w'});
       const a=new VF.Annotation(key.chords[i]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);cn.push(sn);}
-    drawVoice(ctx,st2,cn,W-150);
+    drawVoice(ctx,st2,cn);
   }
   document.querySelectorAll('.kbwrap').forEach(wrap=>{
     const pg=+wrap.dataset.page;const slice=keys.slice(pg*3,pg*3+3);
@@ -246,7 +241,7 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
       const block=document.createElement('div');block.className='keyblock';
       const lab=document.createElement('div');lab.className='keylabel';
       lab.style.background=key.color+'18';
-      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key</span><span class="keysig">${key.acc||'무조표 (0)'}</span>`;
+      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key${key.acc ? ' ' + key.acc : ''}</span>`;
       const st=document.createElement('div');st.className='staves';
       const rom=document.createElement('div');rom.className='roman-row';
       rom.innerHTML=ROMAN.map(r=>`<span>${r}</span>`).join('');
@@ -254,6 +249,40 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
       try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' 렌더 오류</div>';console.error(key.name,e);}
     });
   });
+})();
+</script>
+<script>
+(function(){
+  function scaleMobile(){
+    var pages=document.querySelectorAll('.page');
+    var vw=window.innerWidth;
+    if(vw<842){
+      var scale=(vw-16)/794;
+      document.body.style.padding='8px';
+      document.body.style.gap='8px';
+      for(var i=0;i<pages.length;i++){
+        var p=pages[i];
+        var h=p.offsetHeight;
+        var margin=-h*(1-scale)/2;
+        p.style.transform='scale('+scale+')';
+        p.style.transformOrigin='top center';
+        p.style.marginTop=margin+'px';
+        p.style.marginBottom=margin+'px';
+      }
+    } else {
+      document.body.style.padding='';
+      document.body.style.gap='';
+      for(var i=0;i<pages.length;i++){
+        var p=pages[i];
+        p.style.transform='';
+        p.style.transformOrigin='';
+        p.style.marginTop='';
+        p.style.marginBottom='';
+      }
+    }
+  }
+  window.addEventListener('resize',scaleMobile);
+  window.addEventListener('load',scaleMobile);
 })();
 </script>
 </body>
