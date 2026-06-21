@@ -3,53 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=794">
-<title>ASAPH PIANO 교육자료</title>
+<title>ASAPH PIANO Teaching Material</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
 <script src="vexflow.js"></script>
 <style>
   :root{--cream:#FFFFFF;--ink:#3a342c;--do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
-    --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;}
+    --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;
+    /* unified design tokens */
+    --line:#EAE1CD;          /* one soft hairline for every border */
+    --soft:#9a8f7d;          /* muted text */
+    --r:16px;                /* card radius */
+    --r-sm:10px;             /* inner cell radius */
+    --pad:14px;              /* standard inner padding / gap */
+    --track-ink:#5a5048;     /* lightened rhythm-track outline (was harsh black) */
+    /* accent palette = the table header colours (do/re/mi/fa/sol/la family) */
+    --hp:#ED7A8E;--ho:#F0A94E;--hg:#9FCB5C;--hb:#5BA7E0;--hv:#A98FD0;}
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{background:#F5EDD6;}
+  html,body{background:#F6F1E6;}
   body{font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
-  .page{width:794px;min-height:1123px;background:var(--cream);padding:44px 42px;position:relative;box-shadow:0 6px 28px rgba(0,0,0,.16);}
-  .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:4px dashed #cbbfa6;border-radius:24px;color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
+  .page{width:794px;min-height:1123px;background:var(--cream);padding:44px 42px;position:relative;box-shadow:0 6px 24px rgba(120,100,60,.12);border-radius:6px;}
+
+  /* ===== UNIFIED CARD SYSTEM (matches the Notes/Rests/Beats table tone) ===== */
+  .card{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff;}
+  .card-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;line-height:1.2;}
+  .card-body{background:#fff;padding:var(--pad);}
+  .card-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:10px;}
+  .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:2px dashed var(--line);border-radius:var(--r);color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
   .ph .big{font-family:'Jua',sans-serif;font-size:32px;} .ph .sm{font-size:19px;}
 
   h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;line-height:1.1;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
   h1 small{font-size:24px;color:#7a6f5d;}
-  .callout{position:absolute;top:38px;right:42px;background:#FFF6DC;border:2px solid #E3C657;border-radius:16px;padding:7px 13px;font-size:15px;line-height:1.25;text-align:center;max-width:210px;}
+  .callout{position:absolute;top:38px;right:42px;background:#FFF6DC;border:1.5px solid #E3C657;border-radius:var(--r);padding:7px 13px;font-size:15px;line-height:1.25;text-align:center;max-width:210px;}
 
-  .tablewrap{margin-top:12px;border:3px solid #E3D8C0;border-radius:20px;overflow:hidden;}
+  .tablewrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
   table{width:100%;border-collapse:collapse;text-align:center;table-layout:fixed;}
   thead th{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:10px 4px;line-height:1.15;}
-  th.h1c{background:#ED7A8E;} th.h2c{background:#F0A94E;} th.h3c{background:#9FCB5C;} th.h4c{background:#5BA7E0;} th.h5c{background:#A98FD0;}
-  tbody td{border-top:2px solid #EDE4D2;padding:6px 4px;vertical-align:middle;}
-  td.nm{background:#FCEFF1;} td.nm .ko{font-family:'Jua',sans-serif;font-size:21px;} td.nm .en{font-size:14px;color:#9a8f7d;}
+  th.h1c{background:var(--hp);} th.h2c{background:var(--ho);} th.h3c{background:var(--hg);} th.h4c{background:var(--hb);} th.h5c{background:var(--hv);}
+  tbody td{border-top:1.5px solid var(--line);padding:5px 4px;vertical-align:middle;}
+  td.nm{background:#FCEFF1;} td.nm .ko{font-family:'Jua',sans-serif;font-size:21px;} td.nm .en{font-size:14px;color:var(--soft);}
   td.beat{font-family:'Jua',sans-serif;font-size:28px;color:#2f7dc0;}
-  .applecell{display:flex;flex-direction:column;align-items:center;gap:3px;}
-  .applerow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:3px;min-height:56px;}
+  .applecell{display:flex;flex-direction:column;align-items:stretch;gap:3px;}
+  .applerow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;min-height:56px;}
+  .applerow .aslot{flex:1;display:flex;align-items:center;justify-content:flex-start;min-width:0;}
   .applecap{font-family:'Jua',sans-serif;font-size:15px;color:#6f5fae;}
-  .act{margin-top:16px;background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:14px 18px;}
+  .act{margin-top:var(--pad);background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:14px 18px;}
   .act-h{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:10px;}
   .pizrow{display:flex;justify-content:space-around;align-items:flex-start;}
-  .pizcell{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  .pizcell{display:flex;flex-direction:column;align-items:center;gap:8px;}
   .pizcell .nm{font-family:'Jua',sans-serif;font-size:18px;}
+  .piztop{display:flex;align-items:center;gap:8px;}
+  .pizeq{font-family:'Jua',sans-serif;font-size:26px;color:#9a8f7d;}
   .ansrow{display:flex;align-items:center;gap:6px;font-family:'Jua',sans-serif;font-size:20px;}
-  .ansblank{width:46px;height:30px;border:2.5px solid var(--ink);border-radius:8px;background:#fff;}
+  .ansblank{width:46px;height:38px;border:2px solid var(--track-ink);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Jua',sans-serif;font-size:26px;color:var(--ink);}
+  .ansblank.ans-filled{background:#FFF3D6;color:var(--re);border-color:var(--re);}
+  /* REST COLORING ACTIVITY */
+  .colorhint{text-align:center;font-family:'Jua',sans-serif;font-size:16px;color:#7a6f5d;margin-bottom:6px;}
+  .restcolor{display:flex;flex-direction:column;gap:8px;}
+  .rcrow{display:flex;align-items:center;gap:14px;}
+  .rclbl{width:54px;display:flex;align-items:center;justify-content:center;}
+  .rctrack{flex:1;display:flex;height:38px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
+  .rccell{flex:1;border-right:1.5px solid var(--line);position:relative;}
+  .rccell:last-child{border-right:none;}
+  .rccell .half{position:absolute;top:0;bottom:0;left:50%;border-left:1.5px dashed #D8CBB2;}
+  .rccell .halffill{position:absolute;top:0;bottom:0;left:0;width:50%;background:#9DC3E6;}
 
   /* BARS */
   .bars-hint{text-align:center;font-family:'Jua',sans-serif;font-size:21px;color:#7a6f5d;margin-bottom:6px;}
   .legend{text-align:center;font-size:17px;color:#8a7d68;margin-bottom:18px;}
-  .sw-solid{display:inline-block;width:26px;border-top:3px solid var(--ink);vertical-align:middle;margin-right:4px;}
+  .sw-solid{display:inline-block;width:26px;border-top:2.5px solid var(--track-ink);vertical-align:middle;margin-right:4px;}
   .sw-dot{display:inline-block;width:26px;border-top:3px dotted #9a8f7d;vertical-align:middle;margin:0 4px 0 12px;}
   .barchart{display:flex;flex-direction:column;gap:18px;}
   .bar{display:flex;align-items:center;gap:14px;}
   .blbl{width:170px;display:flex;align-items:center;gap:8px;font-family:'Jua',sans-serif;font-size:22px;}
   .blbl .emo{font-size:30px;}
-  .track{flex:1;display:flex;height:84px;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:#fff;}
+  .track{flex:1;display:flex;height:84px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
   .cell{flex:1;display:flex;align-items:center;justify-content:center;}
 
   /* SCALE PAGES */
@@ -58,12 +87,12 @@
   .scalepage h2 small{font-size:15px;color:#7a6f5d;}
   .cont-h2{font-size:15px!important;margin-bottom:7px!important;color:#a99a82!important;}
   .cont-h2 small{font-size:12px!important;}
-  .keyblock{margin-bottom:10px;border:2px solid #E3D8C0;border-radius:10px;background:#fff;}
-  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1px solid #E3D8C0;border-radius:10px 10px 0 0;}
+  .keyblock{margin-bottom:10px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:#fff;}
+  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1.5px solid var(--line);border-radius:var(--r-sm) var(--r-sm) 0 0;}
   .keylabel .keyname{font-size:19px;font-weight:bold;}
   .keylabel .keysig{font-size:12px;opacity:.65;}
   .staves svg{display:block;}
-  .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FAFAF5;border-top:1px dashed #D8CFC0;}
+  .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FBF8F0;border-top:1.5px dashed var(--line);}
 
   /* PDF IMAGE PAGES */
   .imgpage{padding:0;overflow:hidden;height:1123px;}
@@ -78,43 +107,127 @@
     height:28px;line-height:28px;
     text-align:center;
     font-family:'Jua',sans-serif;font-size:14px;
-    border-top:1px solid #E3D8C0;
+    border-top:1.5px solid var(--line);
     color:#7a6f5d;z-index:99;
   }
 
-  /* PAGE 6 추가 : DOTTED NOTES + BEAM (compact) */
-  .p7-wrap{margin-top:8px;border:3px solid #E3D8C0;border-radius:16px;overflow:hidden;}
-  .p7-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:5px 16px;text-align:center;}
-  .p7-body{background:#FFFDF6;padding:7px 12px;}
-  .p7-rule{border-radius:10px;padding:4px 10px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;margin-bottom:6px;}
-  .p7-cards{display:flex;justify-content:space-around;gap:6px;}
-  .p7-card{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:2px solid #E3D8C0;border-top-width:4px;border-radius:10px;padding:6px;flex:1;}
-  .p7-feq{display:flex;align-items:center;gap:4px;}
+  /* PAGE 6 added : DOTTED NOTES + BEAM (compact) */
+  .p7-wrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .p7-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;}
+  .p7-body{background:#fff;padding:var(--pad);}
+  .p7-rule{border-radius:var(--r-sm);padding:4px 10px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;margin-bottom:6px;}
+  .p7-cards{display:flex;flex-direction:column;gap:8px;}
+  .p7-card{display:flex;flex-direction:row;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--line);border-left:5px solid var(--hp);border-radius:var(--r-sm);padding:8px 14px;}
+  .p7-feq{display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;min-width:118px;}
   .p7-dot{width:7px;height:7px;border-radius:50%;background:#2b2620;display:inline-block;flex-shrink:0;}
-  .p7-beats{font-family:'Jua',sans-serif;font-size:12px;color:var(--sol);}
-  .p7-fname{font-family:'Jua',sans-serif;font-size:13px;color:var(--ink);}
-  .p7-note-op{color:#9a8f7d;font-size:18px;font-family:'Jua',sans-serif;}
+  .p7-beats{font-family:'Jua',sans-serif;font-size:15px;color:var(--sol);flex-shrink:0;min-width:84px;}
+  .p7-fname{font-family:'Jua',sans-serif;font-size:14px;color:var(--ink);min-width:96px;flex-shrink:0;}
+  .p7-note-op{color:var(--soft);font-size:18px;font-family:'Jua',sans-serif;}
   .p7-note-eq{color:var(--do);font-size:18px;font-family:'Jua',sans-serif;}
   .p7-beam-cmp{display:flex;gap:8px;}
-  .p7-bcrd{flex:1;background:#fff;border:2px solid #E3D8C0;border-top-width:4px;border-radius:10px;padding:6px 8px;text-align:center;}
+  .p7-bcrd{flex:1;background:#fff;border:1.5px solid var(--line);border-top-width:4px;border-radius:var(--r-sm);padding:6px 8px;text-align:center;}
   .p7-bctitle{font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d;margin-top:4px;margin-bottom:0;}
 
+  /* PRACTICE PANELS */
+  .act-panel{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .act-ph{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;}
+  .act-pb{background:#fff;padding:var(--pad);}
+  .act-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .drill-row{display:flex;gap:10px;margin-bottom:10px;}
+  .drill-row:last-child{margin-bottom:0;}
+  .drill-card{flex:1;background:#fff;border:2px dashed #D8CBB2;border-radius:var(--r-sm);padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;}
+  .drill-eq{display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Jua',sans-serif;font-size:16px;flex-wrap:wrap;}
+  .ans-box{width:44px;height:28px;border:2px solid var(--track-ink);border-radius:8px;display:inline-block;flex-shrink:0;}
+  .drill-q{font-family:'Jua',sans-serif;font-size:12px;color:var(--soft);}
+  /* MATCH (draw-a-line) */
+  .match-board{display:flex;justify-content:space-between;align-items:stretch;gap:12px;background:#fff;border:2px dashed #D8CBB2;border-radius:var(--r-sm);padding:16px 18px;position:relative;}
+  .match-col{display:flex;flex-direction:column;justify-content:space-around;gap:16px;}
+  .match-item{display:flex;align-items:center;gap:10px;}
+  .match-item.right{flex-direction:row-reverse;}
+  .match-card{display:flex;align-items:center;justify-content:center;width:142px;min-height:50px;}
+  .match-dot{width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid var(--track-ink);flex-shrink:0;}
+  .match-eg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .len-grid{display:grid;grid-template-columns:120px 1fr;gap:12px 14px;align-items:center;}
+  .len-lbl{display:flex;align-items:center;gap:7px;font-family:'Jua',sans-serif;font-size:14px;color:var(--ink);}
+  .len-eg{font-family:'Jua',sans-serif;font-size:12px;color:#fff;background:var(--ho);border-radius:20px;padding:2px 9px;}
+  .len-bar{height:48px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;display:flex;background:#fff;}
+  .len-c{flex:1;border-right:1.5px solid var(--line);position:relative;}
+  .len-c:last-child{border-right:none;}
+  .len-c::before{content:"";position:absolute;left:50%;top:6px;bottom:6px;border-left:1.5px dashed #D8CBB2;}
+  .p7-len{position:relative;display:flex;flex:1;min-width:120px;height:24px;border:2px solid var(--track-ink);border-radius:6px;overflow:hidden;background:#fff;}
+  .p7-fill{position:absolute;top:0;bottom:0;left:0;z-index:0;}
+  .p7-len .seg{flex:1;border-right:1.5px solid var(--line);position:relative;z-index:1;}
+  .p7-len .seg:last-child{border-right:none;}
+  .p7-len .seg::before{content:"";position:absolute;left:50%;top:2px;bottom:2px;border-left:1.5px dashed #D8CBB2;}
+  /* RHYTHM STRIP */
+  .rhm-box{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .rhm-ph{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;background:var(--hb);}
+  .rhm-pb{background:#fff;padding:var(--pad);}
+  .rhm-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .rhm-strip{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:6px 12px;}
+
   /* FOBEAT */
-  .fobeat{background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:18px 20px 22px;margin-top:20px;}
+  .fobeat{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px 22px;margin-top:var(--pad);}
   .fobeat-title{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:16px;}
   .fob-grid{display:grid;grid-template-columns:80px repeat(4,1fr);}
-  .fob-hdr-space{border-bottom:2px solid #E3D8C0;margin-bottom:10px;}
-  .fob-hdr{display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:10px;border-bottom:2px solid #E3D8C0;margin-bottom:10px;}
+  .fob-hdr-space{border-bottom:1.5px solid var(--line);margin-bottom:10px;}
+  .fob-hdr{display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:10px;border-bottom:1.5px solid var(--line);margin-bottom:10px;}
   .fob-num{font-family:'Jua',sans-serif;font-size:20px;color:#6a5f4d;}
+  .fob-hemoji{font-size:24px;line-height:1;white-space:nowrap;}
   .fob-pill{font-family:'Jua',sans-serif;font-size:16px;padding:3px 12px;border-radius:20px;color:#fff;}
   .fob-lbl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-right:6px;}
   .fob-emoji{font-size:36px;line-height:1;}
   .fob-name{font-family:'Jua',sans-serif;font-size:15px;}
   .fob-name.L{color:#3C90DD;} .fob-name.R{color:#EF8A3C;}
-  .fob-track{grid-column:2/6;height:88px;border:3px solid var(--ink);border-radius:13px;overflow:hidden;display:flex;background:#fff;margin-bottom:12px;}
-  .fob-cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:2px solid #EDE4D2;}
+  .fob-track{grid-column:2/6;height:88px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;display:flex;background:#fff;margin-bottom:12px;}
+  .fob-cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--line);}
   .fob-cell:last-child{border-right:none;}
   .fob-cell.aL{background:#EAF4FF;} .fob-cell.aR{background:#FFF3E8;}
+  /* clap grid (age 4 advanced rhythm) */
+  .clap-row{display:flex;gap:10px;margin-bottom:12px;}
+  .clap-meas{flex:1;display:flex;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
+  .clap-cell{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0;border-right:1.5px solid var(--line);}
+  .clap-cell:last-child{border-right:none;}
+  .clap-note{height:36px;display:flex;align-items:flex-end;justify-content:center;}
+  .clap-cell.rest .clap-note svg path,.clap-cell.rest .clap-note svg rect{opacity:.55;}
+  .clap-pic{font-size:28px;line-height:1;}
+  .clap-word{font-family:'''Gaegu''',sans-serif;font-size:15px;color:#5a4f3f;font-weight:700;}
+  .clap-num{font-family:'''Jua''',sans-serif;font-size:15px;color:#b6ab98;}
+  .clap-cell.fast{background:#EAF4FF;}
+  .clap-cell.fast .clap-pic{font-size:20px;}
+  .clap-cell.rest{background:#F2EEE4;}
+  .clap-cell.rest .clap-word,.clap-cell.rest .clap-num{color:#c3baa8;}
+  .clap-cell.hold{background:#FFF3E8;}
+  .clap-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-family:'''Jua''',sans-serif;font-size:12px;color:#7a7060;margin-top:4px;}
+
+  /* TIE */
+  .tie-eg{display:flex;flex-direction:column;gap:8px;}
+  .tie-row{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-left:5px solid var(--hb);border-radius:var(--r-sm);padding:9px 14px;}
+  .tie-lbl{font-family:'Jua',sans-serif;font-size:14px;min-width:150px;line-height:1.45;}
+  .tie-lbl small{font-size:11px;color:var(--soft);}
+  .tie-vis{flex:1;display:flex;align-items:center;justify-content:center;}
+  .tie-res{font-family:'Jua',sans-serif;font-size:15px;color:var(--do);min-width:92px;text-align:right;line-height:1.35;}
+  .tie-warn{margin-top:8px;background:#EAF4FF;border:1.5px solid #90BFEC;border-radius:var(--r-sm);padding:7px 12px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;color:#1a4a7a;}
+  .cmp-row{display:flex;gap:10px;align-items:stretch;}
+  .cmp-card{flex:1;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 10px;text-align:center;}
+  .cmp-card .ct{font-family:'Jua',sans-serif;font-size:14px;margin-bottom:5px;}
+  .cmp-card .cd{font-size:12px;color:#7a6f5d;line-height:1.55;}
+  .cmp-vs{display:flex;align-items:center;font-family:'Jua',sans-serif;font-size:18px;color:#a99a82;}
+
+  /* G-KEY MAPPING PAGE */
+  .gkey-page{padding:24px 40px 40px;}
+  .gk-card{border:1.5px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:16px;overflow:hidden;}
+  .gk-head{display:flex;align-items:center;gap:8px;padding:8px 16px;font-family:'Jua',sans-serif;font-size:18px;color:#fff;}
+  .gk-body{padding:14px 14px 16px;}
+  .gk-sub{font-family:'Jua',sans-serif;font-size:14px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .gk-staff{display:flex;justify-content:center;}
+  .gk-staff svg{display:block;max-width:100%;}
+  .gk-kbd{display:flex;justify-content:center;margin-top:4px;}
+  .gk-kbd svg{display:block;max-width:100%;}
+  .gk-arrow{text-align:center;font-size:22px;color:#C8B8A0;line-height:1;margin:2px 0;}
+  .gk-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:12px;}
+  .gk-chip{display:flex;align-items:center;gap:6px;font-family:'Jua',sans-serif;font-size:14px;color:#5a4f3f;}
+  .gk-chip i{width:15px;height:15px;border-radius:50%;display:inline-block;flex-shrink:0;}
 
   @media print{
     @page{size:A4;margin:0;}
@@ -128,125 +241,47 @@
 <body>
 
 <!-- ORIGINAL 5 PAGES from PDF -->
-<div class="page imgpage"><img src="pages/page1.jpg" alt="1쪽 표지"></div>
-<div class="page imgpage"><img src="pages/page2.jpg" alt="2쪽 퀴즈"></div>
-<div class="page imgpage"><img src="pages/page3.jpg" alt="3쪽 건반과 음이름"></div>
-<div class="page imgpage"><img src="pages/page4.jpg" alt="4쪽 손가락 번호"></div>
-<div class="page imgpage"><img src="pages/page5.jpg" alt="5쪽 샵과 플랫"></div>
+<div class="page imgpage"><img src="pages/page1.jpg" alt="Page 1 Cover"></div>
+<div class="page imgpage"><img src="pages/page2.jpg" alt="Page 2 Quiz"></div>
+<div class="page imgpage"><img src="pages/page3.jpg" alt="Page 3 Keyboard & Note Names"></div>
+<div class="page imgpage"><img src="pages/page4.jpg" alt="Page 4 Finger Numbers"></div>
+<div class="page imgpage"><img src="pages/page5.jpg" alt="Page 5 Sharps & Flats"></div>
 
-<!-- PAGE 6 : APPLE TABLE + DOTTED NOTES + BEAM -->
+<!-- PAGE 6 : APPLE TABLE + PIZZA -->
 <div class="page">
-  <h1><span style="color:var(--re)">⭐</span> 음표와 <span style="color:var(--fa)">쉼표</span>, <span style="color:var(--sol)">박자</span></h1>
+  <h1><span style="color:var(--re)">⭐</span> Notes, <span style="color:var(--fa)">Rests</span> & <span style="color:var(--sol)">Beats</span></h1>
   <div class="tablewrap"><table>
     <colgroup><col style="width:15%"><col style="width:13%"><col style="width:13%"><col style="width:11%"><col style="width:48%"></colgroup>
-    <thead><tr><th class="h1c">이름</th><th class="h2c">음표</th><th class="h3c">쉼표</th><th class="h4c">박자(길이)</th><th class="h5c">1마디(4박)를 사과로!</th></tr></thead>
+    <thead><tr><th class="h1c">Name</th><th class="h2c">🎵 Note</th><th class="h3c">🤫 Rest</th><th class="h4c">Beats</th><th class="h5c">🍎 Count with apples!</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table></div>
 
-  <!-- 붓점 -->
-  <div class="p7-wrap">
-    <div class="p7-head" style="background:#ED7A8E">🔴 붓점 — 음표 뒤 ● 점 → 원래 길이 + ½ 더!</div>
-    <div class="p7-body">
-      <div class="p7-cards">
+  <div class="act" style="margin-top:14px;padding:8px 18px"><div class="pizrow" id="pizrow"></div></div>
 
-        <div class="p7-card" style="border-top-color:#F0A94E">
-          <div class="p7-fname">붓점 2분음표</div>
-          <div class="p7-feq">
-            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <span class="p7-note-op">+</span><span class="p7-dot"></span>
-            <span class="p7-note-eq">=</span>
-            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-beats">2박+1박=<span style="color:var(--do)">3박</span></div>
-        </div>
-
-        <div class="p7-card" style="border-top-color:#9FCB5C">
-          <div class="p7-fname">붓점 4분음표</div>
-          <div class="p7-feq">
-            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <span class="p7-note-op">+</span><span class="p7-dot"></span>
-            <span class="p7-note-eq">=</span>
-            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-beats">1박+½박=<span style="color:var(--do)">1½박</span></div>
-        </div>
-
-        <div class="p7-card" style="border-top-color:#5BA7E0">
-          <div class="p7-fname">붓점 8분음표</div>
-          <div class="p7-feq">
-            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <span class="p7-note-op">+</span><span class="p7-dot"></span>
-            <span class="p7-note-eq">=</span>
-            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-beats">½박+¼박=<span style="color:var(--do)">¾박</span></div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- 이어치기 (빔) -->
-  <div class="p7-wrap">
-    <div class="p7-head" style="background:#9FCB5C">🌿 이어치기(빔)</div>
-    <div class="p7-body">
-      <div class="p7-beam-cmp">
-
-        <div class="p7-bcrd" style="border-top-color:#5BA7E0">
-          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
-            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
-            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-bctitle">8분음표</div>
-        </div>
-
-        <div class="p7-bcrd" style="border-top-color:#A98FD0">
-          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
-            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
-            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
-            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-bctitle">16분음표</div>
-        </div>
-
-        <div class="p7-bcrd" style="border-top-color:#9FCB5C">
-          <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;">
-            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
-            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
-            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="6" width="120" height="6" rx="2" fill="#2b2620"/></svg>
-          </div>
-          <div class="p7-bctitle">4개 묶음</div>
-        </div>
-
-      </div>
-    </div>
+  <div class="act" style="margin-top:14px;padding:8px 18px">
+    <div class="restcolor" id="restcolor"></div>
   </div>
 </div>
 
-<!-- PAGE 7 : PIZZA + CLAP -->
+<!-- PAGE 9 : CLAP + RHYTHM EXERCISE -->
 <div class="page">
-  <h1><span style="color:var(--re)">🍕</span> 피자를 <span style="color:var(--fa)">잘라</span>보아요</h1>
-  <div class="act"><div class="pizrow" id="pizrow"></div></div>
-  <h1 style="margin-top:32px">👏 박수치기</h1>
+  <h1>👏 Clap the Beat</h1>
   <div class="barchart" id="barchart"></div>
 
-  <!-- 포비트 연습 -->
+  <!-- Follow my hands -->
   <div class="fobeat">
-    <div class="fobeat-title">손 따라 박수치기</div>
+    <div class="fobeat-title">✋ Follow My Hands</div>
     <div class="fob-grid">
-      <!-- 헤더 -->
+      <!-- header -->
       <div class="fob-hdr-space"></div>
-      <div class="fob-hdr"><span class="fob-num">1박</span><span class="fob-pill" style="background:#9B59B6;">양손</span></div>
-      <div class="fob-hdr"><span class="fob-num">2박</span><span class="fob-pill" style="background:#B8B0A4;">쉬기</span></div>
-      <div class="fob-hdr"><span class="fob-num">3박</span><span class="fob-pill" style="background:#EF8A3C;">오른손</span></div>
-      <div class="fob-hdr"><span class="fob-num">4박</span><span class="fob-pill" style="background:#3C90DD;">왼손</span></div>
-      <!-- 오른손 (위) -->
+      <div class="fob-hdr"><span class="fob-num">1</span><span class="fob-hemoji">🤚🏻✋🏻</span><span class="fob-pill" style="background:#9B59B6;">Both</span></div>
+      <div class="fob-hdr"><span class="fob-num">2</span><span class="fob-hemoji">😴</span><span class="fob-pill" style="background:#B8B0A4;">Rest</span></div>
+      <div class="fob-hdr"><span class="fob-num">3</span><span class="fob-hemoji">🤚🏻</span><span class="fob-pill" style="background:#EF8A3C;">Right</span></div>
+      <div class="fob-hdr"><span class="fob-num">4</span><span class="fob-hemoji">✋🏻</span><span class="fob-pill" style="background:#3C90DD;">Left</span></div>
+      <!-- right hand (top) -->
       <div class="fob-lbl">
         <span class="fob-emoji">🤚🏻</span>
-        <span class="fob-name R">오른손</span>
+        <span class="fob-name R">Right</span>
       </div>
       <div class="fob-track">
         <div class="fob-cell aR"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/><line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/></svg></div>
@@ -254,10 +289,10 @@
         <div class="fob-cell aR"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/><line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/></svg></div>
         <div class="fob-cell"><svg width="26" height="44" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
-      <!-- 왼손 (아래) -->
+      <!-- left hand (bottom) -->
       <div class="fob-lbl">
         <span class="fob-emoji">✋🏻</span>
-        <span class="fob-name L">왼손</span>
+        <span class="fob-name L">Left</span>
       </div>
       <div class="fob-track" style="margin-bottom:0;">
         <div class="fob-cell aL"><svg width="32" height="48" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/><line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/></svg></div>
@@ -269,9 +304,275 @@
   </div>
 </div>
 
+<!-- PAGE 7 : DOTTED NOTES + PRACTICE -->
+<div class="page">
+  <h1>🔴 <span style="color:var(--do)">Dotted Note</span></h1>
+  <div class="p7-wrap">
+    <div class="p7-head" style="background:#ED7A8E">🎵 ＋ ● ＝ ＋ ½ longer!</div>
+    <div class="p7-body">
+      <div class="p7-cards">
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:50%;background:#9DC3E6"></div><div class="p7-fill" style="left:50%;width:25%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:25%;background:#9DC3E6"></div><div class="p7-fill" style="left:25%;width:12.5%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:12.5%;background:#9DC3E6"></div><div class="p7-fill" style="left:12.5%;width:6.25%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dotted note practice -->
+  <div class="act-panel">
+    <div class="act-ph" style="background:#F0A94E">🎨 Color the length!</div>
+    <div class="act-pb">
+      <div class="len-grid">
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c" style="background:#9DC3E6"></div><div class="len-c" style="background:#9DC3E6"></div><div class="len-c" style="background:#ED7A8E"></div><div class="len-c"></div></div>
+
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div></div>
+
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><path d="M25 12 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Tie theory + practice — same page as dotted notes ===== -->
+  <h1 style="margin-top:30px;">🩵 Tie</h1>
+  <div style="margin-top:var(--pad);display:flex;align-items:center;justify-content:center;gap:26px;border:1.5px solid var(--line);background:#F6FAFF;border-radius:var(--r);padding:14px 24px;">
+    <svg width="150" height="68" viewBox="0 0 150 70">
+      <ellipse cx="38" cy="38" rx="14" ry="10" transform="rotate(-20 38 38)" fill="#3C90DD"/>
+      <line x1="51" y1="34" x2="51" y2="6" stroke="#3C90DD" stroke-width="5"/>
+      <ellipse cx="112" cy="38" rx="14" ry="10" transform="rotate(-20 112 38)" fill="#3C90DD"/>
+      <line x1="125" y1="34" x2="125" y2="6" stroke="#3C90DD" stroke-width="5"/>
+      <path d="M40 49 Q75 70 110 49" fill="none" stroke="#E24B4A" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <div style="font-family:'Jua',sans-serif;font-size:28px;color:#3C90DD;">👏 <span style="color:#E24B4A;">Play once</span> → hold ✋</div>
+  </div>
+
+  <!-- Tie practice example (notes + clap/hold) -->
+  <div style="margin-top:var(--pad);border:1.5px solid var(--line);background:#fff;border-radius:var(--r);padding:14px 16px;">
+    <div style="display:flex;gap:16px;justify-content:center;align-items:flex-start;">
+
+      <!-- quarter ‿ quarter -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#3C90DD"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#3C90DD"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span></div>
+      </div>
+
+      <!-- half ‿ quarter -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#3C90DD"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span><span>➡️</span></div>
+      </div>
+
+      <!-- half ‿ half -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span><span>➡️</span><span>➡️</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 8 : BEAM + PRACTICE -->
+<div class="page">
+  <h1>🌿 <span style="color:var(--fa)">Beam</span></h1>
+  <div class="p7-wrap">
+    <div class="p7-body">
+      <div class="p7-beam-cmp">
+        <div class="p7-bcrd" style="border-top-color:#5BA7E0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#A98FD0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#9FCB5C">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;">
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="6" width="120" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="p7-beam-cmp" style="margin-top:8px;">
+        <div class="p7-bcrd" style="border-top-color:#F0A94E">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M64 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M64 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="40" height="6" rx="2" fill="#2b2620"/><rect x="50" y="20" width="14" height="6" rx="1" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#ED7A8E">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M66 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M106 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="80" height="6" rx="2" fill="#2b2620"/><rect x="66" y="20" width="40" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beaming practice : draw a line to find the matching pair -->
+  <div class="act-panel">
+    <div class="act-pb">
+      <div class="match-board">
+        <!-- example answer : flag #1 ↔ two eighth notes beamed -->
+        <svg class="match-eg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="26" y1="12" x2="74" y2="50" stroke="#E24B4A" stroke-width="0.6" stroke-dasharray="2.5 2"/></svg>
+        <!-- left : flagged notes -->
+        <div class="match-col">
+          <!-- 1) two eighth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M60 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 2) two sixteenth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M60 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M60 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 3) four eighth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="132" height="46" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 4) mixed : dotted eighth + sixteenth, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M64 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M64 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 5) mixed : eighth + two sixteenths, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M66 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M106 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+        </div>
+
+        <!-- right : beamed notes — shuffled order -->
+        <div class="match-col">
+          <!-- four eighth notes beamed  → 3 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="132" height="46" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="120" height="7" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- mixed eighth + two sixteenths beamed  → 5 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="80" height="6" rx="2" fill="#2b2620"/><rect x="66" y="20" width="40" height="6" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- two eighth notes beamed  → 1 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- mixed dotted eighth + sixteenth beamed  → 4 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="40" height="6" rx="2" fill="#2b2620"/><rect x="50" y="20" width="14" height="6" rx="1" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- two sixteenth notes beamed  → 2 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clap & count -->
+  <div class="rhm-box" style="border-color:#CDBEE6;">
+    <div class="rhm-ph" style="background:#7E6BC4;">⭐ Clap &amp; Count</div>
+    <div class="rhm-pb">
+      <div id="claprows"></div>
+      <div class="clap-legend">
+        <span>👏 Clap</span>
+        <span style="color:#3C90DD;">👏👏 Two fast</span>
+        <span>😴 Rest</span>
+        <span style="color:#E8913C;">➡️ Hold</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
 <div class="page scalepage">
-  <h2>🎵 다이아토닉 스케일 &amp; 코드</h2>
+  <h2>🎵 Diatonic Scales &amp; Chords</h2>
   <div class="kbwrap" data-page="0"></div>
 </div>
 <div class="page scalepage">
@@ -284,9 +585,59 @@
   <div class="kbwrap" data-page="3"></div>
 </div>
 
+<!-- G KEY : keyboard mapping + four-beat practice -->
+<div class="page scalepage gkey-page">
+  <h2>🎵 Melody Practice <small>Praise His Name · G key</small></h2>
+
+  <div class="gk-card">
+    <div class="gk-head" style="background:#E24B4A;">🎹 G Key Keyboard Map <span style="font-size:13px;font-weight:normal;opacity:.85;">So La Ti Do Re Mi Fa# · So La Ti Do Re Mi Fa# · So</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">G key scale — find each colored note on the keyboard</div>
+      <div class="gk-staff" id="gscale"></div>
+      <div class="gk-staff" id="gkbd" style="margin-top:10px;"></div>
+      <div class="gk-legend" id="glegend"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="gk-head" style="background:#7FB23E;">🎵 Melody — Praise His Name</div>
+    <div class="gk-body">
+      <div class="gk-sub">🤚🏻 Right Hand · So La Ti Do</div>
+      <div class="gk-staff" id="gmelody"></div>
+      <div class="gk-legend" id="gmellegend"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="gk-head" style="background:#3C90DD;">🎵 G key Four-Beat Practice <span style="font-size:13px;font-weight:normal;opacity:.85;">4/4 · 4 bars</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">R.H. So·Ti·Re / L.H. So — count 4 beats and play slowly</div>
+      <div class="gk-staff" id="gpractice"></div>
+      <div class="gk-legend">
+        <span class="gk-chip">🤚🏻 R.H. — So · Ti · Re</span>
+        <span class="gk-chip">✋🏻 L.H. — So</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="gk-head" style="background:#7E6BC4;">🎹 Play Chords Together <span style="font-size:13px;font-weight:normal;opacity:.85;">4/4 · 8 bars</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">Strike all three notes at once — like So·Ti·Re! Same rhythm as Four-Beat — ♩ ♩ 𝕗𝕥</div>
+      <div class="gk-staff" id="gchords"></div>
+      <div class="gk-legend">
+        <span class="gk-chip"><i style="background:#E24B4A"></i>C</span>
+        <span class="gk-chip"><i style="background:#7E6BC4"></i>Am</span>
+        <span class="gk-chip"><i style="background:#3C90DD"></i>F</span>
+        <span class="gk-chip"><i style="background:#EF8A3C"></i>G</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGES 11-12 : PRAISE SONGS (image sheets) -->
-<div class="page imgpage"><img src="pages/praise1.png" alt="찬양 ① · 빛나는 왕의 왕"></div>
-<div class="page imgpage"><img src="pages/praise2.jpg" alt="찬양 ② · 주 이름 찬양"></div>
+<div class="page imgpage"><img src="pages/praise1.png" alt="Praise ① · Shining King of Kings"></div>
+<div class="page imgpage"><img src="pages/praise2.jpg" alt="Praise ② · Praise His Name"></div>
 
 <script>
 /* ---------- NOTE GLYPHS ---------- */
@@ -301,9 +652,9 @@ function note(t,w=46){const cx=18,cy=40;let g='';
   else if(t==='sixteenth'){g=head(false,cx,cy)+stem(cx,cy)+flag(cx,cy,2);}
   return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 40 58">${g}</svg>`;}
 function rest(t,w=40){let g='';
-  if(t==='whole'){g=`<line x1="6" y1="30" x2="30" y2="30" stroke="#2b2620" stroke-width="2"/><rect x="14" y="22" width="13" height="8" fill="#2b2620"/>`;}
-  else if(t==='half'){g=`<line x1="6" y1="34" x2="30" y2="34" stroke="#2b2620" stroke-width="2"/><rect x="14" y="26" width="13" height="8" fill="#2b2620"/>`;}
-  else if(t==='quarter'){g=`<path d="M14 18 L24 28 L15 34 L24 44 Q12 40 19 50" fill="none" stroke="#2b2620" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;}
+  if(t==='whole'){g=`<line x1="6" y1="26" x2="30" y2="26" stroke="#2b2620" stroke-width="2"/><rect x="13" y="26" width="13" height="7" fill="#2b2620"/>`;}
+  else if(t==='half'){g=`<line x1="6" y1="33" x2="30" y2="33" stroke="#2b2620" stroke-width="2"/><rect x="13" y="26" width="13" height="7" fill="#2b2620"/>`;}
+  else if(t==='quarter'){g=`<path d="M14 13 L23 25 L15 33 L24 45" fill="none" stroke="#2b2620" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 45 q-9 -2 -5 6 q3 5 8 1" fill="none" stroke="#2b2620" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;}
   else if(t==='eighth'){g=`<circle cx="15" cy="26" r="4" fill="#2b2620"/><path d="M18 24 L13 46" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
   else if(t==='sixteenth'){g=`<circle cx="14" cy="22" r="3.6" fill="#2b2620"/><circle cx="16" cy="33" r="3.6" fill="#2b2620"/><path d="M19 20 L12 48" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
   return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 36 58">${g}</svg>`;}
@@ -312,43 +663,102 @@ function rest(t,w=40){let g='';
 function appleWhole(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 24 Q53 14 49 8" fill="none" stroke="var(--stem)" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="14" rx="10" ry="5.5" fill="var(--leaf)" transform="rotate(-22 60 14)"/><path d="M50 30 C39 18 19 22 18 43 C17 63 33 86 50 90 C67 86 83 63 82 43 C81 22 61 18 50 30 Z" fill="var(--skin)"/><ellipse cx="36" cy="40" rx="7" ry="10" fill="#fff" opacity=".25" transform="rotate(-20 36 40)"/><circle cx="41" cy="54" r="3.4" fill="#3a2a2a"/><circle cx="59" cy="54" r="3.4" fill="#3a2a2a"/><path d="M42 62 Q50 70 58 62" fill="none" stroke="#3a2a2a" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="32" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/><ellipse cx="68" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/></svg>`;}
 function appleCut(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 22 Q52 13 49 8" fill="none" stroke="var(--stem)" stroke-width="3.5" stroke-linecap="round"/><ellipse cx="59" cy="13" rx="8" ry="4.5" fill="var(--leaf)" transform="rotate(-22 59 13)"/><circle cx="50" cy="57" r="34" fill="var(--skin)"/><circle cx="50" cy="57" r="25" fill="var(--flesh)"/><circle cx="44" cy="55" r="2.6" fill="#3a2a2a"/><circle cx="56" cy="55" r="2.6" fill="#3a2a2a"/><path d="M45 61 Q50 66 55 61" fill="none" stroke="#3a2a2a" stroke-width="2" stroke-linecap="round"/><ellipse cx="39" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/><ellipse cx="61" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/></svg>`;}
 function appleSlice(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M40 14 C62 34 62 66 40 86 C36 66 36 34 40 14 Z" fill="var(--flesh)" stroke="#E7C9A0" stroke-width="1.5"/><path d="M40 14 C62 34 62 66 40 86" fill="none" stroke="var(--skin)" stroke-width="6" stroke-linecap="round"/><circle cx="46" cy="44" r="2" fill="var(--seed)"/><circle cx="47" cy="58" r="2" fill="var(--seed)"/></svg>`;}
-function pizza(size){const c=size/2,r=size*0.40,crust=size*0.455;return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${crust}" fill="#E8B879" stroke="#C98A3E" stroke-width="${size*0.05}"/><circle cx="${c}" cy="${c}" r="${r}" fill="#FFF7E3" stroke="#E7A23C" stroke-width="2.5"/><circle cx="${c}" cy="${c}" r="${size*0.045}" fill="#E7A23C"/></svg>`;}
+function pizza(size,slices){const c=size/2,r=size*0.40,crust=size*0.455;let cuts='';
+  if(slices>1){for(let i=0;i<slices;i++){const a=(Math.PI*2/slices)*i-Math.PI/2;cuts+=`<line x1="${c}" y1="${c}" x2="${c+Math.cos(a)*r}" y2="${c+Math.sin(a)*r}" stroke="#E7A23C" stroke-width="2"/>`;}}
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${crust}" fill="#E8B879" stroke="#C98A3E" stroke-width="${size*0.05}"/><circle cx="${c}" cy="${c}" r="${r}" fill="#FFF7E3" stroke="#E7A23C" stroke-width="2.5"/>${cuts}<circle cx="${c}" cy="${c}" r="${size*0.045}" fill="#E7A23C"/></svg>`;}
 
 /* ---------- APPLES: whole apples (1/2/4) + cut rounds (8) + slices (16) ---------- */
 const rows=[
-  {ko:'온음표',en:'Whole',note:'whole',beat:'4박',apple:'whole',n:1,asz:56},
-  {ko:'2분음표',en:'Half',note:'half',beat:'2박',apple:'whole',n:2,asz:48},
-  {ko:'4분음표',en:'Quarter',note:'quarter',beat:'1박',apple:'whole',n:4,asz:36},
-  {ko:'8분음표',en:'Eighth',note:'eighth',beat:'½박',apple:'cut',n:8,asz:30},
-  {ko:'16분음표',en:'Sixteenth',note:'sixteenth',beat:'¼박',apple:'slice',n:16,asz:18},
+  {en:'Whole',note:'whole',beat:'4',apple:'whole',n:1,asz:56},
+  {en:'Half',note:'half',beat:'2',apple:'whole',n:2,asz:48},
+  {en:'Quarter',note:'quarter',beat:'1',apple:'whole',n:4,asz:36},
+  {en:'Eighth',note:'eighth',beat:'½',apple:'cut',n:8,asz:30},
+  {en:'Sixteenth',note:'sixteenth',beat:'¼',apple:'slice',n:16,asz:18},
 ];
 function ag(t,w){return t==='whole'?appleWhole(w):t==='cut'?appleCut(w):appleSlice(w);}
-document.getElementById('tbody').innerHTML=rows.map(r=>{let a='';for(let i=0;i<r.n;i++)a+=ag(r.apple,r.asz);
-  return `<tr><td class="nm"><div class="ko">${r.ko}</div><div class="en">(${r.en})</div></td><td>${note(r.note,38)}</td><td>${rest(r.note,36)}</td><td class="beat">${r.beat}</td><td><div class="applecell"><div class="applerow">${a}</div></div></td></tr>`;}).join('');
+document.getElementById('tbody').innerHTML=rows.map(r=>{let a='';for(let i=0;i<r.n;i++)a+=(r.note==='half'?`<div class="aslot">${ag(r.apple,r.asz)}</div>`:ag(r.apple,r.asz));
+  return `<tr><td class="nm"><div class="ko">${r.en}</div></td><td>${note(r.note,38)}</td><td>${rest(r.note,36)}</td><td class="beat">${r.beat}</td><td><div class="applecell"><div class="applerow">${a}</div></div></td></tr>`;}).join('');
 
 /* ---------- PIZZA ACTIVITY ---------- */
-const pacts=['half','quarter','eighth'];
-document.getElementById('pizrow').innerHTML=pacts.map(t=>`<div class="pizcell"><div class="nm">${note(t,42)}</div>${pizza(122)}<div class="ansrow"><span class="ansblank"></span> 조각</div></div>`).join('');
+const pacts=[{t:'half',n:2},{t:'quarter',n:4},{t:'eighth',n:8}];
+document.getElementById('pizrow').innerHTML=pacts.map((p,i)=>{
+  const ex=(i===0);
+  return `<div class="pizcell"><div class="piztop">${note(p.t,42)}<span class="pizeq">=</span><span class="ansblank${ex?' ans-filled':''}">${ex?p.n:''}</span></div>${pizza(96,ex?p.n:0)}</div>`;
+}).join('');
+
+/* ---------- REST COLORING ACTIVITY (4-beat track, color the rest's length) ---------- */
+const restColor=[
+  {en:'Whole rest',type:'whole',beat:'4 beats',cells:4},
+  {en:'Half rest',type:'half',beat:'2 beats',cells:2},
+  {en:'Quarter rest',type:'quarter',beat:'1 beat',cells:1},
+  {en:'Eighth rest',type:'eighth',beat:'½ beat',cells:0.5},
+];
+document.getElementById('restcolor').innerHTML=restColor.map((r,idx)=>{
+  let track='';
+  const ex=(idx===0), full=Math.floor(r.cells), hasHalf=(r.cells%1)>0;
+  for(let i=0;i<4;i++){
+    let style='',extra='';
+    if(ex){
+      if(i<full) style=' style="background:#9DC3E6"';
+      else if(i===full && hasHalf) extra='<span class="halffill"></span>';
+    }
+    track+=`<div class="rccell"${style}><span class="half"></span>${extra}</div>`;
+  }
+  return `<div class="rcrow"><div class="rclbl">${rest(r.type,40)}</div><div class="rctrack">${track}</div></div>`;
+}).join('');
 
 /* ---------- BARS (solid = note onset, dotted = beat grid) ---------- */
 const bars=[
-  {type:'whole',name:'온음표',col:'#E24B4A',cells:4,notes:[0],solid:[],dotted:[1,2,3],emo:''},
-  {type:'half',name:'2분음표',col:'#EF8A3C',cells:4,notes:[0,2],solid:[2],dotted:[1,3],emo:''},
-  {type:'quarter',name:'4분음표',col:'#7FB23E',cells:4,notes:[0,1,2,3],solid:[1,2,3],dotted:[],emo:''},
-  {type:'eighth',name:'8분음표',col:'#3C90DD',cells:8,notes:[0,1,2,3,4,5,6,7],solid:[2,4,6],dotted:[1,3,5,7],emo:''},
-  {type:'sixteenth',name:'16분음표',col:'#D9B11E',cells:16,notes:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],solid:[4,8,12],dotted:[1,2,3,5,6,7,9,10,11,13,14,15],emo:''},
+  {type:'whole',name:'Whole',col:'#E24B4A',cells:4,notes:[0],solid:[],dotted:[1,2,3],emo:''},
+  {type:'half',name:'Half',col:'#EF8A3C',cells:4,notes:[0,2],solid:[2],dotted:[1,3],emo:''},
+  {type:'quarter',name:'Quarter',col:'#7FB23E',cells:4,notes:[0,1,2,3],solid:[1,2,3],dotted:[],emo:''},
+  {type:'eighth',name:'Eighth',col:'#3C90DD',cells:8,notes:[0,1,2,3,4,5,6,7],solid:[2,4,6],dotted:[1,3,5,7],emo:''},
+  {type:'sixteenth',name:'Sixteenth',col:'#D9B11E',cells:16,notes:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],solid:[4,8,12],dotted:[1,2,3,5,6,7,9,10,11,13,14,15],emo:''},
 ];
 const cellSz={4:46,8:26,16:15};
 document.getElementById('barchart').innerHTML=bars.map(b=>{
   let cells='';
   for(let i=0;i<b.cells;i++){
     let bd='none';
-    if(i<b.cells-1){ const div=i+1; bd = b.solid.includes(div)?'2.5px solid var(--ink)':(b.dotted.includes(div)?'2px dotted #9a8f7d':'none'); }
+    if(i<b.cells-1){ const div=i+1; bd = b.solid.includes(div)?'2.5px solid var(--track-ink)':(b.dotted.includes(div)?'2px dotted #b3a890':'none'); }
     const content = b.notes.includes(i)?note(b.type,cellSz[b.cells]):'';
     cells+=`<div class="cell" style="border-right:${bd}">${content}</div>`;
   }
   return `<div class="bar"><div class="blbl" style="color:${b.col}">${b.emo?`<span class="emo">${b.emo}</span>`:''}${note(b.type,30)} ${b.name}</div><div class="track">${cells}</div></div>`;
 }).join('');
+</script>
+
+<script>
+/* ---------- advanced rhythm clap cells (age 4) ---------- */
+(function(){
+  /* lyrics stay in Korean · everything else is visualized with notes + pictures (age 4 only) */
+  const lines=[
+    [ [{t:'rest'},{t:'fast',w:'모든'},{t:'clap',w:'축'},{t:'clap',w:'복'}],
+      [{t:'clap',w:'주'},{t:'clap',w:'신'},{t:'clap',w:'주'},{t:'clap',w:'님'}],
+      [{t:'rest'},{t:'clap',w:'찬'},{t:'clap',w:'양'},{t:'clap',w:'하'}],
+      [{t:'hold',w:'리'},{t:'holdcont'},{t:'rest',g:'half'},{t:'rest',g:'cont'}] ],
+    [ [{t:'rest'},{t:'fast',w:'어둔'},{t:'clap',w:'날'},{t:'clap',w:'이'}],
+      [{t:'clap',w:'다'},{t:'clap',w:'가'},{t:'clap',w:'와'},{t:'clap',w:'도'}],
+      [{t:'rest'},{t:'clap',w:'난'},{t:'clap',w:'외'},{t:'clap',w:'치'}],
+      [{t:'hold',w:'리'},{t:'holdcont'},{t:'rest',g:'half'},{t:'rest',g:'cont'}] ],
+  ];
+  const pic={clap:'👏',fast:'👏👏',rest:'😴',hold:'👏',holdcont:'➡️'};
+  function beamPair(){return '<svg width="36" height="42" viewBox="0 0 52 58"><ellipse cx="13" cy="44" rx="7" ry="5" transform="rotate(-20 13 44)" fill="#2b2620"/><line x1="19" y1="42" x2="19" y2="10" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="34" cy="44" rx="7" ry="5" transform="rotate(-20 34 44)" fill="#2b2620"/><line x1="40" y1="42" x2="40" y2="10" stroke="#2b2620" stroke-width="2.4"/><rect x="19" y="8" width="21" height="5.5" rx="2" fill="#2b2620"/></svg>';}
+  function glyph(c){
+    if(c.t==='clap')return note('quarter',24);
+    if(c.t==='fast')return beamPair();
+    if(c.t==='hold')return note('half',24);          // 2-beat hold = half note
+    if(c.t==='rest'){
+      if(c.g==='half')return rest('half',24);        // 3-4 beat rest = one half rest
+      if(c.g==='cont')return '';                      // continuation cell of the half rest (no note)
+      return rest('quarter',22);                      // 1-beat rest = quarter rest
+    }
+    return '';                                         // holdcont = hold continuation (no note)
+  }
+  function cell(c){const w=c.w||'';return `<div class="clap-cell ${c.t}"><div class="clap-note">${glyph(c)}</div><div class="clap-pic">${pic[c.t]}</div><div class="clap-word">${w}</div></div>`;}
+  const el=document.getElementById('claprows');
+  if(el) el.innerHTML=lines.map(line=>`<div class="clap-row">`+line.map(m=>`<div class="clap-meas">${m.map(cell).join('')}</div>`).join('')+`</div>`).join('');
+})();
 </script>
 
 <script>
@@ -399,9 +809,204 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
       const rom=document.createElement('div');rom.className='roman-row';
       rom.innerHTML=ROMAN.map(r=>`<span>${r}</span>`).join('');
       block.appendChild(lab);block.appendChild(st);block.appendChild(rom);wrap.appendChild(block);
-      try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' 렌더 오류</div>';console.error(key.name,e);}
+      try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' render error</div>';console.error(key.name,e);}
     });
   });
+})();
+</script>
+
+<script>
+/* ---------- G KEY : keyboard mapping + melody + four-beat practice ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded (G key)');return;}
+  // letter -> [English solfege (fixed-do, G major), color]
+  const NOTE={g:['So','#3C90DD'],a:['La','#7E6BC4'],b:['Ti','#C85FA0'],c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa#','#7FB23E']};
+  function info(key){return NOTE[key.charAt(0)];}
+  function styleNote(n,key){
+    const I=info(key);if(!I)return;
+    n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    const a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}
+    n.addModifier(a,0);
+  }
+
+  function renderScale(div){
+    const W=860,H=140;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const st=new VF.Stave(4,18,W-12);st.addClef('treble').addKeySignature('G');st.setContext(ctx).draw();
+    const keys=['g/3','a/3','b/3','c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5'];
+    const notes=keys.map(function(k){const n=new VF.StaveNote({keys:[k],duration:'q'});styleNote(n,k);return n;});
+    const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],W-140);
+    v.draw(ctx,st);
+  }
+
+  function renderKbd(div){
+    const whites=['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'];
+    const hl={'G3':'g','A3':'a','B3':'b','C4':'c','D4':'d','E4':'e','F#4':'f','G4':'g','A4':'a','B4':'b','C5':'c','D5':'d','E5':'e','F#5':'f','G5':'g'};
+    const ww=52,wh=156,bw=32,bh=98;
+    const W=whites.length*ww,H=wh;
+    let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    whites.forEach(function(n,i){
+      const x=i*ww,L=hl[n],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
+      if(c){const cx=x+ww/2,cy=wh-30;
+        s+='<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="12" fill="#fff">'+I[0]+'</text>';}
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-7)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#b7ab92">'+n[0]+'</text>';
+    });
+    const hasBlack={C:1,D:1,F:1,G:1,A:1};
+    whites.forEach(function(n,i){
+      if(i>=whites.length-1)return;
+      if(!hasBlack[n[0]])return;
+      const sharp=n[0]+'#'+n[1],x=(i+1)*ww-bw/2,L=hl[sharp],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+x+'" y="0" width="'+bw+'" height="'+bh+'" rx="4" fill="'+(c||'#2b2620')+'" stroke="#2b2620" stroke-width="1.5"/>';
+      if(c)s+='<text x="'+(x+bw/2)+'" y="'+(bh-12)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#fff">'+I[0]+'</text>';
+    });
+    s+='</svg>';
+    div.innerHTML=s;
+  }
+
+  function renderLegend(div){
+    const order=['g','a','b','c','d','e','f'];
+    div.innerHTML=order.map(function(l){var I=NOTE[l];return '<span class="gk-chip"><i style="background:'+I[1]+'"></i>'+I[0]+'</span>';}).join('');
+  }
+
+  function renderMelody(div){
+    const W=672;
+    const MEL=[
+      [{r:'q'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'g/4',d:'q'},{k:'d/4',d:'q'}],
+      [{k:'d/4',d:'q'},{k:'e/4',d:'q'},{k:'f/4',d:'q'},{k:'g/4',d:'q'}],
+      [{r:'q'},{k:'a/4',d:'q'},{k:'a/4',d:'q'},{k:'g/4',d:'q'}],
+      [{k:'e/4',d:'h'},{r:'h'}]
+    ];
+    const L1=MEL, L2=MEL;
+    const systems=[L1,L2];
+    const sysH=146,topPad=14;
+    const H=topPad+systems.length*sysH;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    function build(sp){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const base=sp.d.replace('d','');
+      const n=new VF.StaveNote({keys:[sp.k],duration:base});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){try{n.addDotToAll();}catch(e2){}}}
+      styleNote(n,sp.k);
+      return n;
+    }
+    const chords=['G','D','Em7','C'];
+    systems.forEach(function(meas,si){
+      const y=topPad+si*sysH+8;
+      const M=meas.length,x0=4,firstW=212,restW=(W-8-x0-firstW)/(M-1);
+      let x=x0;
+      for(let m=0;m<M;m++){
+        const w=m===0?firstW:restW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0)st.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const notes=specs.map(build);
+        if(chords[m]){var ca=new VF.Annotation(chords[m]);ca.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);try{ca.setStyle({fillStyle:'#6a5f4d'});}catch(e){}notes[0].addModifier(ca,0);}
+        const beams=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beams.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){
+          const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
+          if(eighth){grp.push(notes[i]);}else{flushBeam();}
+        }
+        flushBeam();
+        const v=new VF.Voice({num_beats:4,beat_value:4});
+        v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beams.forEach(function(b){b.setContext(ctx).draw();});
+        x+=w;
+      }
+    });
+  }
+
+  function renderPractice(div){
+    const W=660,H=238,M=4,x0=8,firstW=182,restW=(W-16-x0-firstW)/(M-1),tY=24,bY=120;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    function mk(k,d,clef){
+      const n=new VF.StaveNote({keys:[k],duration:d,clef:clef||'treble'});
+      styleNote(n,k);return n;
+    }
+    let x=x0,firstT,firstB,lastT,lastB;
+    for(let m=0;m<M;m++){
+      const w=m===0?firstW:restW;
+      const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+      if(m===0){t.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+        b.addClef('bass').addKeySignature('G').addTimeSignature('4/4');firstT=t;firstB=b;}
+      t.setContext(ctx).draw();b.setContext(ctx).draw();
+      if(m===M-1){lastT=t;lastB=b;}
+      const rh=[mk('g/4','q'),mk('b/4','q'),mk('d/5','h')];
+      const lh=[mk('g/3','w','bass')];
+      const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
+      const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
+      new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(m===0?92:24));
+      vt.draw(ctx,t);vb.draw(ctx,b);
+      x+=w;
+    }
+    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+    new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+  }
+
+  function renderChordPractice(div){
+    const COL={C:'#E24B4A',Am:'#7E6BC4',F:'#3C90DD',G:'#EF8A3C'};
+    const prog=[
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
+      {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
+      {name:'F', rh:['f/4','a/4','c/5'], lh:'f/2'},
+      {name:'G', rh:['g/4','b/4','d/5'], lh:'g/2'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'}
+    ];
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=185,tY0=20;
+    const H=tY0+rows*sysGap;
+    const restW=(W-16-x0-firstW)/(perRow-1);
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    function chord(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});return n;}
+    for(let row=0;row<rows;row++){
+      const tY=tY0+row*sysGap,bY=tY+96;
+      let x=x0,firstT,firstB,lastT,lastB;
+      for(let c=0;c<perRow;c++){
+        const ch=prog[row*perRow+c],w=c===0?firstW:restW,col=COL[ch.name];
+        const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+        if(c===0){t.addClef('treble').addTimeSignature('4/4');
+          b.addClef('bass').addTimeSignature('4/4');firstT=t;firstB=b;}
+        t.setContext(ctx).draw();b.setContext(ctx).draw();
+        if(c===perRow-1){lastT=t;lastB=b;}
+        const rh=[chord(ch.rh,'q',col),chord(ch.rh,'q',col),chord(ch.rh,'h',col)];
+        const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+        try{a.setStyle({fillStyle:col});}catch(e){}
+        rh[0].addModifier(a,0);
+        const lh=[new VF.StaveNote({keys:[ch.lh],duration:'w',clef:'bass'})];
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
+        new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
+        vt.draw(ctx,t);vb.draw(ctx,b);
+        x+=w;
+      }
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+      new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    }
+  }
+
+  function go(){
+    var ml=document.getElementById('gmelody');if(ml){try{renderMelody(ml);}catch(e){console.error('gmelody',e);}}
+    var mlg=document.getElementById('gmellegend');if(mlg){try{renderLegend(mlg);}catch(e){}}
+    var sc=document.getElementById('gscale');if(sc){try{renderScale(sc);}catch(e){console.error('gscale',e);}}
+    var kb=document.getElementById('gkbd');if(kb){try{renderKbd(kb);}catch(e){console.error('gkbd',e);}}
+    var lg=document.getElementById('glegend');if(lg){try{renderLegend(lg);}catch(e){}}
+    var pr=document.getElementById('gpractice');if(pr){try{renderPractice(pr);}catch(e){console.error('gpractice',e);}}
+    var gc=document.getElementById('gchords');if(gc){try{renderChordPractice(gc);}catch(e){console.error('gchords',e);}}
+  }
+  go();
 })();
 </script>
 
