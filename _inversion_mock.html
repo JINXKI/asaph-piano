@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전위 표시 mock-up</title>
+<script src="vexflow.js"></script>
+<style>
+  body{font-family:'Malgun Gothic',sans-serif;background:#FBF8F0;margin:0;padding:24px;color:#3a342b;}
+  h1{font-size:22px;text-align:center;margin:0 0 4px;}
+  .sub{text-align:center;color:#7a6f5d;font-size:14px;margin-bottom:20px;line-height:1.6;}
+  .keyblock{max-width:1000px;margin:0 auto 18px;border:2px solid #e6ddc8;border-radius:12px;background:#fff;}
+  .keylabel{padding:6px 16px;font-weight:bold;font-size:18px;border-bottom:1.5px solid #e6ddc8;}
+  .row-cap{font-size:12px;color:#a99a82;padding:5px 16px 0;}
+  .staves svg{display:block;}
+  .legend{text-align:center;font-size:13px;color:#7a6f5d;margin-bottom:18px;}
+  .legend b{color:#2b2620;} .legend i{color:#9a9a9a;font-style:normal;}
+</style>
+</head>
+<body>
+<h1>다이아토닉 코드 전위 — 표시 방식 mock-up</h1>
+<div class="sub">각 코드를 <b>원위치(검정)</b> · <b style="color:#9a9a9a">1전위 · 2전위(회색)</b> 순으로 나란히.<br>
+너무 높거나 낮으면 옥타브를 옮겨 중간 음역에 맞춤. 대표 키 C · F · A.</div>
+
+<div id="root"></div>
+
+<script>
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){document.body.insertAdjacentHTML('beforeend','<p style="color:#c00">VexFlow 로드 실패</p>');return;}
+  const LET=['c','d','e','f','g','a','b'];
+  const KEYS=[
+    {name:'C', tonic:'c', sig:'C', chords:['C','Dm','Em','F','G','Am','Bdim']},
+    {name:'F', tonic:'f', sig:'F', chords:['F','Gm','Am','Bb','C','Dm','Edim']},
+    {name:'A', tonic:'a', sig:'A', chords:['A','Bm','C#m','D','E','F#m','G#dim']},
+  ];
+  const ROMAN=['I','ii','iii','IV','V','vi','vii°'];
+  const POS=['원','1전','2전'];
+  const BLACK='#2b2620', GRAY='#a8a29a';
+  const wi=(l,o)=>LET.indexOf(l)+7*o;
+  const fromWi=v=>LET[((v%7)+7)%7]+'/'+Math.floor(v/7);
+  const startOct=t=>('gab'.indexOf(t)>=0)?3:4;
+  function scaleKeys(tonic){const s=LET.indexOf(tonic),out=[];let oct=startOct(tonic),prev=-1;
+    for(let i=0;i<15;i++){const idx=(s+i)%7;if(i>0&&idx<prev)oct++;out.push(LET[idx]+'/'+oct);prev=idx;}return out;}
+
+  // 3 inversions of a diatonic triad, each folded so its bottom note sits in [tonic..tonic+octave)
+  function invStacks(tonic,deg){
+    const s=LET.indexOf(tonic),o0=startOct(tonic);
+    const at=p=>{const idx=(s+p)%7,oc=o0+Math.floor((s+p)/7);return wi(LET[idx],oc);};
+    const r=at(deg),t=at(deg+2),f=at(deg+4);
+    const raw=[[r,t,f],[t,f,r+7],[f,r+7,t+7]];   // root, 1st, 2nd
+    const floor=wi(tonic,o0);
+    return raw.map(st=>{let a=st.slice();
+      while(a[0]<floor)a=a.map(v=>v+7);
+      while(a[0]>=floor+7)a=a.map(v=>v-7);
+      return a.map(fromWi);
+    });
+  }
+
+  function drawVoice(ctx,stave,tickables,w){
+    const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(tickables);
+    new VF.Formatter().joinVoices([v]).format([v],w);
+    v.draw(ctx,stave);
+  }
+  function ctxIn(div,W,H){const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);return r.getContext();}
+
+  function renderScale(div,key){
+    const W=980,H=170;const ctx=ctxIn(div,W,H);
+    const all=scaleKeys(key.tonic);
+    const sT=new VF.Stave(6,28,W-12).addClef('treble').addKeySignature(key.sig);
+    const sB=new VF.Stave(6,100,W-12).addClef('bass').addKeySignature(key.sig);
+    sT.setContext(ctx).draw();sB.setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    drawVoice(ctx,sT,all.slice(8).map(k=>new VF.StaveNote({keys:[k],duration:'q'})),W-180);
+    drawVoice(ctx,sB,all.slice(0,8).map(k=>new VF.StaveNote({keys:[k],duration:'q',clef:'bass'})),W-180);
+  }
+
+  function renderInversions(div,key){
+    const W=980,H=150;const ctx=ctxIn(div,W,H);
+    const st=new VF.Stave(6,34,W-12).addClef('treble').addKeySignature(key.sig);st.setContext(ctx).draw();
+    const tickables=[];
+    for(let d=0;d<7;d++){
+      const stacks=invStacks(key.tonic,d);
+      stacks.forEach((keys,pi)=>{
+        const sn=new VF.StaveNote({keys,duration:'w'});
+        const col=pi===0?BLACK:GRAY;
+        sn.setStyle({fillStyle:col,strokeStyle:col});
+        if(pi===0){const a=new VF.Annotation(key.chords[d]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+          try{a.setStyle({fillStyle:BLACK});}catch(e){}sn.addModifier(a,0);}
+        const pl=new VF.Annotation(POS[pi]);pl.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+        try{pl.setFont('Malgun Gothic, sans-serif',9,'normal');}catch(e){}
+        try{pl.setStyle({fillStyle:col});}catch(e){}
+        sn.addModifier(pl,0);
+        tickables.push(sn);
+      });
+      if(d<6)tickables.push(new VF.BarNote());
+    }
+    drawVoice(ctx,st,tickables,W-130);
+  }
+
+  const wrap=document.getElementById('root');
+  KEYS.forEach(key=>{
+    const b=document.createElement('div');b.className='keyblock';
+    b.innerHTML='<div class="keylabel">'+key.name+' Key</div>';
+    const c1=document.createElement('div');c1.className='row-cap';c1.textContent='🎹 2옥타브 음계 — 왼손(아래) · 오른손(위)';b.appendChild(c1);
+    const s1=document.createElement('div');s1.className='staves';b.appendChild(s1);
+    const c2=document.createElement('div');c2.className='row-cap';c2.textContent='🎵 다이아토닉 코드 — 원위치(검정) + 1·2전위(회색)';b.appendChild(c2);
+    const s2=document.createElement('div');s2.className='staves';b.appendChild(s2);
+    wrap.appendChild(b);
+    renderScale(s1,key);
+    renderInversions(s2,key);
+  });
+})();
+</script>
+</body>
+</html>

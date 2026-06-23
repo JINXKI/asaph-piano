@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>포비트 연습 Mockup v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFFFF;--ink:#3a342c;--bg:#F5EDD6;
+  --left-col:#3C90DD;--right-col:#EF8A3C;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;padding:32px;gap:24px;}
+.page{width:794px;background:var(--cream);padding:44px 42px;
+  border-radius:4px;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;margin-bottom:28px;}
+
+.fobeat-section{
+  background:#FFFDF6;border:3px solid #EAD9B6;
+  border-radius:22px;padding:20px 28px 28px;
+}
+.fobeat-title{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:24px;}
+
+.track-pair{display:flex;gap:20px;align-items:flex-start;justify-content:center;}
+
+.hand-track{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;}
+
+.hand-label{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.hand-name{font-family:'Jua',sans-serif;font-size:20px;}
+.hand-name.left{color:var(--left-col);}
+.hand-name.right{color:var(--right-col);}
+
+.beat-nums{display:flex;width:100%;}
+.beat-num{flex:1;text-align:center;font-family:'Jua',sans-serif;font-size:14px;color:#9a8f7d;}
+
+.track{width:100%;height:96px;border:3px solid var(--ink);
+  border-radius:14px;overflow:hidden;display:flex;background:#fff;}
+.cell{flex:1;display:flex;align-items:center;justify-content:center;
+  border-right:2px solid #E3D8C0;}
+.cell:last-child{border-right:none;}
+.cell.active-left{background:#EAF4FF;}
+.cell.active-right{background:#FFF3E8;}
+
+.divider{width:3px;background:#EAD9B6;border-radius:4px;align-self:stretch;margin:0 2px;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>🥁 포비트 연습</h1>
+  <div class="fobeat-section">
+    <div class="fobeat-title">손 따라 박수치기</div>
+    <div class="track-pair">
+
+      <!-- ===== 왼손 (LEFT) ===== -->
+      <div class="hand-track">
+        <div class="hand-label">
+          <!-- Left hand: thumb on right, fingers L→R: pinky ring middle index -->
+          <svg width="70" height="80" viewBox="0 0 70 80">
+            <!-- palm -->
+            <ellipse cx="35" cy="60" rx="26" ry="18" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- pinky -->
+            <rect x="8" y="28" width="10" height="24" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- ring -->
+            <rect x="20" y="20" width="10" height="30" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- middle -->
+            <rect x="32" y="14" width="10" height="36" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- index -->
+            <rect x="44" y="20" width="10" height="30" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- thumb: right side, angled out -->
+            <rect x="56" y="46" width="10" height="20" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2" transform="rotate(30 61 56)"/>
+            <!-- L badge -->
+            <circle cx="35" cy="61" r="11" fill="#3C90DD" opacity="0.15"/>
+            <text x="35" y="66" font-family="Jua,sans-serif" font-size="15" fill="#3C90DD" text-anchor="middle" font-weight="bold">L</text>
+          </svg>
+          <span class="hand-name left">왼손</span>
+        </div>
+        <div class="beat-nums">
+          <div class="beat-num">1</div><div class="beat-num">2</div>
+          <div class="beat-num">3</div><div class="beat-num">4</div>
+        </div>
+        <!-- 왼 ○ ○ 왼 → beats 1,4 -->
+        <div class="track">
+          <div class="cell active-left">
+            <svg width="34" height="50" viewBox="0 0 40 58">
+              <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+              <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+            </svg>
+          </div>
+          <div class="cell">
+            <!-- 4분쉼표 quarter rest -->
+            <svg width="28" height="48" viewBox="0 0 40 58">
+              <path d="M14 14 L24 24 L15 30 L24 40 Q12 36 19 46" fill="none" stroke="#B0A898" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="cell">
+            <svg width="28" height="48" viewBox="0 0 40 58">
+              <path d="M14 14 L24 24 L15 30 L24 40 Q12 36 19 46" fill="none" stroke="#B0A898" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="cell active-left">
+            <svg width="34" height="50" viewBox="0 0 40 58">
+              <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+              <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ===== 오른손 (RIGHT) ===== -->
+      <div class="hand-track">
+        <div class="hand-label">
+          <!-- Right hand: thumb on left, fingers L→R: index middle ring pinky -->
+          <svg width="70" height="80" viewBox="0 0 70 80">
+            <!-- palm -->
+            <ellipse cx="35" cy="60" rx="26" ry="18" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- index -->
+            <rect x="8" y="20" width="10" height="30" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- middle -->
+            <rect x="20" y="14" width="10" height="36" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- ring -->
+            <rect x="32" y="20" width="10" height="30" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- pinky -->
+            <rect x="44" y="28" width="10" height="24" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2"/>
+            <!-- thumb: left side, angled out -->
+            <rect x="4" y="46" width="10" height="20" rx="5" fill="#FBEAC2" stroke="#C9A060" stroke-width="2.2" transform="rotate(-30 9 56)"/>
+            <!-- R badge -->
+            <circle cx="35" cy="61" r="11" fill="#EF8A3C" opacity="0.15"/>
+            <text x="35" y="66" font-family="Jua,sans-serif" font-size="15" fill="#EF8A3C" text-anchor="middle" font-weight="bold">R</text>
+          </svg>
+          <span class="hand-name right">오른손</span>
+        </div>
+        <div class="beat-nums">
+          <div class="beat-num">1</div><div class="beat-num">2</div>
+          <div class="beat-num">3</div><div class="beat-num">4</div>
+        </div>
+        <!-- 오 ○ 오 ○ → beats 1,3 -->
+        <div class="track">
+          <div class="cell active-right">
+            <svg width="34" height="50" viewBox="0 0 40 58">
+              <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+              <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+            </svg>
+          </div>
+          <div class="cell">
+            <svg width="28" height="48" viewBox="0 0 40 58">
+              <path d="M14 14 L24 24 L15 30 L24 40 Q12 36 19 46" fill="none" stroke="#B0A898" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="cell active-right">
+            <svg width="34" height="50" viewBox="0 0 40 58">
+              <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+              <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+            </svg>
+          </div>
+          <div class="cell">
+            <svg width="28" height="48" viewBox="0 0 40 58">
+              <path d="M14 14 L24 24 L15 30 L24 40 Q12 36 19 46" fill="none" stroke="#B0A898" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- track-pair -->
+  </div><!-- fobeat-section -->
+</div>
+</body>
+</html>

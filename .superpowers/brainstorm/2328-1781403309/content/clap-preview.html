@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>박수활동 미리보기</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#3a342c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#F5EDD6;font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;padding:32px;gap:32px;}
+.page{width:794px;background:#FFF9F0;padding:44px 42px;border-radius:4px;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+.pg-title{font-family:'Jua';font-size:32px;margin-bottom:22px;text-align:center;}
+.clap{background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:18px 20px 22px;}
+.clap-title{font-family:'Jua';font-size:20px;text-align:center;margin-bottom:14px;}
+.clap-grid{display:grid;grid-template-columns:78px repeat(8,1fr);}
+.clap-hdr-sp{border-bottom:2px solid #E3D8C0;margin-bottom:10px;}
+.clap-hdr{display:flex;flex-direction:column;align-items:center;gap:4px;padding-bottom:10px;border-bottom:2px solid #E3D8C0;margin-bottom:10px;min-height:52px;justify-content:flex-end;}
+.clap-num{font-family:'Jua';font-size:14px;color:#6a5f4d;}
+.clap-num.dim{color:#CEC8BE;}
+.clap-pill{font-family:'Jua';font-size:11px;padding:2px 7px;border-radius:12px;color:#fff;}
+.clap-lbl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-right:4px;}
+.clap-emoji{font-size:28px;line-height:1;}
+.clap-name{font-family:'Jua';font-size:13px;}
+.clap-name.L{color:#3C90DD;}.clap-name.R{color:#EF8A3C;}
+.clap-track{grid-column:2/10;height:76px;border:3px solid var(--ink);border-radius:12px;overflow:hidden;display:flex;background:#fff;margin-bottom:12px;}
+.clap-track.last{margin-bottom:0;}
+.clap-cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:2px solid #EDE4D2;}
+.clap-cell:last-child{border-right:none;}
+.clap-cell.aL{background:#EAF4FF;}.clap-cell.aR{background:#FFF3E8;}
+.clap-cell.aP{background:#F3EEF9;}.clap-cell.aG{background:#EDFAE0;}
+</style>
+</head>
+<body>
+
+<!-- 붓점 박수활동 -->
+<div class="page">
+  <div class="pg-title">🔴 붓점 박수치기</div>
+  <div class="clap">
+    <div class="clap-title">길~~~짧  길~~~짧</div>
+    <div class="clap-grid">
+      <div class="clap-hdr-sp"></div>
+      <div class="clap-hdr"><span class="clap-num">1박</span><span class="clap-pill" style="background:#9B59B6;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num dim">1+</span></div>
+      <div class="clap-hdr"><span class="clap-num dim">2박</span></div>
+      <div class="clap-hdr"><span class="clap-num">2+</span><span class="clap-pill" style="background:#9B59B6;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">3박</span><span class="clap-pill" style="background:#9B59B6;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num dim">3+</span></div>
+      <div class="clap-hdr"><span class="clap-num dim">4박</span></div>
+      <div class="clap-hdr"><span class="clap-num">4+</span><span class="clap-pill" style="background:#9B59B6;">박수</span></div>
+      <!-- 👏 단일 행 -->
+      <div class="clap-lbl"><span class="clap-emoji">👏</span><span class="clap-name" style="color:#9B59B6;">박수</span></div>
+      <div class="clap-track last">
+        <!-- 1박: 붓점 4분음표 (active) -->
+        <div class="clap-cell aP"><svg width="30" height="46" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#9B59B6"/><line x1="24" y1="38" x2="24" y2="6" stroke="#9B59B6" stroke-width="2.8"/><circle cx="32" cy="40" r="3.2" fill="#9B59B6"/></svg></div>
+        <!-- 1+: rest -->
+        <div class="clap-cell"><svg width="22" height="40" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#D4CEC8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <!-- 2박: rest -->
+        <div class="clap-cell"><svg width="22" height="40" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#D4CEC8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <!-- 2+: 8분음표 (active) -->
+        <div class="clap-cell aP"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#9B59B6"/><line x1="24" y1="38" x2="24" y2="6" stroke="#9B59B6" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#9B59B6" stroke-width="2.8"/></svg></div>
+        <!-- 3박: 붓점 4분음표 (active) -->
+        <div class="clap-cell aP"><svg width="30" height="46" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#9B59B6"/><line x1="24" y1="38" x2="24" y2="6" stroke="#9B59B6" stroke-width="2.8"/><circle cx="32" cy="40" r="3.2" fill="#9B59B6"/></svg></div>
+        <!-- 3+: rest -->
+        <div class="clap-cell"><svg width="22" height="40" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#D4CEC8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <!-- 4박: rest -->
+        <div class="clap-cell"><svg width="22" height="40" viewBox="0 0 40 58"><path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#D4CEC8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <!-- 4+: 8분음표 (active) -->
+        <div class="clap-cell aP"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#9B59B6"/><line x1="24" y1="38" x2="24" y2="6" stroke="#9B59B6" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#9B59B6" stroke-width="2.8"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 이어치기 박수활동 -->
+<div class="page">
+  <div class="pg-title">🌿 이어치기 박수치기</div>
+  <div class="clap">
+    <div class="clap-title">콩콩콩콩콩콩콩콩</div>
+    <div class="clap-grid">
+      <div class="clap-hdr-sp"></div>
+      <div class="clap-hdr"><span class="clap-num">1박</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">1+</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">2박</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">2+</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">3박</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">3+</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">4박</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <div class="clap-hdr"><span class="clap-num">4+</span><span class="clap-pill" style="background:#7FB23E;">박수</span></div>
+      <!-- 👏 단일 행, 전 셀 활성 -->
+      <div class="clap-lbl"><span class="clap-emoji">👏</span><span class="clap-name" style="color:#7FB23E;">박수</span></div>
+      <div class="clap-track last">
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+        <div class="clap-cell aG"><svg width="26" height="46" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#7FB23E"/><line x1="24" y1="38" x2="24" y2="6" stroke="#7FB23E" stroke-width="2.8"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#7FB23E" stroke-width="2.8"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

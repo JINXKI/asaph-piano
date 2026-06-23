@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전위 비교 — 옵션1 vs 옵션3</title>
+<script src="vexflow.js"></script>
+<style>
+  body{font-family:'Malgun Gothic',sans-serif;background:#FBF8F0;margin:0;padding:24px;color:#3a342b;}
+  h1{font-size:22px;text-align:center;margin:0 0 4px;}
+  .sub{text-align:center;color:#7a6f5d;font-size:14px;margin-bottom:24px;}
+  .cols{display:flex;gap:24px;align-items:flex-start;}
+  .col{flex:1;background:#fff;border:2px solid #e6ddc8;border-radius:14px;padding:16px 18px;}
+  .col h2{font-size:18px;margin:0 0 4px;}
+  .col .desc{font-size:13px;color:#7a6f5d;margin:0 0 16px;line-height:1.5;}
+  .opt1 h2{color:#3C90DD;} .opt3 h2{color:#E24B4A;}
+  .keyblock{margin-bottom:14px;border:1.5px solid #e6ddc8;border-radius:10px;background:#fff;}
+  .keylabel{padding:5px 14px;font-weight:bold;font-size:17px;border-bottom:1.5px solid #e6ddc8;}
+  .rowlbl{font-size:12px;color:#8a7d68;padding:2px 14px 0;}
+  .staves svg{display:block;}
+  .roman-row{display:flex;justify-content:space-around;padding:3px 6px 6px 64px;font-size:11px;color:#8a7d68;}
+</style>
+</head>
+<body>
+<h1>다이아토닉 전위 비교</h1>
+<div class="sub">음 높이: 중간 음역 시작 · 2옥타브 음계 · 대표 키 C / G / F</div>
+<div class="cols">
+  <div class="col opt1">
+    <h2>옵션 1 — 반주용 근접 보이싱</h2>
+    <p class="desc">모든 코드를 한 옥타브 안에 가두어 손 이동을 최소화. 자리바꿈(전위)이 자동 적용됨.</p>
+    <div id="o1"></div>
+  </div>
+  <div class="col opt3">
+    <h2>옵션 3 — 둘 다 (원위치 + 반주 보이싱)</h2>
+    <p class="desc">위: 근음 위치(학습용) · 아래: 반주용 근접 보이싱(실전용)</p>
+    <div id="o3"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){document.body.insertAdjacentHTML('beforeend','<p style="color:#c00">VexFlow 로드 실패</p>');return;}
+  const LET=['c','d','e','f','g','a','b'];
+  const KEYS=[
+    {name:'C', tonic:'c', sig:'C', chords:['C','Dm','Em','F','G','Am','Bdim']},
+    {name:'G', tonic:'g', sig:'G', chords:['G','Am','Bm','C','D','Em','F#dim']},
+    {name:'F', tonic:'f', sig:'F', chords:['F','Gm','Am','Bb','C','Dm','Edim']},
+  ];
+  const ROMAN=['I','ii','iii','IV','V','vi','vii°'];
+  const wi=(l,o)=>LET.indexOf(l)+7*o;
+  const fromWi=v=>LET[((v%7)+7)%7]+'/'+Math.floor(v/7);
+  // start octave: tonic g/a/b -> 3, else 4  (keeps tonic in middle register)
+  const startOct=t=>('gab'.indexOf(t)>=0)?3:4;
+
+  // 2-octave scale note keys (15 notes, tonic..tonic+2oct)
+  function scaleKeys(tonic){
+    const s=LET.indexOf(tonic), out=[];
+    let oct=startOct(tonic), prev=-1;
+    for(let i=0;i<15;i++){const idx=(s+i)%7; if(i>0&&idx<prev)oct++; out.push(LET[idx]+'/'+oct); prev=idx;}
+    return out;
+  }
+  // root-position diatonic triad (degree 0..6), in the octave above tonic-start
+  function rootTriad(tonic,deg){
+    const s=LET.indexOf(tonic), o0=startOct(tonic);
+    const pos=p=>{const idx=(s+p)%7, oc=o0+Math.floor((s+p)/7); return LET[idx]+'/'+oc;};
+    return [pos(deg),pos(deg+2),pos(deg+4)];
+  }
+  // close-position accompaniment voicing: fold each chord tone into [tonic..tonic+octave)
+  // returns {keys, inv} where inv is the inversion of the lowest (bass) note
+  function closeTriad(tonic,deg){
+    const root=rootTriad(tonic,deg);              // [root, third, fifth] letters
+    const o0=startOct(tonic), floor=wi(tonic,o0);
+    const folded=root.map(k=>{const[l,o]=k.split('/'); let v=wi(l,+o); while(v<floor)v+=7; while(v>=floor+7)v-=7; return v;});
+    folded.sort((a,b)=>a-b);
+    const bassL=fromWi(folded[0]).split('/')[0];
+    const rootL=root[0].split('/')[0], thirdL=root[1].split('/')[0];
+    const inv = bassL===rootL ? '원위치' : bassL===thirdL ? '1전위' : '2전위';
+    return {keys:folded.map(fromWi), inv};
+  }
+  function drawVoice(ctx,stave,notes,w){
+    const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],w);
+    v.draw(ctx,stave);
+  }
+  function renderScaleStave(ctx,key,y,W){
+    const st=new VF.Stave(6,y,W-12).addClef('treble').addKeySignature(key.sig);
+    st.setContext(ctx).draw();
+    const notes=scaleKeys(key.tonic).map(k=>new VF.StaveNote({keys:[k],duration:'q'}));
+    drawVoice(ctx,st,notes,W-150);
+  }
+  // returns the inversion labels array (empty for root mode)
+  function renderChordStave(ctx,key,y,W,mode){
+    const st=new VF.Stave(6,y,W-12).addClef('treble').addKeySignature(key.sig);
+    st.setContext(ctx).draw();
+    const invs=[];
+    const cn=key.chords.map((c,i)=>{
+      const t=mode==='root'?{keys:rootTriad(key.tonic,i),inv:null}:closeTriad(key.tonic,i);
+      invs.push(t.inv);
+      const sn=new VF.StaveNote({keys:t.keys,duration:'w'});
+      const a=new VF.Annotation(c);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);
+      return sn;
+    });
+    drawVoice(ctx,st,cn,W-120);
+    return invs;
+  }
+
+  function block(targetSel,key,opt){
+    const wrap=document.querySelector(targetSel);
+    const b=document.createElement('div');b.className='keyblock';
+    b.innerHTML='<div class="keylabel">'+key.name+' Key</div>';
+    const W=560;
+    const rows = opt===1
+      ? [['🎹 2옥타브 음계','scale'],['🎵 반주용 근접 보이싱','close']]
+      : [['🎹 2옥타브 음계','scale'],['📘 근음 위치 (학습용)','root'],['🎵 반주용 보이싱 (실전용)','close']];
+    rows.forEach(([lbl,kind])=>{
+      const rl=document.createElement('div');rl.className='rowlbl';rl.textContent=lbl;b.appendChild(rl);
+      const sv=document.createElement('div');sv.className='staves';b.appendChild(sv);
+      const H=120;
+      const r=new VF.Renderer(sv,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+      let invs=null;
+      if(kind==='scale')renderScaleStave(ctx,key,14,W);
+      else invs=renderChordStave(ctx,key,14,W,kind);
+      if(kind==='root'){
+        const rom=document.createElement('div');rom.className='roman-row';
+        rom.innerHTML=ROMAN.map(x=>'<span>'+x+'</span>').join('');b.appendChild(rom);
+      }
+      if(kind==='close'){
+        const inv=document.createElement('div');inv.className='roman-row';inv.style.color='#3C90DD';
+        inv.innerHTML=invs.map(x=>'<span>'+x+'</span>').join('');b.appendChild(inv);
+      }
+    });
+    wrap.appendChild(b);
+  }
+  KEYS.forEach(k=>{block('#o1',k,1);block('#o3',k,3);});
+})();
+</script>
+</body>
+</html>

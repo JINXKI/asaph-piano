@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5선지 ↔ 건반 매핑 디자인</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFDF6;--ink:#3a342c;
+    --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+    --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+    --bg:#F5EDD6;--border:#E3D8C0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+  body{padding:24px 16px;max-width:1100px;margin:0 auto;}
+  h1{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:6px;}
+  .subtitle{text-align:center;font-size:15px;color:#7a6f5d;margin-bottom:24px;}
+
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:700px){.card-grid{grid-template-columns:1fr;}}
+
+  .design-card{
+    background:#fff;border:3px solid var(--border);border-radius:20px;
+    padding:20px;cursor:pointer;transition:all .2s;position:relative;
+  }
+  .design-card:hover{border-color:#a89a7c;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .design-card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+  .badge{position:absolute;top:12px;right:12px;background:#3C90DD;color:#fff;
+    font-family:'Jua',sans-serif;font-size:13px;padding:2px 10px;border-radius:20px;display:none;}
+  .design-card.selected .badge{display:block;}
+  .card-title{font-family:'Jua',sans-serif;font-size:17px;margin-bottom:8px;}
+  .card-desc{font-size:13px;color:#7a6f5d;margin-bottom:14px;line-height:1.5;}
+
+  /* ── SHARED: solfège colors ── */
+  .sc{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;
+      font-family:'Jua',sans-serif;color:#fff;font-weight:bold;}
+
+  /* ── SHARED: Piano key styles ── */
+  .piano{display:flex;gap:0;position:relative;user-select:none;}
+  .wkey{
+    width:36px;height:80px;border:2px solid #ccc;border-radius:0 0 8px 8px;
+    background:#fff;position:relative;display:flex;flex-direction:column;
+    justify-content:flex-end;align-items:center;padding-bottom:5px;gap:1px;
+    transition:background .2s;
+  }
+  .wkey.lit{border-width:2.5px;}
+  .wkey .sname{font-family:'Jua',sans-serif;font-size:12px;font-weight:bold;}
+  .wkey .fnum{font-size:11px;}
+  .bkey{
+    width:22px;height:50px;background:#444;border-radius:0 0 5px 5px;
+    position:absolute;top:0;z-index:2;
+  }
+
+  /* ── DESIGN A: 수직 연결선 ── */
+  .mapping-wrap{position:relative;width:100%;}
+  .staff-row{display:flex;align-items:flex-end;gap:0;padding:0 4px;margin-bottom:0;}
+  .note-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+  .note-bubble{
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-family:'Jua',sans-serif;font-size:14px;color:#fff;
+    font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,.2);
+  }
+  .finger-num{font-family:'Jua',sans-serif;font-size:13px;color:#7a6f5d;}
+  .connector-line{width:2px;height:28px;border-left:2px dashed #ccc;margin:0 auto;}
+  .piano-row{display:flex;gap:0;justify-content:space-around;padding:0 2px;}
+  .mini-wkey{
+    flex:1;height:64px;border:2px solid #ddd;border-radius:0 0 6px 6px;
+    background:#fff;display:flex;flex-direction:column;justify-content:flex-end;
+    align-items:center;padding-bottom:3px;gap:1px;margin:0 1px;
+  }
+  .mini-wkey.lit{border-width:2.5px;}
+  .mini-wkey .sn{font-family:'Jua',sans-serif;font-size:11px;font-weight:bold;}
+  .mini-wkey .fn{font-size:10px;}
+
+  /* staff mock */
+  .staff-mock{
+    background:#fff;border:1px solid #e0d8c8;border-radius:8px;
+    padding:10px 8px;margin-bottom:6px;position:relative;
+  }
+  .staff-lines{position:relative;height:40px;margin-bottom:4px;}
+  .staff-line{position:absolute;left:0;right:0;height:1.5px;background:#bbb;}
+  .staff-notes-row{display:flex;justify-content:space-around;align-items:center;padding:0 8px;}
+  .snote{width:22px;height:16px;border-radius:50%;display:inline-block;}
+
+  /* ── label chip ── */
+  .chip{display:inline-block;padding:2px 7px;border-radius:8px;color:#fff;
+    font-family:'Jua',sans-serif;font-size:12px;font-weight:bold;}
+
+  .bottom-note{text-align:center;margin-top:20px;font-size:13px;color:#9a8f7d;}
+  .click-hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;
+    padding:6px 14px;display:inline-block;font-size:14px;margin-bottom:16px;}
+</style>
+<script>
+function sel(el){
+  document.querySelectorAll('.design-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,text:el.querySelector('.card-title').textContent})
+  }).catch(()=>{});
+}
+</script>
+</head>
+<body>
+
+<h1>5선지 ↔ 건반 매핑 디자인 고르기</h1>
+<p class="subtitle">스케일 노트(5선지)와 피아노 건반을 어떻게 연결할까요?</p>
+<div style="text-align:center;margin-bottom:16px;">
+  <span class="click-hint">👇 마음에 드는 디자인을 클릭하세요</span>
+</div>
+
+<div class="card-grid">
+
+  <!-- ── DESIGN A: 위에 계이름 + 손가락번호 → 점선 → 건반 ── -->
+  <div class="design-card" data-choice="A" onclick="sel(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">A. 위에 계이름·번호 → 점선 → 건반</div>
+    <div class="card-desc">5선지 노트 위에 계이름 원형 + 손가락 번호 → 점선이 아래 건반 키로 연결. 매핑이 선명.</div>
+
+    <!-- note bubbles -->
+    <div style="display:flex;justify-content:space-around;padding:0 4px;margin-bottom:4px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--do)">도</div>
+        <div class="finger-num">①</div>
+        <div class="connector-line" style="border-color:var(--do)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--re)">레</div>
+        <div class="finger-num">②</div>
+        <div class="connector-line" style="border-color:var(--re)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--mi)">미</div>
+        <div class="finger-num">③</div>
+        <div class="connector-line" style="border-color:var(--mi)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--fa)">파</div>
+        <div class="finger-num">①</div>
+        <div class="connector-line" style="border-color:var(--fa)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--sol)">솔</div>
+        <div class="finger-num">②</div>
+        <div class="connector-line" style="border-color:var(--sol)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--la)">라</div>
+        <div class="finger-num">③</div>
+        <div class="connector-line" style="border-color:var(--la)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--si)">시</div>
+        <div class="finger-num">④</div>
+        <div class="connector-line" style="border-color:var(--si)66"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div class="note-bubble" style="background:var(--do)">도</div>
+        <div class="finger-num">⑤</div>
+        <div class="connector-line" style="border-color:var(--do)66"></div>
+      </div>
+    </div>
+
+    <!-- 5선지 mock -->
+    <div class="staff-mock">
+      <svg width="100%" height="44" viewBox="0 0 340 44">
+        <!-- staff lines -->
+        <line x1="8" y1="10" x2="332" y2="10" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="18" x2="332" y2="18" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="26" x2="332" y2="26" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="34" x2="332" y2="34" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="42" x2="332" y2="42" stroke="#bbb" stroke-width="1.2"/>
+        <!-- clef placeholder -->
+        <text x="10" y="36" font-size="32" fill="#bbb" font-family="serif">𝄞</text>
+        <!-- notes (simplified ellipses, C major scale positions) -->
+        <!-- C4 = below staff (ledger), D4 = just below, E4 = first line, F4 = first space, G4 = second line, A4 = second space, B4 = third line, C5 = third space -->
+        <ellipse cx="68"  cy="46" rx="8" ry="5.5" fill="var(--do)" transform="rotate(-15 68 46)"/>
+        <ellipse cx="106" cy="42" rx="8" ry="5.5" fill="var(--re)" transform="rotate(-15 106 42)"/>
+        <ellipse cx="144" cy="38" rx="8" ry="5.5" fill="var(--mi)" transform="rotate(-15 144 38)"/>
+        <ellipse cx="182" cy="34" rx="8" ry="5.5" fill="var(--fa)" transform="rotate(-15 182 34)"/>
+        <ellipse cx="220" cy="30" rx="8" ry="5.5" fill="var(--sol)" transform="rotate(-15 220 30)"/>
+        <ellipse cx="258" cy="26" rx="8" ry="5.5" fill="var(--la)" transform="rotate(-15 258 26)"/>
+        <ellipse cx="296" cy="22" rx="8" ry="5.5" fill="var(--si)" transform="rotate(-15 296 22)"/>
+        <!-- ledger line for C4 -->
+        <line x1="58" y1="46" x2="78" y2="46" stroke="#bbb" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- piano keys -->
+    <div style="display:flex;justify-content:space-around;padding:0 4px;">
+      <div class="mini-wkey lit" style="border-color:var(--do)">
+        <span class="sn" style="color:var(--do)">C</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--re)">
+        <span class="sn" style="color:var(--re)">D</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--mi)">
+        <span class="sn" style="color:var(--mi)">E</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--fa)">
+        <span class="sn" style="color:var(--fa)">F</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--sol)">
+        <span class="sn" style="color:var(--sol)">G</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--la)">
+        <span class="sn" style="color:var(--la)">A</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--si)">
+        <span class="sn" style="color:var(--si)">B</span>
+      </div>
+      <div class="mini-wkey lit" style="border-color:var(--do)">
+        <span class="sn" style="color:var(--do)">C</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DESIGN B: 색깔만으로 연결 (텍스트 레이블 직접 건반에) ── -->
+  <div class="design-card" data-choice="B" onclick="sel(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">B. 색깔 통일 + 건반에 직접 계이름</div>
+    <div class="card-desc">5선지 노트 색 = 건반 색. 건반 안에 계이름·손가락 번호 표시. 선은 없고 색으로 매핑. 깔끔.</div>
+
+    <!-- 5선지 mock -->
+    <div class="staff-mock" style="margin-bottom:8px;">
+      <div style="font-family:'Jua',sans-serif;font-size:11px;color:#9a8f7d;margin-bottom:4px;">← 5선지 노트 (색 = 계이름)</div>
+      <svg width="100%" height="44" viewBox="0 0 340 44">
+        <line x1="8" y1="10" x2="332" y2="10" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="18" x2="332" y2="18" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="26" x2="332" y2="26" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="34" x2="332" y2="34" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="42" x2="332" y2="42" stroke="#bbb" stroke-width="1.2"/>
+        <text x="10" y="36" font-size="32" fill="#bbb" font-family="serif">𝄞</text>
+        <ellipse cx="68"  cy="46" rx="8" ry="5.5" fill="var(--do)" transform="rotate(-15 68 46)"/>
+        <ellipse cx="106" cy="42" rx="8" ry="5.5" fill="var(--re)" transform="rotate(-15 106 42)"/>
+        <ellipse cx="144" cy="38" rx="8" ry="5.5" fill="var(--mi)" transform="rotate(-15 144 38)"/>
+        <ellipse cx="182" cy="34" rx="8" ry="5.5" fill="var(--fa)" transform="rotate(-15 182 34)"/>
+        <ellipse cx="220" cy="30" rx="8" ry="5.5" fill="var(--sol)" transform="rotate(-15 220 30)"/>
+        <ellipse cx="258" cy="26" rx="8" ry="5.5" fill="var(--la)" transform="rotate(-15 258 26)"/>
+        <ellipse cx="296" cy="22" rx="8" ry="5.5" fill="var(--si)" transform="rotate(-15 296 22)"/>
+        <line x1="58" y1="46" x2="78" y2="46" stroke="#bbb" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- Full piano with colored keys -->
+    <div style="font-family:'Jua',sans-serif;font-size:11px;color:#9a8f7d;margin-bottom:4px;">← 건반 (계이름 + 손가락 번호 직접 표시)</div>
+    <div style="display:flex;gap:2px;position:relative;">
+      <div style="flex:1;height:88px;border:2.5px solid var(--do);border-radius:0 0 8px 8px;background:var(--do)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--do)">도</span>
+        <span style="font-size:11px;color:var(--do)">①</span>
+      </div>
+      <!-- black key C#/Db -->
+      <div style="position:relative;flex:0.6;">
+        <div style="position:absolute;left:-8px;top:0;width:20px;height:54px;background:#333;border-radius:0 0 4px 4px;z-index:2;"></div>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--re);border-radius:0 0 8px 8px;background:var(--re)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;z-index:1;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--re)">레</span>
+        <span style="font-size:11px;color:var(--re)">②</span>
+      </div>
+      <!-- black key D#/Eb -->
+      <div style="position:relative;flex:0.6;">
+        <div style="position:absolute;left:-8px;top:0;width:20px;height:54px;background:#333;border-radius:0 0 4px 4px;z-index:2;"></div>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--mi);border-radius:0 0 8px 8px;background:var(--mi)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;z-index:1;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--mi)">미</span>
+        <span style="font-size:11px;color:var(--mi)">③</span>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--fa);border-radius:0 0 8px 8px;background:var(--fa)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--fa)">파</span>
+        <span style="font-size:11px;color:var(--fa)">①</span>
+      </div>
+      <div style="position:relative;flex:0.6;">
+        <div style="position:absolute;left:-8px;top:0;width:20px;height:54px;background:#333;border-radius:0 0 4px 4px;z-index:2;"></div>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--sol);border-radius:0 0 8px 8px;background:var(--sol)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;z-index:1;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--sol)">솔</span>
+        <span style="font-size:11px;color:var(--sol)">②</span>
+      </div>
+      <div style="position:relative;flex:0.6;">
+        <div style="position:absolute;left:-8px;top:0;width:20px;height:54px;background:#333;border-radius:0 0 4px 4px;z-index:2;"></div>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--la);border-radius:0 0 8px 8px;background:var(--la)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;z-index:1;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--la)">라</span>
+        <span style="font-size:11px;color:var(--la)">③</span>
+      </div>
+      <div style="position:relative;flex:0.6;">
+        <div style="position:absolute;left:-8px;top:0;width:20px;height:54px;background:#333;border-radius:0 0 4px 4px;z-index:2;"></div>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--si);border-radius:0 0 8px 8px;background:var(--si)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;z-index:1;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--si)">시</span>
+        <span style="font-size:11px;color:var(--si)">④</span>
+      </div>
+      <div style="flex:1;height:88px;border:2.5px solid var(--do);border-radius:0 0 8px 8px;background:var(--do)18;
+           display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;gap:2px;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--do)">도</span>
+        <span style="font-size:11px;color:var(--do)">⑤</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DESIGN C: 5선지 위에 계이름, 아래에 손가락, 건반은 별도 섹션 ── -->
+  <div class="design-card" data-choice="C" onclick="sel(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">C. 5선지 위=계이름, 아래=번호 / 건반 별도</div>
+    <div class="card-desc">VexFlow 5선지 위에 계이름 텍스트, 아래에 손가락 번호. 건반은 아래에 별도 섹션으로. 기존 악보 레이아웃 유지.</div>
+
+    <div class="staff-mock">
+      <!-- solfège row above -->
+      <div style="display:flex;justify-content:space-around;padding:0 6px;margin-bottom:4px;">
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--do)">도</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--re)">레</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--mi)">미</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--fa)">파</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--sol)">솔</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--la)">라</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--si)">시</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--do)">도</span>
+      </div>
+      <svg width="100%" height="44" viewBox="0 0 340 44">
+        <line x1="8" y1="10" x2="332" y2="10" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="18" x2="332" y2="18" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="26" x2="332" y2="26" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="34" x2="332" y2="34" stroke="#bbb" stroke-width="1.2"/>
+        <line x1="8" y1="42" x2="332" y2="42" stroke="#bbb" stroke-width="1.2"/>
+        <text x="10" y="36" font-size="32" fill="#bbb" font-family="serif">𝄞</text>
+        <ellipse cx="68"  cy="46" rx="8" ry="5.5" fill="var(--do)" transform="rotate(-15 68 46)"/>
+        <ellipse cx="106" cy="42" rx="8" ry="5.5" fill="var(--re)" transform="rotate(-15 106 42)"/>
+        <ellipse cx="144" cy="38" rx="8" ry="5.5" fill="var(--mi)" transform="rotate(-15 144 38)"/>
+        <ellipse cx="182" cy="34" rx="8" ry="5.5" fill="var(--fa)" transform="rotate(-15 182 34)"/>
+        <ellipse cx="220" cy="30" rx="8" ry="5.5" fill="var(--sol)" transform="rotate(-15 220 30)"/>
+        <ellipse cx="258" cy="26" rx="8" ry="5.5" fill="var(--la)" transform="rotate(-15 258 26)"/>
+        <ellipse cx="296" cy="22" rx="8" ry="5.5" fill="var(--si)" transform="rotate(-15 296 22)"/>
+        <line x1="58" y1="46" x2="78" y2="46" stroke="#bbb" stroke-width="1.5"/>
+      </svg>
+      <!-- finger numbers below -->
+      <div style="display:flex;justify-content:space-around;padding:0 6px;margin-top:4px;">
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">①</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">②</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">③</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">①</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">②</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">③</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">④</span>
+        <span style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d">⑤</span>
+      </div>
+    </div>
+
+    <!-- compact keyboard -->
+    <div style="font-family:'Jua',sans-serif;font-size:11px;color:#9a8f7d;margin-bottom:4px;margin-top:8px;">피아노 건반 (C 장조)</div>
+    <div style="display:flex;gap:2px;">
+      <div style="flex:1;height:64px;border:2px solid var(--do);border-radius:0 0 6px 6px;background:var(--do)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--do)">C</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--re);border-radius:0 0 6px 6px;background:var(--re)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--re)">D</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--mi);border-radius:0 0 6px 6px;background:var(--mi)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--mi)">E</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--fa);border-radius:0 0 6px 6px;background:var(--fa)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--fa)">F</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--sol);border-radius:0 0 6px 6px;background:var(--sol)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--sol)">G</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--la);border-radius:0 0 6px 6px;background:var(--la)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--la)">A</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--si);border-radius:0 0 6px 6px;background:var(--si)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--si)">B</span>
+      </div>
+      <div style="flex:1;height:64px;border:2px solid var(--do);border-radius:0 0 6px 6px;background:var(--do)14;
+           display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;">
+        <span style="font-family:'Jua',sans-serif;font-size:11px;color:var(--do)">C</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DESIGN D: 통합 레이아웃 (건반이 5선지 바로 아래, 폭 정렬) ── -->
+  <div class="design-card" data-choice="D" onclick="sel(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">D. 통합: 5선지 + 건반 같은 폭 정렬</div>
+    <div class="card-desc">5선지와 건반을 같은 가로 폭으로 맞추고 각 음표가 건반 바로 위에 오도록 정렬. 가장 직접적인 매핑. 블랙 키도 표시.</div>
+
+    <div style="position:relative;background:#FAFAF5;border-radius:10px;padding:10px 8px;">
+      <!-- 계이름 row -->
+      <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:0;margin-bottom:2px;padding:0 2px;">
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--do)">도</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--re)">레</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--mi)">미</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--fa)">파</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--sol)">솔</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--la)">라</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--si)">시</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:13px;font-weight:bold;color:var(--do)">도</div>
+      </div>
+
+      <!-- staff (simplified) -->
+      <div style="background:#fff;border-radius:6px;padding:4px;margin-bottom:2px;border:1px solid #e0d8c8;">
+        <svg width="100%" height="42" viewBox="0 0 300 42" preserveAspectRatio="none">
+          <line x1="0" y1="9" x2="300" y2="9" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="17" x2="300" y2="17" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="25" x2="300" y2="25" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="33" x2="300" y2="33" stroke="#ccc" stroke-width="1"/>
+          <line x1="0" y1="41" x2="300" y2="41" stroke="#ccc" stroke-width="1"/>
+          <!-- notes evenly spaced at 1/8 intervals of 300px = 18.75 each, starting at 9 -->
+          <ellipse cx="9"   cy="44" rx="7" ry="4.5" fill="var(--do)" transform="rotate(-15 9 44)"/>
+          <ellipse cx="47"  cy="40" rx="7" ry="4.5" fill="var(--re)" transform="rotate(-15 47 40)"/>
+          <ellipse cx="85"  cy="36" rx="7" ry="4.5" fill="var(--mi)" transform="rotate(-15 85 36)"/>
+          <ellipse cx="123" cy="32" rx="7" ry="4.5" fill="var(--fa)" transform="rotate(-15 123 32)"/>
+          <ellipse cx="161" cy="28" rx="7" ry="4.5" fill="var(--sol)" transform="rotate(-15 161 28)"/>
+          <ellipse cx="199" cy="24" rx="7" ry="4.5" fill="var(--la)" transform="rotate(-15 199 24)"/>
+          <ellipse cx="237" cy="20" rx="7" ry="4.5" fill="var(--si)" transform="rotate(-15 237 20)"/>
+          <ellipse cx="275" cy="16" rx="7" ry="4.5" fill="var(--do)" transform="rotate(-15 275 16)"/>
+          <line x1="2" y1="44" x2="16" y2="44" stroke="#ccc" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <!-- finger numbers row -->
+      <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:0;margin-bottom:4px;padding:0 2px;">
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">①</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">②</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">③</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">①</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">②</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">③</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">④</div>
+        <div style="text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:#7a6f5d">⑤</div>
+      </div>
+
+      <!-- piano keys (with black keys, grid-aligned to white keys) -->
+      <div style="position:relative;height:74px;">
+        <!-- white keys via grid -->
+        <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:2px;height:100%;">
+          <div style="border:2.5px solid var(--do);border-radius:0 0 7px 7px;background:var(--do)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--re);border-radius:0 0 7px 7px;background:var(--re)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--mi);border-radius:0 0 7px 7px;background:var(--mi)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--fa);border-radius:0 0 7px 7px;background:var(--fa)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--sol);border-radius:0 0 7px 7px;background:var(--sol)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--la);border-radius:0 0 7px 7px;background:var(--la)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--si);border-radius:0 0 7px 7px;background:var(--si)16;height:100%;"></div>
+          <div style="border:2.5px solid var(--do);border-radius:0 0 7px 7px;background:var(--do)16;height:100%;"></div>
+        </div>
+        <!-- black keys overlay (C#, D#, F#, G#, A# positions — gray out since not in C major) -->
+        <!-- In 8-slot grid, each slot = 12.5% wide; black keys at 1.5, 2.5, 4.5, 5.5, 6.5 = 18.75%, 31.25%, 56.25%, 68.75%, 81.25% -->
+        <div style="position:absolute;top:0;left:14.5%;width:9%;height:46px;background:#666;border-radius:0 0 4px 4px;z-index:3;opacity:0.45;"></div>
+        <div style="position:absolute;top:0;left:26.9%;width:9%;height:46px;background:#666;border-radius:0 0 4px 4px;z-index:3;opacity:0.45;"></div>
+        <div style="position:absolute;top:0;left:51.7%;width:9%;height:46px;background:#666;border-radius:0 0 4px 4px;z-index:3;opacity:0.45;"></div>
+        <div style="position:absolute;top:0;left:64.1%;width:9%;height:46px;background:#666;border-radius:0 0 4px 4px;z-index:3;opacity:0.45;"></div>
+        <div style="position:absolute;top:0;left:76.5%;width:9%;height:46px;background:#666;border-radius:0 0 4px 4px;z-index:3;opacity:0.45;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-note">
+  하나 선택하거나 터미널에서 의견 주세요.<br>
+  <small>예: "A처럼 연결선 있되 D처럼 건반 폭 정렬" 도 가능!</small>
+</div>
+
+</body>
+</html>

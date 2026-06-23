@@ -1,0 +1,11 @@
+[     325ms] [ERROR] gmelody g: [RuntimeError] IncompleteVoice: Voice does not have enough notes.
+    at http://localhost:8731/vexflow.js:6:226903
+    at Array.reduce (<anonymous>)
+    at Pe.getResolutionMultiplier (http://localhost:8731/vexflow.js:6:226716)
+    at Pe.createModifierContexts (http://localhost:8731/vexflow.js:6:227084)
+    at Pe.joinVoices (http://localhost:8731/vexflow.js:6:232973)
+    at http://localhost:8731/index.html:940:28
+    at Array.forEach (<anonymous>)
+    at renderMelody (http://localhost:8731/index.html:915:10)
+    at go (http://localhost:8731/index.html:1021:58)
+    at http://localhost:8731/index.html:1029:3 @ http://localhost:8731/index.html:1020

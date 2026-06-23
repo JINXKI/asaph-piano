@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5선지 ↔ 건반 매핑 v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+  --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+  --bg:#F5EDD6;--border:#E3D8C0;--ink:#3a342c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+body{padding:20px;max-width:860px;margin:0 auto;}
+h1{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:6px;}
+.sub{text-align:center;font-size:14px;color:#7a6f5d;margin-bottom:20px;}
+
+.card{
+  background:#fff;border:3px solid var(--border);border-radius:18px;
+  padding:20px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;
+}
+.card:hover{border-color:#a89a7c;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+.badge{position:absolute;top:14px;right:14px;background:#3C90DD;color:#fff;
+  font-family:'Jua',sans-serif;font-size:13px;padding:2px 12px;border-radius:20px;display:none;}
+.card.selected .badge{display:block;}
+.card-title{font-family:'Jua',sans-serif;font-size:17px;margin-bottom:6px;}
+.card-desc{font-size:13px;color:#7a6f5d;margin-bottom:14px;line-height:1.5;}
+
+/* 공통 섹션 wrapper */
+.section-box{background:#FAFAF5;border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.row-label{font-family:'Jua',sans-serif;font-size:11px;color:#9a8f7d;margin-bottom:4px;}
+
+/* 계이름 행 */
+.solfege-row{display:grid;grid-template-columns:repeat(8,1fr);text-align:center;margin-bottom:4px;}
+.solfege-row span{font-family:'Jua',sans-serif;font-size:15px;font-weight:bold;}
+
+/* 손가락 번호 행 */
+.finger-row{display:grid;grid-template-columns:repeat(8,1fr);text-align:center;margin-top:4px;}
+.finger-row span{font-family:'Jua',sans-serif;font-size:13px;color:#7a6f5d;}
+
+/* 점선 연결 행 */
+.line-row{display:grid;grid-template-columns:repeat(8,1fr);height:20px;margin:2px 0;}
+.line-row div{display:flex;justify-content:center;}
+.vline{width:0;border-left:2px dashed #ccc;height:20px;}
+
+.bottom-note{text-align:center;margin-top:16px;font-size:13px;color:#9a8f7d;}
+.hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;
+  padding:6px 14px;display:inline-block;font-size:14px;margin-bottom:14px;}
+</style>
+<script>
+const COLORS=['--do','--re','--mi','--fa','--sol','--la','--si','--do'];
+const SOLFEGE=['도','레','미','파','솔','라','시','도'];
+const FINGERS=['①','②','③','①','②','③','④','⑤'];
+
+/* ── SVG piano keyboard (C major, C4-C5) ── */
+/* 흰 건반 8개: C D E F G A B C, 검정 건반 5개(회색) */
+function makePiano(opt){
+  const W=48, G=3, H=130, BW=28, BH=78;
+  const slot=W+G; // 51
+  // white key x positions
+  const wx=[0,51,102,153,204,255,306,357];
+  const colors=['var(--do)','var(--re)','var(--mi)','var(--fa)','var(--sol)','var(--la)','var(--si)','var(--do)'];
+  const svgW=wx[7]+W+1; // 406
+
+  // black key x positions (C#,D#,F#,G#,A#)
+  // center between adjacent whites, offset to left by BW/2
+  const bx=[
+    wx[0]+W+G/2-BW/2,  // C# between C(0) D(1)
+    wx[1]+W+G/2-BW/2,  // D# between D E
+    wx[3]+W+G/2-BW/2,  // F# between F G
+    wx[4]+W+G/2-BW/2,  // G# between G A
+    wx[5]+W+G/2-BW/2,  // A# between A B
+  ];
+
+  let whites='', blacks='';
+
+  wx.forEach((x,i)=>{
+    const col=colors[i];
+    const fill=`${col}22`;
+    const stroke=col;
+    // inner fill for label area
+    whites+=`
+      <rect x="${x}" y="0" width="${W}" height="${H}" rx="0 0 7 7"
+            fill="${fill}" stroke="${stroke}" stroke-width="2.5" rx="7"/>`;
+
+    if(opt==='A'){
+      // no labels on keyboard for option A (labels above via bubble)
+    } else if(opt==='B'||opt==='C'){
+      // solfège + finger inside key bottom
+      const sf=SOLFEGE[i], fn=FINGERS[i];
+      whites+=`
+        <text x="${x+W/2}" y="${H-26}" text-anchor="middle"
+              font-family="Jua,sans-serif" font-size="13" font-weight="bold" fill="${col}">${sf}</text>
+        <text x="${x+W/2}" y="${H-10}" text-anchor="middle"
+              font-family="Gaegu,sans-serif" font-size="11" fill="#7a6f5d">${fn}</text>`;
+    }
+  });
+
+  bx.forEach(x=>{
+    blacks+=`<rect x="${x}" y="0" width="${BW}" height="${BH}" rx="4"
+                   fill="#444" stroke="#222" stroke-width="1.5"/>`;
+  });
+
+  return {svg:`<svg viewBox="0 0 ${svgW} ${H}" width="100%" height="auto"
+    xmlns="http://www.w3.org/2000/svg">${whites}${blacks}</svg>`, svgW};
+}
+
+/* ── staff SVG (C major scale, 8 notes) ── */
+function makeStaff(showSolfege, showFinger){
+  // staff lines y: 18,26,34,42,50 (5 lines)
+  // C4 = ledger line below (y=58), D4=54, E4=50(line1), F4=46(space), G4=42(line2), A4=38(space), B4=34(line3), C5=30(space)
+  const noteY=[58,54,50,46,42,38,34,30];
+  const noteX=[60,105,150,195,240,285,330,375]; // evenly spaced
+  const colors=['var(--do)','var(--re)','var(--mi)','var(--fa)','var(--sol)','var(--la)','var(--si)','var(--do)'];
+  const sf=SOLFEGE, fn=FINGERS;
+
+  let lines='', notes='', solfegeRow='', fingerRow='';
+
+  // 5 staff lines
+  for(let i=0;i<5;i++){
+    const y=18+i*8;
+    lines+=`<line x1="8" y1="${y}" x2="405" y2="${y}" stroke="#ccc" stroke-width="1.2"/>`;
+  }
+  // ledger line for C4
+  lines+=`<line x1="${noteX[0]-10}" y1="58" x2="${noteX[0]+10}" y2="58" stroke="#ccc" stroke-width="1.2"/>`;
+
+  notes=noteX.map((x,i)=>`
+    <ellipse cx="${x}" cy="${noteY[i]}" rx="10" ry="6.5"
+             fill="${colors[i]}" stroke="${colors[i]}" stroke-width="1"
+             transform="rotate(-15 ${x} ${noteY[i]})"/>
+  `).join('');
+
+  if(showSolfege){
+    solfegeRow=noteX.map((x,i)=>`
+      <text x="${x}" y="${noteY[i]-14}" text-anchor="middle"
+            font-family="Jua,sans-serif" font-size="13" font-weight="bold"
+            fill="${colors[i]}">${sf[i]}</text>
+    `).join('');
+  }
+
+  if(showFinger){
+    fingerRow=noteX.map((x,i)=>`
+      <text x="${x}" y="76" text-anchor="middle"
+            font-family="Jua,sans-serif" font-size="12" fill="#7a6f5d">${fn[i]}</text>
+    `).join('');
+  }
+
+  const totalH=showFinger?82:68;
+  return `<svg viewBox="0 0 415 ${totalH}" width="100%" height="auto">
+    <!-- treble clef placeholder -->
+    <text x="6" y="48" font-size="42" fill="#bbb" font-family="serif">𝄞</text>
+    ${lines}${notes}${solfegeRow}${fingerRow}
+  </svg>`;
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // Design A: bubble row → dashes → staff → dashes → keyboard
+  const pianoA=makePiano('A');
+  document.getElementById('piano-a').innerHTML=pianoA.svg;
+  document.getElementById('staff-a').innerHTML=makeStaff(false,false);
+
+  // Design B: solfège above staff + finger below + colored keyboard
+  const pianoB=makePiano('B');
+  document.getElementById('piano-b').innerHTML=pianoB.svg;
+  document.getElementById('staff-b').innerHTML=makeStaff(true,true);
+
+  // Design C: solfège+finger on staff, keyboard below (clean)
+  const pianoC=makePiano('C');
+  document.getElementById('piano-c').innerHTML=pianoC.svg;
+  document.getElementById('staff-c').innerHTML=makeStaff(true,true);
+});
+
+function sel(el){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,
+      text:el.querySelector('.card-title').textContent})}).catch(()=>{});
+}
+</script>
+</head>
+<body>
+
+<h1>5선지 ↔ 건반 매핑</h1>
+<p class="sub">어떤 방식으로 연결할까요? 마음에 드는 디자인을 클릭하세요.</p>
+<div style="text-align:center;margin-bottom:16px;">
+  <span class="hint">👇 클릭으로 선택</span>
+</div>
+
+<!-- ── DESIGN A: 계이름 버블 → 점선 → 5선지 → 점선 → 건반 ── -->
+<div class="card" data-choice="A" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">A. 계이름 버블 → 점선 → 5선지 → 점선 → 건반</div>
+  <div class="card-desc">동그라미 계이름이 5선지 위에, 건반 색과 같은 색으로 점선 연결. 매핑이 가장 명확.</div>
+
+  <div class="section-box">
+    <!-- 계이름 버블 row -->
+    <div class="row-label">계이름 + 손가락 번호</div>
+    <div style="display:grid;grid-template-columns:repeat(8,1fr);text-align:center;gap:2px;padding:0 0 0 0;" id="bubbles-a">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- 점선 -->
+    <div class="line-row" id="lines-top-a"></div>
+
+    <!-- 5선지 -->
+    <div style="background:#fff;border-radius:8px;padding:6px 4px;border:1px solid #e8e0d0;margin:2px 0;" id="staff-a"></div>
+
+    <!-- 점선 아래 -->
+    <div class="line-row" id="lines-bot-a"></div>
+
+    <!-- 건반 -->
+    <div style="padding:0 2px;" id="piano-a"></div>
+  </div>
+</div>
+
+<!-- ── DESIGN B: 5선지 위=계이름/아래=번호, 건반에 계이름·번호 직접 ── -->
+<div class="card" data-choice="B" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">B. 5선지 위=계이름 / 아래=번호 → 건반에도 직접 표시</div>
+  <div class="card-desc">VexFlow 5선지 노트 위에 계이름, 아래에 손가락 번호. 건반 하단에도 동일하게 표시. 간결.</div>
+
+  <div class="section-box">
+    <div style="background:#fff;border-radius:8px;padding:6px 4px;border:1px solid #e8e0d0;margin-bottom:10px;" id="staff-b"></div>
+    <div id="piano-b"></div>
+  </div>
+</div>
+
+<!-- ── DESIGN C: 5선지 + 건반, 같은 열로 정렬 ── -->
+<div class="card" data-choice="C" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">C. 5선지 노트와 건반 키를 같은 열로 정렬</div>
+  <div class="card-desc">계이름·손가락 번호가 5선지 위/아래에. 건반을 바로 아래 같은 폭으로 정렬. 노트와 건반이 1:1 매핑.</div>
+
+  <div class="section-box">
+    <div style="background:#fff;border-radius:8px;padding:6px 4px;border:1px solid #e8e0d0;margin-bottom:6px;" id="staff-c"></div>
+    <div id="piano-c"></div>
+  </div>
+</div>
+
+<div class="bottom-note">
+  하나 클릭하거나 터미널에서 의견 주세요.<br>
+  <small>"A처럼 연결선 + B처럼 건반에 계이름" 같은 조합도 OK!</small>
+</div>
+
+<script>
+// Fill bubble rows after DOM ready
+window.addEventListener('DOMContentLoaded',()=>{
+  const COLORS_CSS=[
+    'var(--do)','var(--re)','var(--mi)','var(--fa)',
+    'var(--sol)','var(--la)','var(--si)','var(--do)'
+  ];
+  const sf=SOLFEGE, fn=FINGERS;
+
+  // A: bubbles
+  const bubblesEl=document.getElementById('bubbles-a');
+  sf.forEach((s,i)=>{
+    const col=COLORS_CSS[i];
+    bubblesEl.innerHTML+=`
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:${col};
+             display:flex;align-items:center;justify-content:center;
+             font-family:'Jua',sans-serif;font-size:14px;color:#fff;font-weight:bold;
+             box-shadow:0 2px 6px rgba(0,0,0,.18);">${s}</div>
+        <div style="font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d;">${fn[i]}</div>
+      </div>`;
+  });
+
+  // A: dashed lines (top and bottom)
+  ['lines-top-a','lines-bot-a'].forEach(id=>{
+    const el=document.getElementById(id);
+    COLORS_CSS.forEach(col=>{
+      el.innerHTML+=`<div><div class="vline" style="border-color:${col}88;"></div></div>`;
+    });
+  });
+});
+</script>
+</body>
+</html>

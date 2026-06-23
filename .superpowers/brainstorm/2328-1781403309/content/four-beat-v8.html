@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>포비트 v8</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFFFF;--ink:#3a342c;--bg:#F5EDD6;--L:#3C90DD;--R:#EF8A3C;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;padding:32px;}
+.page{width:794px;background:var(--cream);padding:44px 42px;
+  border-radius:4px;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;margin-bottom:28px;}
+.section{background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:22px 24px 26px;}
+.sec-title{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:20px;}
+
+.grid{display:grid;grid-template-columns:88px repeat(4,1fr);gap:0;}
+
+/* 헤더 */
+.hdr-spacer{border-bottom:2px solid #E3D8C0;margin-bottom:12px;}
+.beat-hdr{display:flex;flex-direction:column;align-items:center;padding-bottom:12px;
+  border-bottom:2px solid #E3D8C0;margin-bottom:12px;gap:6px;}
+.beat-num{font-family:'Jua',sans-serif;font-size:22px;color:#6a5f4d;}
+.action-pill{font-family:'Jua',sans-serif;font-size:18px;padding:4px 14px;border-radius:20px;color:#fff;}
+
+/* 레이블 */
+.track-label{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;padding-right:8px;}
+.lname{font-family:'Jua',sans-serif;font-size:17px;}
+.lname.L{color:var(--L);} .lname.R{color:var(--R);}
+
+/* 트랙 */
+.track-wrap{grid-column:2/6;height:96px;border:3px solid var(--ink);
+  border-radius:14px;overflow:hidden;display:flex;background:#fff;margin-bottom:14px;}
+.cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:2px solid #E3D8C0;}
+.cell:last-child{border-right:none;}
+.cell.aL{background:#EAF4FF;} .cell.aR{background:#FFF3E8;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>🥁 포비트 연습</h1>
+  <div class="section">
+    <div class="sec-title">손 따라 박수치기</div>
+    <div class="grid">
+
+      <!-- 헤더 -->
+      <div class="hdr-spacer"></div>
+      <div class="beat-hdr"><span class="beat-num">1박</span><span class="action-pill" style="background:#9B59B6;">양손</span></div>
+      <div class="beat-hdr"><span class="beat-num">2박</span><span class="action-pill" style="background:#B8B0A4;">쉬기</span></div>
+      <div class="beat-hdr"><span class="beat-num">3박</span><span class="action-pill" style="background:var(--R);">오른손</span></div>
+      <div class="beat-hdr"><span class="beat-num">4박</span><span class="action-pill" style="background:var(--L);">왼손</span></div>
+
+      <!-- 왼손 (L) 트랙 -->
+      <div class="track-label">
+        <!--
+          Left hand: thumb on RIGHT.
+          Single closed path = palm + 4 fingers (no internal segment lines).
+          Thumb = separate oval path on the right side.
+        -->
+        <svg width="56" height="62" viewBox="2 -5 110 100">
+          <!-- 손바닥+손가락 (한 덩어리) -->
+          <path d="M 8,84 C 4,84 4,76 4,68 L 4,52
+            C 4,42 8,34 10,24 L 10,14
+            C 10,4 22,4 22,14 L 22,30
+            C 24,24 27,17 30,15 L 30,10
+            C 30,0 42,0 42,10 L 42,26
+            C 44,20 48,14 52,12 L 52,7
+            C 52,-3 64,-3 64,7 L 64,24
+            C 66,18 70,13 74,12 L 74,8
+            C 74,-2 86,-2 86,8 L 86,26
+            C 88,36 90,48 90,60 L 90,72
+            C 90,82 84,88 74,88
+            C 64,90 44,90 28,88 C 18,86 10,84 8,84 Z"
+            fill="#FBEAC2" stroke="#C9A060" stroke-width="2.5"
+            stroke-linejoin="round" stroke-linecap="round"/>
+          <!-- 엄지 (오른쪽) -->
+          <path d="M 87,54 C 100,44 110,60 104,70 C 98,80 84,78 82,66 C 80,58 84,52 87,54 Z"
+            fill="#FBEAC2" stroke="#C9A060" stroke-width="2.5"
+            stroke-linejoin="round"/>
+          <!-- L 뱃지 -->
+          <circle cx="49" cy="74" r="12" fill="#3C90DD" opacity="0.18"/>
+          <text x="49" y="80" font-family="Jua,sans-serif" font-size="17"
+            fill="#3C90DD" text-anchor="middle" font-weight="bold">L</text>
+        </svg>
+        <span class="lname L">왼손</span>
+      </div>
+
+      <!-- 왼손 트랙 바 -->
+      <div class="track-wrap">
+        <div class="cell aL">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell aL">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 오른손 (R) 트랙 -->
+      <div class="track-label">
+        <!--
+          Right hand: thumb on LEFT.
+          Same path as left hand but mirrored horizontally (translate(112,0) scale(-1,1)).
+          L/R text placed outside the transform so it reads correctly.
+        -->
+        <svg width="56" height="62" viewBox="2 -5 110 100">
+          <g transform="translate(112,0) scale(-1,1)">
+            <path d="M 8,84 C 4,84 4,76 4,68 L 4,52
+              C 4,42 8,34 10,24 L 10,14
+              C 10,4 22,4 22,14 L 22,30
+              C 24,24 27,17 30,15 L 30,10
+              C 30,0 42,0 42,10 L 42,26
+              C 44,20 48,14 52,12 L 52,7
+              C 52,-3 64,-3 64,7 L 64,24
+              C 66,18 70,13 74,12 L 74,8
+              C 74,-2 86,-2 86,8 L 86,26
+              C 88,36 90,48 90,60 L 90,72
+              C 90,82 84,88 74,88
+              C 64,90 44,90 28,88 C 18,86 10,84 8,84 Z"
+              fill="#FBEAC2" stroke="#C9A060" stroke-width="2.5"
+              stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M 87,54 C 100,44 110,60 104,70 C 98,80 84,78 82,66 C 80,58 84,52 87,54 Z"
+              fill="#FBEAC2" stroke="#C9A060" stroke-width="2.5"
+              stroke-linejoin="round"/>
+          </g>
+          <!-- R 뱃지 (미러 바깥에 배치 → 글자 정방향 유지) -->
+          <!-- 왼손 L 위치 x=49 → 미러 후 x=112-49=63 -->
+          <circle cx="63" cy="74" r="12" fill="#EF8A3C" opacity="0.18"/>
+          <text x="63" y="80" font-family="Jua,sans-serif" font-size="17"
+            fill="#EF8A3C" text-anchor="middle" font-weight="bold">R</text>
+        </svg>
+        <span class="lname R">오른손</span>
+      </div>
+
+      <!-- 오른손 트랙 바 -->
+      <div class="track-wrap" style="margin-bottom:0;">
+        <div class="cell aR">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell aR">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

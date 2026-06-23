@@ -24,6 +24,9 @@
   html,body{background:#F6F1E6;}
   body{font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
   .page{width:794px;min-height:1123px;background:var(--cream);padding:44px 42px;position:relative;box-shadow:0 6px 24px rgba(120,100,60,.12);border-radius:6px;}
+  /* spread the sections so they fill the page instead of clumping at the top */
+  .page:not(.imgpage):not(.scalepage){display:flex;flex-direction:column;justify-content:space-between;}
+  .page:not(.imgpage):not(.scalepage)::after{position:absolute;}
 
   /* ===== UNIFIED CARD SYSTEM (matches the Notes/Rests/Beats table tone) ===== */
   .card{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff;}
@@ -33,14 +36,21 @@
   .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:2px dashed var(--line);border-radius:var(--r);color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
   .ph .big{font-family:'Jua',sans-serif;font-size:32px;} .ph .sm{font-size:19px;}
 
-  h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;line-height:1.1;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
-  h1 small{font-size:24px;color:#7a6f5d;}
+  h1{font-family:'Gaegu',sans-serif;font-weight:700;font-size:42px;color:#5b4a3a;text-align:center;line-height:1.05;
+     display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;
+     width:fit-content;max-width:100%;margin:2px auto 14px;position:relative;padding-bottom:13px;}
+  h1::after{content:"";position:absolute;left:7%;right:7%;bottom:2px;height:5px;border-radius:4px;
+     background:var(--tline,#EBB36A);filter:url(#pencil);opacity:.8;}
+  h1 small{font-size:24px;color:#9a8f7d;font-weight:400;}
+  .t-dot{width:17px;height:17px;border-radius:50%;background:var(--do);display:inline-block;}
   .callout{position:absolute;top:38px;right:42px;background:#FFF6DC;border:1.5px solid #E3C657;border-radius:var(--r);padding:7px 13px;font-size:15px;line-height:1.25;text-align:center;max-width:210px;}
 
   .tablewrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
   table{width:100%;border-collapse:collapse;text-align:center;table-layout:fixed;}
-  thead th{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:10px 4px;line-height:1.15;}
-  th.h1c{background:var(--hp);} th.h2c{background:var(--ho);} th.h3c{background:var(--hg);} th.h4c{background:var(--hb);} th.h5c{background:var(--hv);}
+  thead th{font-family:'Gaegu',sans-serif;font-weight:700;font-size:19px;color:#6b5544;padding:10px 4px 11px;line-height:1.15;position:relative;}
+  thead th::after{content:"";position:absolute;left:7px;right:7px;bottom:4px;height:2px;border-radius:2px;filter:url(#pencil);opacity:.85;}
+  th.h1c{background:#FDEFF1;} th.h2c{background:#FDF2E5;} th.h3c{background:#F1F7E4;} th.h4c{background:#EAF3FC;} th.h5c{background:#F2ECFA;}
+  th.h1c::after{background:#E6849C;} th.h2c::after{background:#EBA257;} th.h3c::after{background:#9DC563;} th.h4c::after{background:#76B0E2;} th.h5c::after{background:#A98FD0;}
   tbody td{border-top:1.5px solid var(--line);padding:5px 4px;vertical-align:middle;}
   td.nm{background:#FCEFF1;} td.nm .ko{font-family:'Jua',sans-serif;font-size:21px;} td.nm .en{font-size:14px;color:var(--soft);}
   td.beat{font-family:'Jua',sans-serif;font-size:28px;color:#2f7dc0;}
@@ -82,15 +92,25 @@
   .cell{flex:1;display:flex;align-items:center;justify-content:center;}
 
   /* SCALE PAGES */
-  .scalepage{padding:28px 40px 36px;}
-  .scalepage h2{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .scalepage h2 small{font-size:15px;color:#7a6f5d;}
+  .scalepage{padding:16px 40px 36px;}
+  .scalepage h2{font-family:'Gaegu',sans-serif;font-weight:700;font-size:30px;color:#5b4a3a;text-align:center;line-height:1.05;
+     margin:0 auto 8px;display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
+     width:fit-content;max-width:100%;position:relative;padding-bottom:12px;}
+  .scalepage h2::after{content:"";position:absolute;left:6%;right:6%;bottom:1px;height:4px;border-radius:3px;
+     background:var(--tline,#EBB36A);filter:url(#pencil);opacity:.8;}
+  .scalepage h2 small{font-size:15px;color:#9a8f7d;font-weight:400;}
   .cont-h2{font-size:15px!important;margin-bottom:7px!important;color:#a99a82!important;}
   .cont-h2 small{font-size:12px!important;}
   .keyblock{margin-bottom:10px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:#fff;}
-  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1.5px solid var(--line);border-radius:var(--r-sm) var(--r-sm) 0 0;}
-  .keylabel .keyname{font-size:19px;font-weight:bold;}
-  .keylabel .keysig{font-size:12px;opacity:.65;}
+  .scalepage .staves svg{width:100%;height:auto;}  /* fill page width, scale height proportionally */
+  .scalepage .keyblock{margin-bottom:6px;}
+  .scalepage .keylabel{padding:5px 16px;gap:11px;border-bottom:1px solid rgba(120,90,50,.07);}
+  .keylabel{display:flex;align-items:center;gap:8px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1px solid var(--line);border-radius:var(--r-sm) var(--r-sm) 0 0;}
+  .keylabel .kl-blob{font-family:'Gaegu',sans-serif;font-weight:700;font-size:21px;color:#fff;
+     min-width:35px;height:32px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;line-height:1;
+     border-radius:63% 37% 57% 43% / 60% 57% 43% 40%;transform:rotate(-4deg);text-shadow:0 1px 1px rgba(0,0,0,.12);
+     box-shadow:0 2px 3px rgba(90,70,40,.20);}
+  .keylabel .kl-key{font-family:'Gaegu',sans-serif;font-weight:700;font-size:19px;color:#6b5544;letter-spacing:.5px;}
   .staves svg{display:block;}
   .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FBF8F0;border-top:1.5px dashed var(--line);}
 
@@ -103,17 +123,36 @@
   .page{counter-increment:pgnum;}
   .page::after{
     content:counter(pgnum);
-    position:absolute;bottom:0;left:0;right:0;
-    height:28px;line-height:28px;
+    position:absolute;bottom:18px;left:0;right:0;
     text-align:center;
     font-family:'Jua',sans-serif;font-size:14px;
-    border-top:1.5px solid var(--line);
-    color:#7a6f5d;z-index:99;
+    color:#b3a892;z-index:99;
   }
+  /* cover: no page number, not counted */
+  .page.cover{counter-increment:none;}
+  .page.cover::after{content:none;}
+
+  /* ===== PICTURE-BOOK HAND-DRAWN HEADERS (colored-pencil look) ===== */
+  .hdr{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;
+    font-family:'Gaegu',sans-serif;font-weight:700;font-size:21px;line-height:1.18;
+    color:#6b5544;background:var(--wash,#FBF6EE);padding:11px 20px 13px;text-align:center;}
+  .hdr::after{content:"";position:absolute;left:14px;right:14px;bottom:5px;height:2px;
+    background:var(--pen,#cbb8a0);border-radius:2px;filter:url(#pencil);opacity:.85;pointer-events:none;}
+  /* hue crayons */
+  .h-pink{--pen:#E6849C;--wash:#FDEFF1;}
+  .h-orange{--pen:#EBA257;--wash:#FDF2E5;}
+  .h-green{--pen:#9DC563;--wash:#F1F7E4;}
+  .h-blue{--pen:#76B0E2;--wash:#EAF3FC;}
+  .h-purple{--pen:#A98FD0;--wash:#F2ECFA;}
+  .h-red{--pen:#E4756F;--wash:#FCEDEB;}
+  .hdr .hop{color:#c4b29c;font-size:21px;}
+  .hdr .hdot{width:13px;height:13px;border-radius:50%;background:#6b5544;display:inline-block;}
+  .hdr .heq{color:#c4b29c;font-size:21px;}
+  .hdr .hgrow{color:var(--pen);font-size:23px;}
 
   /* PAGE 6 added : DOTTED NOTES + BEAM (compact) */
   .p7-wrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
-  .p7-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;}
+  .p7-head{font-family:'Jua',sans-serif;font-size:18px;color:var(--ink);background:#FCEFF1;padding:11px 16px;display:flex;align-items:center;justify-content:center;gap:9px;}
   .p7-body{background:#fff;padding:var(--pad);}
   .p7-rule{border-radius:var(--r-sm);padding:4px 10px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;margin-bottom:6px;}
   .p7-cards{display:flex;flex-direction:column;gap:8px;}
@@ -216,12 +255,12 @@
 
   /* G-KEY MAPPING PAGE */
   .gkey-page{padding:24px 40px 40px;}
-  .gk-card{border:1.5px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:16px;overflow:hidden;}
+  .gk-card{border:1.5px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:11px;overflow:hidden;}
   .gk-head{display:flex;align-items:center;gap:8px;padding:8px 16px;font-family:'Jua',sans-serif;font-size:18px;color:#fff;}
   .gk-body{padding:14px 14px 16px;}
   .gk-sub{font-family:'Jua',sans-serif;font-size:14px;color:var(--soft);text-align:center;margin-bottom:8px;}
   .gk-staff{display:flex;justify-content:center;}
-  .gk-staff svg{display:block;max-width:100%;}
+  .gk-staff svg{display:block;width:100% !important;height:auto !important;}
   .gk-kbd{display:flex;justify-content:center;margin-top:4px;}
   .gk-kbd svg{display:block;max-width:100%;}
   .gk-arrow{text-align:center;font-size:22px;color:#C8B8A0;line-height:1;margin:2px 0;}
@@ -240,8 +279,16 @@
 </head>
 <body>
 
+<!-- hand-drawn "colored-pencil" edge filter (wobbles borders so they look sketched) -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+  <filter id="pencil" x="-5%" y="-20%" width="110%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.016 0.014" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
 <!-- ORIGINAL 5 PAGES from PDF -->
-<div class="page imgpage"><img src="pages/page1.jpg" alt="Page 1 Cover"></div>
+<div class="page imgpage cover"><img src="pages/page1.jpg" alt="Page 1 Cover"></div>
 <div class="page imgpage"><img src="pages/page2.jpg" alt="Page 2 Quiz"></div>
 <div class="page imgpage"><img src="pages/page3.jpg" alt="Page 3 Keyboard & Note Names"></div>
 <div class="page imgpage"><img src="pages/page4.jpg" alt="Page 4 Finger Numbers"></div>
@@ -249,10 +296,10 @@
 
 <!-- PAGE 6 : APPLE TABLE + PIZZA -->
 <div class="page">
-  <h1><span style="color:var(--re)">⭐</span> Notes, <span style="color:var(--fa)">Rests</span> & <span style="color:var(--sol)">Beats</span></h1>
+  <h1>Notes, <span style="color:var(--fa)">Rests</span> & <span style="color:var(--sol)">Beats</span></h1>
   <div class="tablewrap"><table>
     <colgroup><col style="width:15%"><col style="width:13%"><col style="width:13%"><col style="width:11%"><col style="width:48%"></colgroup>
-    <thead><tr><th class="h1c">Name</th><th class="h2c">🎵 Note</th><th class="h3c">🤫 Rest</th><th class="h4c">Beats</th><th class="h5c">🍎 Count with apples!</th></tr></thead>
+    <thead><tr><th class="h1c">Name</th><th class="h2c">Note</th><th class="h3c">Rest</th><th class="h4c">Beats</th><th class="h5c">Count with apples!</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table></div>
 
@@ -265,12 +312,11 @@
 
 <!-- PAGE 9 : CLAP + RHYTHM EXERCISE -->
 <div class="page">
-  <h1>👏 Clap the Beat</h1>
+  <h1 style="--tline:#76B0E2">Clap the Beat</h1>
   <div class="barchart" id="barchart"></div>
 
   <!-- Follow my hands -->
   <div class="fobeat">
-    <div class="fobeat-title">✋ Follow My Hands</div>
     <div class="fob-grid">
       <!-- header -->
       <div class="fob-hdr-space"></div>
@@ -306,9 +352,9 @@
 
 <!-- PAGE 7 : DOTTED NOTES + PRACTICE -->
 <div class="page">
-  <h1>🔴 <span style="color:var(--do)">Dotted Note</span></h1>
+  <h1 style="--tline:#E6849C"><span class="t-dot"></span> <span style="color:var(--do)">Dotted Note</span></h1>
   <div class="p7-wrap">
-    <div class="p7-head" style="background:#ED7A8E">🎵 ＋ ● ＝ ＋ ½ longer!</div>
+    <div class="hdr h-pink"><svg width="19" height="28" viewBox="0 0 40 58" style="vertical-align:middle"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#6b5544"/><line x1="24" y1="38" x2="24" y2="8" stroke="#6b5544" stroke-width="2.6"/></svg> <span class="hop">+</span> <span class="hdot"></span> <span class="heq">=</span> <span class="hgrow">½ longer!</span></div>
     <div class="p7-body">
       <div class="p7-cards">
         <div class="p7-card">
@@ -341,7 +387,7 @@
 
   <!-- Dotted note practice -->
   <div class="act-panel">
-    <div class="act-ph" style="background:#F0A94E">🎨 Color the length!</div>
+    <div class="hdr h-orange">Color the length!</div>
     <div class="act-pb">
       <div class="len-grid">
         <div class="len-lbl">
@@ -363,7 +409,7 @@
   </div>
 
   <!-- ===== Tie theory + practice — same page as dotted notes ===== -->
-  <h1 style="margin-top:30px;">🩵 Tie</h1>
+  <h1 style="margin-top:30px;--tline:#76B0E2">Tie</h1>
   <div style="margin-top:var(--pad);display:flex;align-items:center;justify-content:center;gap:26px;border:1.5px solid var(--line);background:#F6FAFF;border-radius:var(--r);padding:14px 24px;">
     <svg width="150" height="68" viewBox="0 0 150 70">
       <ellipse cx="38" cy="38" rx="14" ry="10" transform="rotate(-20 38 38)" fill="#3C90DD"/>
@@ -421,7 +467,7 @@
 
 <!-- PAGE 8 : BEAM + PRACTICE -->
 <div class="page">
-  <h1>🌿 <span style="color:var(--fa)">Beam</span></h1>
+  <h1 style="--tline:#9DC563"><span style="color:var(--fa)">Beam</span></h1>
   <div class="p7-wrap">
     <div class="p7-body">
       <div class="p7-beam-cmp">
@@ -557,22 +603,16 @@
 
   <!-- Clap & count -->
   <div class="rhm-box" style="border-color:#CDBEE6;">
-    <div class="rhm-ph" style="background:#7E6BC4;">⭐ Clap &amp; Count</div>
+    <div class="hdr h-purple">Clap &amp; Count</div>
     <div class="rhm-pb">
       <div id="claprows"></div>
-      <div class="clap-legend">
-        <span>👏 Clap</span>
-        <span style="color:#3C90DD;">👏👏 Two fast</span>
-        <span>😴 Rest</span>
-        <span style="color:#E8913C;">➡️ Hold</span>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- PAGES 8-11 : 12-KEY SCALE / DIATONIC CHORD -->
+<!-- 12-KEY SCALE / DIATONIC CHORD (3 keys × 4 pages) -->
 <div class="page scalepage">
-  <h2>🎵 Diatonic Scales &amp; Chords</h2>
+  <h2>Scales &amp; Chords</h2>
   <div class="kbwrap" data-page="0"></div>
 </div>
 <div class="page scalepage">
@@ -585,59 +625,90 @@
   <div class="kbwrap" data-page="3"></div>
 </div>
 
-<!-- G KEY : keyboard mapping + four-beat practice -->
+<!-- C KEY : keyboard map (2 octaves) + 위대하신 주 후렴 멜로디 -->
 <div class="page scalepage gkey-page">
-  <h2>🎵 Melody Practice <small>Praise His Name · G key</small></h2>
+  <h2>How Great Is Our God <small>C key</small></h2>
 
   <div class="gk-card">
-    <div class="gk-head" style="background:#E24B4A;">🎹 G Key Keyboard Map <span style="font-size:13px;font-weight:normal;opacity:.85;">So La Ti Do Re Mi Fa# · So La Ti Do Re Mi Fa# · So</span></div>
+    <div class="hdr h-red">Keyboard Map</div>
     <div class="gk-body">
-      <div class="gk-sub">G key scale — find each colored note on the keyboard</div>
-      <div class="gk-staff" id="gscale"></div>
-      <div class="gk-staff" id="gkbd" style="margin-top:10px;"></div>
-      <div class="gk-legend" id="glegend"></div>
+      <div class="gk-staff" id="cscale"></div>
+      <div class="gk-staff" id="ckbd" style="margin-top:10px;"></div>
     </div>
   </div>
 
   <div class="gk-card">
-    <div class="gk-head" style="background:#7FB23E;">🎵 Melody — Praise His Name</div>
+    <div class="hdr h-green">Melody</div>
     <div class="gk-body">
-      <div class="gk-sub">🤚🏻 Right Hand · So La Ti Do</div>
-      <div class="gk-staff" id="gmelody"></div>
-      <div class="gk-legend" id="gmellegend"></div>
-    </div>
-  </div>
-
-  <div class="gk-card">
-    <div class="gk-head" style="background:#3C90DD;">🎵 G key Four-Beat Practice <span style="font-size:13px;font-weight:normal;opacity:.85;">4/4 · 4 bars</span></div>
-    <div class="gk-body">
-      <div class="gk-sub">R.H. So·Ti·Re / L.H. So — count 4 beats and play slowly</div>
-      <div class="gk-staff" id="gpractice"></div>
-      <div class="gk-legend">
-        <span class="gk-chip">🤚🏻 R.H. — So · Ti · Re</span>
-        <span class="gk-chip">✋🏻 L.H. — So</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="gk-card">
-    <div class="gk-head" style="background:#7E6BC4;">🎹 Play Chords Together <span style="font-size:13px;font-weight:normal;opacity:.85;">4/4 · 8 bars</span></div>
-    <div class="gk-body">
-      <div class="gk-sub">Strike all three notes at once — like So·Ti·Re! Same rhythm as Four-Beat — ♩ ♩ 𝕗𝕥</div>
-      <div class="gk-staff" id="gchords"></div>
-      <div class="gk-legend">
-        <span class="gk-chip"><i style="background:#E24B4A"></i>C</span>
-        <span class="gk-chip"><i style="background:#7E6BC4"></i>Am</span>
-        <span class="gk-chip"><i style="background:#3C90DD"></i>F</span>
-        <span class="gk-chip"><i style="background:#EF8A3C"></i>G</span>
-      </div>
+      <div class="gk-staff" id="cmelody"></div>
     </div>
   </div>
 </div>
 
-<!-- PAGES 11-12 : PRAISE SONGS (image sheets) -->
+<!-- C KEY (cont.) : chords + four-beat -->
+<div class="page scalepage gkey-page">
+  <h2>How Great Is Our God <small>C key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-purple">Chords</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="cchords"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-blue">Four Beats</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="cfourbeat"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRAISE SONG SHEET : 위대하신 주 (빛나는 왕의 왕) -->
 <div class="page imgpage"><img src="pages/praise1.png" alt="Praise ① · Shining King of Kings"></div>
+<!-- G KEY : keyboard mapping + four-beat practice -->
+<div class="page scalepage gkey-page">
+  <h2>Praise His Name <small>G key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-red">Keyboard Map</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gscale"></div>
+      <div class="gk-staff" id="gkbd" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-green">Melody — Praise His Name</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gmelody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- G KEY (cont.) : chords + four-beat practice -->
+<div class="page scalepage gkey-page">
+  <h2>Praise His Name <small>G key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-purple">Chords</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gchords"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-blue">Four Beats</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gpractice"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRAISE SONG SHEET : 주이름 찬양 -->
 <div class="page imgpage"><img src="pages/praise2.jpg" alt="Praise ② · Praise His Name"></div>
+
+
 
 <script>
 /* ---------- NOTE GLYPHS ---------- */
@@ -767,6 +838,20 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
   if(!VF){console.warn('VexFlow not loaded');return;}
   const LET=['c','d','e','f','g','a','b'];
+  // accidental colors — ♯/♭ noteheads + key-signature glyphs use each key's own theme color
+  const SHARP_ORDER=['f','c','g','d','a','e','b'];   // order ♯s appear in a key sig
+  const FLAT_ORDER =['b','e','a','d','g','c','f'];    // order ♭s appear in a key sig
+  const lighten=(hex,t=0.55)=>{                       // mix a hex color toward white (for inversions)
+    const m=hex.replace('#',''),r=parseInt(m.slice(0,2),16),g=parseInt(m.slice(2,4),16),b=parseInt(m.slice(4,6),16);
+    const mix=c=>Math.round(c+(255-c)*t).toString(16).padStart(2,'0');
+    return '#'+mix(r)+mix(g)+mix(b);
+  };
+  function alteredInfo(acc,keyColor){                 // acc like '1♯','2♯',…,'6♭', or ''
+    if(!acc)return null;
+    const n=parseInt(acc,10)||0, sharp=acc.indexOf('♯')>=0;
+    const order=sharp?SHARP_ORDER:FLAT_ORDER;
+    return {set:new Set(order.slice(0,n)), color:keyColor, colorLight:lighten(keyColor)};
+  }
   const keys=[
     {name:'C',  tonic:'c', sig:'C',  acc:'',   color:'#E24B4A', chords:['C','Dm','Em','F','G','Am','Bdim','C']},
     {name:'G',  tonic:'g', sig:'G',  acc:'1♯', color:'#EF8A3C', chords:['G','Am','Bm','C','D','Em','F#dim','G']},
@@ -785,30 +870,85 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   function build(tonic){const s=LET.indexOf(tonic);const letters=[];for(let i=0;i<7;i++)letters.push(LET[(s+i)%7]);
     const notes=[];let oct=4,prev=-1;for(let i=0;i<7;i++){const idx=LET.indexOf(letters[i]);if(i>0&&idx<prev)oct++;notes.push({l:letters[i],o:oct});prev=idx;}return{letters,notes};}
   function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
+  const wikey=k=>{const a=k.split('/');return LET.indexOf(a[0])+7*(+a[1]);};
+  const fromWi=v=>LET[((v%7)+7)%7]+'/'+Math.floor(v/7);
+  // 3 positions of a diatonic triad (root / 1st inv / 2nd inv), each folded so its
+  // bottom note sits in [tonic@oct4 .. +octave) — keeps every chord in mid register.
+  function invStacks(sc,d,tonic){
+    const raw=[[at(sc,d),at(sc,d+2),at(sc,d+4)],[at(sc,d+2),at(sc,d+4),at(sc,d+7)],[at(sc,d+4),at(sc,d+7),at(sc,d+9)]];
+    const floor=LET.indexOf(tonic)+7*4;
+    return raw.map(st=>{let a=st.map(wikey);while(a[0]<floor)a=a.map(v=>v+7);while(a[0]>=floor+7)a=a.map(v=>v-7);return a.map(fromWi);});
+  }
   function drawVoice(ctx,stave,notes){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);const w=stave.getNoteEndX()-stave.getNoteStartX()-10;new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
+  // 2-octave scale (tonic4 .. tonic6)
+  function scale2oct(tonic){const s=LET.indexOf(tonic),out=[];let o=4,prev=-1;
+    for(let i=0;i<15;i++){const idx=(s+i)%7;if(i>0&&idx<prev)o++;out.push(LET[idx]+'/'+o);prev=idx;}return out;}
+  const octShift=(k,n)=>{const p=k.split('/');return p[0]+'/'+(+p[1]+n);};
   function renderKey(div,key){
-    const W=700,H=220;
+    const W=700,H=356,PADX=22,SW=W-PADX-10;  /* PADX: left room for brace · extra H: bottom room for chord badges */
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
     const sc=build(key.tonic);
-    const sk=sc.notes.map(n=>n.l+'/'+n.o);sk.push(at(sc,7));
-    const st1=new VF.Stave(6,16,W-12);st1.addClef('treble').addKeySignature(key.sig);st1.setContext(ctx).draw();
-    drawVoice(ctx,st1,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})));
-    const st2=new VF.Stave(6,116,W-12);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
-    const cn=[];for(let i=0;i<8;i++){const sn=new VF.StaveNote({keys:[at(sc,i),at(sc,i+2),at(sc,i+4)],duration:'w'});
-      const a=new VF.Annotation(key.chords[i]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);cn.push(sn);}
-    drawVoice(ctx,st2,cn);
+    const sk=scale2oct(key.tonic);
+    const alt=alteredInfo(key.acc,key.color);   // which letters are ♯/♭ in this key, colored with the key's theme color
+    const mkScaleNote=(k,clef)=>{const o={keys:[k],duration:'w'};if(clef)o.clef=clef;const n=new VF.StaveNote(o);
+      if(alt&&alt.set.has(k.charAt(0)))n.setStyle({fillStyle:alt.color,strokeStyle:alt.color});return n;};
+    /* diatonic 2-octave scale — grand staff (R.H. treble · L.H. bass, 2 octaves apart) */
+    const sT=new VF.Stave(PADX,32,SW);sT.addClef('treble').addKeySignature(key.sig);sT.setContext(ctx).draw();
+    const sB=new VF.Stave(PADX,130,SW);sB.addClef('bass').addKeySignature(key.sig);sB.setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    drawVoice(ctx,sT,sk.map(k=>mkScaleNote(k)));
+    drawVoice(ctx,sB,sk.map(k=>mkScaleNote(octShift(k,-2),'bass')));
+    /* diatonic chords (treble) — root position (black) + 1st & 2nd inversion (gray) side by side */
+    const st2=new VF.Stave(PADX,222,SW);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
+    const tick=[];const rootNotes=[];
+    for(let d=0;d<7;d++){
+      invStacks(sc,d,key.tonic).forEach((keys,pi)=>{
+        const sn=new VF.StaveNote({keys,duration:'w'});const col=pi===0?'#2b2620':'#a8a29a';
+        sn.setStyle({fillStyle:col,strokeStyle:col});
+        if(alt){const ac=pi===0?alt.color:alt.colorLight;  // root = full color · inversions = light (was gray)
+          keys.forEach((kk,ki)=>{if(alt.set.has(kk.charAt(0)))sn.setKeyStyle(ki,{fillStyle:ac,strokeStyle:ac});});}  // only ♯/♭ noteheads get color
+        if(pi===0)rootNotes.push({note:sn,name:key.chords[d]});  // chord name → badge drawn below the staff
+        tick.push(sn);
+      });
+      if(d<6)tick.push(new VF.BarNote());
+    }
+    drawVoice(ctx,st2,tick);
+    /* chord-name badges below the chord staff — soft pebble outline (organic, uneven corner radii) in the key color */
+    const svg=div.querySelector('svg');
+    if(svg){
+      const cy=330;  /* well below the chord staff (bottom ≈262, ledger notes ≈280) so badges never touch the score */
+      /* rounded rect with 4 independent corner radii [tl,tr,br,bl] → asymmetric = pebble-like */
+      const pebble=(x,y,w,h,r)=>{const tl=r[0],tr=r[1],br=r[2],bl=r[3];
+        return 'M'+(x+tl)+' '+y+' H'+(x+w-tr)+' Q'+(x+w)+' '+y+' '+(x+w)+' '+(y+tr)
+          +' V'+(y+h-br)+' Q'+(x+w)+' '+(y+h)+' '+(x+w-br)+' '+(y+h)
+          +' H'+(x+bl)+' Q'+x+' '+(y+h)+' '+x+' '+(y+h-bl)
+          +' V'+(y+tl)+' Q'+x+' '+y+' '+(x+tl)+' '+y+' Z';};
+      const shapes=[[12,8,11,9],[9,11,8,12]];  /* two pebble profiles, alternated for an organic feel */
+      let frag='';
+      rootNotes.forEach((o,i)=>{
+        let cx=PADX;try{cx=o.note.getAbsoluteX();}catch(e){}
+        try{cx+=o.note.getGlyphWidth()/2;}catch(e){cx+=8;}
+        const w=Math.max(22,o.name.length*8+13),h=21,r=shapes[i%2];   // pebble sized to the chord-name width
+        frag+='<path d="'+pebble(cx-w/2,cy-h/2,w,h,r)+'" fill="'+key.color+'18" stroke="'+key.color+'" stroke-width="1.3"/>';
+        frag+='<text x="'+cx+'" y="'+(cy+4.5)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="13.5" fill="'+key.color+'">'+o.name+'</text>';
+      });
+      svg.insertAdjacentHTML('beforeend',frag);
+    }
+    /* paint the key-signature ♯/♭ glyphs (all three staves) the same accidental color */
+    if(alt)div.querySelectorAll('.vf-keysignature path').forEach(p=>p.setAttribute('fill',alt.color));
   }
   document.querySelectorAll('.kbwrap').forEach(wrap=>{
     const pg=+wrap.dataset.page;const slice=keys.slice(pg*3,pg*3+3);
     slice.forEach(key=>{
       const block=document.createElement('div');block.className='keyblock';
       const lab=document.createElement('div');lab.className='keylabel';
-      lab.style.background=key.color+'18';
-      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key</span>`;
+      lab.style.background=key.color+'1c';   // solid soft tint of the key color (no gradient)
+      lab.innerHTML=`<span class="kl-blob" style="background:${key.color}">${key.name}</span>`
+        +`<span class="kl-key">Key</span>`;
       const st=document.createElement('div');st.className='staves';
-      const rom=document.createElement('div');rom.className='roman-row';
-      rom.innerHTML=ROMAN.map(r=>`<span>${r}</span>`).join('');
-      block.appendChild(lab);block.appendChild(st);block.appendChild(rom);wrap.appendChild(block);
+      block.appendChild(lab);block.appendChild(st);wrap.appendChild(block);
       try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' render error</div>';console.error(key.name,e);}
     });
   });
@@ -821,7 +961,7 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
   if(!VF){console.warn('VexFlow not loaded (G key)');return;}
   // letter -> [English solfege (fixed-do, G major), color]
-  const NOTE={g:['So','#3C90DD'],a:['La','#7E6BC4'],b:['Ti','#C85FA0'],c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa#','#7FB23E']};
+  const NOTE={g:['Sol','#3C90DD'],a:['La','#7E6BC4'],b:['Si','#C85FA0'],c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa#','#7FB23E']};
   function info(key){return NOTE[key.charAt(0)];}
   function styleNote(n,key){
     const I=info(key);if(!I)return;
@@ -832,7 +972,7 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   }
 
   function renderScale(div){
-    const W=860,H=140;
+    const W=860,H=152;
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
     const st=new VF.Stave(4,18,W-12);st.addClef('treble').addKeySignature('G');st.setContext(ctx).draw();
     const keys=['g/3','a/3','b/3','c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5'];
@@ -846,15 +986,15 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   function renderKbd(div){
     const whites=['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'];
     const hl={'G3':'g','A3':'a','B3':'b','C4':'c','D4':'d','E4':'e','F#4':'f','G4':'g','A4':'a','B4':'b','C5':'c','D5':'d','E5':'e','F#5':'f','G5':'g'};
-    const ww=52,wh=156,bw=32,bh=98;
+    const ww=52,wh=174,bw=32,bh=98;
     const W=whites.length*ww,H=wh;
     let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
     whites.forEach(function(n,i){
       const x=i*ww,L=hl[n],I=L?NOTE[L]:null,c=I?I[1]:null;
       s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
-      if(c){const cx=x+ww/2,cy=wh-30;
+      if(c){const cx=x+ww/2,cy=wh-50;
         s+='<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="12" fill="#fff">'+I[0]+'</text>';}
-      s+='<text x="'+(x+ww/2)+'" y="'+(wh-7)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#b7ab92">'+n[0]+'</text>';
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-9)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#b7ab92">'+n[0]+'</text>';
     });
     const hasBlack={C:1,D:1,F:1,G:1,A:1};
     whites.forEach(function(n,i){
@@ -874,119 +1014,159 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
   }
 
   function renderMelody(div){
-    const W=672;
-    const MEL=[
+    const W=1040;  // wide render; CSS scales it to the card so labels never overlap
+    // All pitches/rhythms verified from melody.png notehead-coordinate analysis.
+    const VERSE=[
       [{r:'q'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'g/4',d:'q'},{k:'d/4',d:'q'}],
       [{k:'d/4',d:'q'},{k:'e/4',d:'q'},{k:'f/4',d:'q'},{k:'g/4',d:'q'}],
       [{r:'q'},{k:'a/4',d:'q'},{k:'a/4',d:'q'},{k:'g/4',d:'q'}],
       [{k:'e/4',d:'h'},{r:'h'}]
     ];
-    const L1=MEL, L2=MEL;
-    const systems=[L1,L2];
-    const sysH=146,topPad=14;
-    const H=topPad+systems.length*sysH;
+    const data=[
+      {ch:['G','D','Em7','C'], ly:[['','모','든','축','복'],['주','신','주','님'],['','찬','양','하'],['리','']], en:[['','Eve-','ry','bless-','ing'],['You','pour','out',"I'll"],['','Turn','back','to'],['praise','']], m:VERSE},
+      {ch:['G','D','Em7','C'], ly:[['','어','둔','날','이'],['다','가','와','도'],['','난','외','치'],['리','']], en:[['','When','the','dark-','ness'],['clos-','es','in','Lord'],['','Still','I','will'],['say','']], m:VERSE},
+      {ch:[null,'G','D','Em7'], ly:[['주','의','이','름'],['을','찬','','양','','해'],['','주','의','이','름'],['을']], en:[['Bless-','ed','be','the'],['name','of','','the','','Lord'],['','Bless-','ed','be','Your'],['name']], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0]], m:[
+        [{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'w'}]
+      ]},
+      {ch:['C','G','D','Em7','C'], ch2:[[3,2,'D']], ly:[['','주','의','이','름'],['을','찬','','양','','해'],['','영','화','로','운'],['주','이','름','','찬','양'],['','']], en:[['','Bless-','ed','be','the'],['name','of','','the','','Lord'],['','Bless-','ed','be','Your'],['glo-','ri-','ous','','name',''],['','']], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0],[3,2,3,3],[3,5,4,0]], m:[
+        [{r:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'b/4',d:'q'},{k:'c/5',d:'8'},{k:'b/4',d:'8'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'q'}],
+        [{k:'g/4',d:'hd'},{r:'q'}]
+      ]}
+    ];
+    const sysH=195,topPad=14;   // wide gap between systems so the lyric line has plenty of breathing room
+    // Trim trailing dead space: reserve only the last system's content height, not a full band.
+    // Reserve must clear the last system's BOTTOM labels: note + finger no. + solfege + Korean + English lyric lines (≈ 168px).
+    const H=topPad+(data.length-1)*sysH+168;
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
-    function build(sp){
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    const chordLbls=[],enLbls=[];
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp,ly,en){
       if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
-      const base=sp.d.replace('d','');
-      const n=new VF.StaveNote({keys:[sp.k],duration:base});
-      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){try{n.addDotToAll();}catch(e2){}}}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
       styleNote(n,sp.k);
+      // Korean lyric — same style as 위대하신 주: Jua 13px, BOTTOM-justified so VexFlow stacks it under the solfege.
+      if(ly){var la=new VF.Annotation(ly);la.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{la.setStyle({fillStyle:'#2b2620'});la.setFont('Jua, sans-serif',13,'normal');}catch(e){}n.addModifier(la,0);}
+      // English lyric — smaller grey italic line, BOTTOM-justified so it stacks directly under the Korean.
+      // English lyric is collected into enLbls and drawn as fixed-baseline SVG text below (keeps it flat + sizable).
       return n;
     }
-    const chords=['G','D','Em7','C'];
-    systems.forEach(function(meas,si){
+    data.forEach(function(sys,si){
+      const meas=sys.m,chords=sys.ch||[];
       const y=topPad+si*sysH+8;
-      const M=meas.length,x0=4,firstW=212,restW=(W-8-x0-firstW)/(M-1);
-      let x=x0;
+      const M=meas.length,x0=4,clefW=58;
+      // Width per measure proportional to note count (+base), so dense bars get room and held notes don't hog space.
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];
       for(let m=0;m<M;m++){
-        const w=m===0?firstW:restW;
+        const w=widths[m];
         const st=new VF.Stave(x,y,w);
-        if(m===0)st.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+        if(m===0)st.addClef('treble').addKeySignature('G');
+        if(si===0&&m===0)st.addTimeSignature('4/4');
         st.setContext(ctx).draw();
         const specs=meas[m];
-        const notes=specs.map(build);
-        if(chords[m]){var ca=new VF.Annotation(chords[m]);ca.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);try{ca.setStyle({fillStyle:'#6a5f4d'});}catch(e){}notes[0].addModifier(ca,0);}
-        const beams=[];let grp=[];
-        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beams.push(new VF.Beam(sub));}grp=[];};
+        const lyM=sys.ly&&sys.ly[m];
+        const enM=sys.en&&sys.en[m];
+        const notes=specs.map(function(sp,i){return build(sp,lyM&&lyM[i],enM&&enM[i]);});sysNotes[m]=notes;
+        // Right-hand finger numbers (verse: thumb on Re; refrain: thumb on Sol)
+        const FING=(si<=1)?{d:1,e:2,f:3,g:4,a:5}:{g:1,a:2,b:3,c:4,d:5};
+        // Tied-to notes (not re-struck) get no finger number.
+        const tieTargets={};(sys.sl||[]).forEach(function(s){tieTargets[s[2]+':'+s[3]]=true;});
+        specs.forEach(function(sp,i){
+          if(sp.r||tieTargets[m+':'+i])return;var fn=FING[sp.k.charAt(0)];if(!fn)return;
+          var fa=new VF.Annotation(String(fn));
+          fa.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+          try{fa.setFont('Jua, sans-serif',10,'normal');}catch(e){}
+          try{fa.setStyle({fillStyle:'#5f8f2e'});}catch(e){}
+          notes[i].addModifier(fa,0);
+        });
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
         for(let i=0;i<specs.length;i++){
           const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
           if(eighth){grp.push(notes[i]);}else{flushBeam();}
         }
         flushBeam();
-        const v=new VF.Voice({num_beats:4,beat_value:4});
+        const nb=beats(specs)||4;
+        const v=new VF.Voice({num_beats:nb,beat_value:4});
         v.addTickables(notes);
         const fw=st.getNoteEndX()-st.getNoteStartX()-6;
         new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
         v.draw(ctx,st);
-        beams.forEach(function(b){b.setContext(ctx).draw();});
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){var cyTop=y-10;try{cyTop=st.getYForLine(0)-8;}catch(e){}chordLbls.push({x:st.getNoteStartX(),y:cyTop,t:chords[m]});}
+        if(enM){enM.forEach(function(et,i){if(!et||!notes[i])return;var nx;try{nx=notes[i].getAbsoluteX();}catch(e){return;}enLbls.push({x:nx,y:y+150,t:et});});}
         x+=w;
       }
+      (sys.sl||[]).forEach(function(s){
+        var fn=sysNotes[s[0]]&&sysNotes[s[0]][s[1]],ln=sysNotes[s[2]]&&sysNotes[s[2]][s[3]];
+        if(!fn||!ln)return;
+        var tie=new VF.StaveTie({first_note:fn,last_note:ln,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(1);}catch(e){}
+        tie.setContext(ctx).draw();
+      });
+      (sys.ch2||[]).forEach(function(c){
+        var nt=sysNotes[c[0]]&&sysNotes[c[0]][c[1]];if(!nt)return;
+        var cx;try{cx=nt.getAbsoluteX();}catch(e){return;}
+        chordLbls.push({x:cx-4,y:topPad+si*sysH+8-10,t:c[2]});
+      });
     });
+    // chord symbols as plain SVG text, lifted above the finger numbers (no overlap)
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});enLbls.forEach(function(e){t+='<text x="'+(e.x+5)+'" y="'+e.y+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="11" font-style="italic" fill="#8a7f6d">'+String(e.t).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
   }
 
-  function renderPractice(div){
-    const W=660,H=238,M=4,x0=8,firstW=182,restW=(W-16-x0-firstW)/(M-1),tY=24,bY=120;
-    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
-    function mk(k,d,clef){
-      const n=new VF.StaveNote({keys:[k],duration:d,clef:clef||'treble'});
-      styleNote(n,k);return n;
-    }
-    let x=x0,firstT,firstB,lastT,lastB;
-    for(let m=0;m<M;m++){
-      const w=m===0?firstW:restW;
-      const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
-      if(m===0){t.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
-        b.addClef('bass').addKeySignature('G').addTimeSignature('4/4');firstT=t;firstB=b;}
-      t.setContext(ctx).draw();b.setContext(ctx).draw();
-      if(m===M-1){lastT=t;lastB=b;}
-      const rh=[mk('g/4','q'),mk('b/4','q'),mk('d/5','h')];
-      const lh=[mk('g/3','w','bass')];
-      const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
-      const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
-      new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(m===0?92:24));
-      vt.draw(ctx,t);vb.draw(ctx,b);
-      x+=w;
-    }
-    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
-    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
-    new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
-  }
+  // Praise His Name (G key) — chord progression for the four-beat & chord pages.
+  // Same I-I-vi-vi-IV-V-I-I shape as the C-key page 14, transposed to G major
+  // (these are exactly this song's chords: G / Em / C / D). Root position,
+  // LH one octave below each RH root. D's "f" reads F# under the G key signature.
+  const COL_G={G:'#E24B4A',Em:'#7E6BC4',C:'#3C90DD',D:'#EF8A3C'};
+  const PROG_G=[
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'Em',rh:['e/4','g/4','b/4'], lh:'e/3'},
+    {name:'Em',rh:['e/4','g/4','b/4'], lh:'e/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'D', rh:['d/4','f/4','a/4'], lh:'d/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'}
+  ];
 
-  function renderChordPractice(div){
-    const COL={C:'#E24B4A',Am:'#7E6BC4',F:'#3C90DD',G:'#EF8A3C'};
-    const prog=[
-      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
-      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
-      {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
-      {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
-      {name:'F', rh:['f/4','a/4','c/5'], lh:'f/2'},
-      {name:'G', rh:['g/4','b/4','d/5'], lh:'g/2'},
-      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
-      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'}
-    ];
-    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=185,tY0=20;
+  // Two rows of 4 measures with the G key signature; buildBars(ch,col) returns
+  // {rh:[...notes], lh:[...notes]}. Mirrors the page-14 renderGrid layout.
+  function renderGridG(div,buildBars){
+    // Compact spacing (matches the C-key renderGrid) so both cards fit one A4 sheet without clipping.
+    // 2번째 줄(C D G G)을 더 아래로 내려 그 코드 글자가 위 시스템의 낮은음자리표를 안 가리게 간격을 넓힘.
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=186,tY0=16;
     const H=tY0+rows*sysGap;
     const restW=(W-16-x0-firstW)/(perRow-1);
     const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
-    function chord(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});return n;}
     for(let row=0;row<rows;row++){
       const tY=tY0+row*sysGap,bY=tY+96;
       let x=x0,firstT,firstB,lastT,lastB;
       for(let c=0;c<perRow;c++){
-        const ch=prog[row*perRow+c],w=c===0?firstW:restW,col=COL[ch.name];
+        const ch=PROG_G[row*perRow+c],w=c===0?firstW:restW,col=COL_G[ch.name];
         const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
-        if(c===0){t.addClef('treble').addTimeSignature('4/4');
-          b.addClef('bass').addTimeSignature('4/4');firstT=t;firstB=b;}
+        if(c===0){t.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+          b.addClef('bass').addKeySignature('G').addTimeSignature('4/4');firstT=t;firstB=b;}
         t.setContext(ctx).draw();b.setContext(ctx).draw();
         if(c===perRow-1){lastT=t;lastB=b;}
-        const rh=[chord(ch.rh,'q',col),chord(ch.rh,'q',col),chord(ch.rh,'h',col)];
+        const bars=buildBars(ch,col);
         const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
         try{a.setStyle({fillStyle:col});}catch(e){}
-        rh[0].addModifier(a,0);
-        const lh=[new VF.StaveNote({keys:[ch.lh],duration:'w',clef:'bass'})];
-        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
-        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
+        bars.rh[0].addModifier(a,0);
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.lh);
         new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
         vt.draw(ctx,t);vb.draw(ctx,b);
         x+=w;
@@ -995,11 +1175,164 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
       new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
       new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
     }
+    // viewBox를 실제 콘텐츠 범위에 맞춰, 왼쪽 브레이스/오선지가 잘리지 않고 모두 테두리 안에 들어오게 한다.
+    const svg=div.querySelector('svg');
+    if(svg){try{const bb=svg.getBBox();
+      const x0v=Math.floor(bb.x-4),fullW=Math.ceil(bb.x+bb.width+4)-x0v,fullH=Math.ceil(bb.y+bb.height+10);
+      svg.setAttribute('viewBox',x0v+' 0 '+fullW+' '+fullH);
+      svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svg.removeAttribute('height');svg.setAttribute('width','100%');}catch(e){}}
+  }
+
+  function chordG(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});return n;}
+  // 왼손(베이스) 음표도 코드 색으로 — 쉼표는 검정 그대로 둔다.
+  function bassG(key,d,col){const n=new VF.StaveNote({keys:[key],duration:d,clef:'bass'});try{n.setStyle({fillStyle:col,strokeStyle:col});}catch(e){}return n;}
+
+  // 포비트 섹션 : 오른손 ●－●－ (1박 치고 2박 쉼 · 3박 치고 4박 쉼), 왼손 ●－－● (1박 치고 2·3박 쉼 · 4박 치기) — 14페이지와 동일 리듬
+  function renderPractice(div){
+    renderGridG(div,function(ch,col){
+      const rh=[
+        chordG(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'}),
+        chordG(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'})
+      ];
+      const lh=[
+        bassG(ch.lh,'q',col),
+        new VF.StaveNote({keys:['d/3'],duration:'hr',clef:'bass'}),
+        bassG(ch.lh,'q',col)
+      ];
+      return {rh:rh,lh:lh};
+    });
+  }
+
+  // 코드 섹션 : 온음표 (한 마디에 한 번) — 14페이지와 동일 리듬
+  function renderChordPractice(div){
+    renderGridG(div,function(ch,col){
+      return {
+        rh:[chordG(ch.rh,'w',col)],
+        lh:[bassG(ch.lh,'w',col)]
+      };
+    });
+  }
+
+  // ===== 위대하신 주 — refrain melody (C major). Colored noteheads + 계이름 + 가사. =====
+  function labelC(key){var I=NOTE[key.charAt(0)];return [key.charAt(0)==='f'?'Fa':I[0],I[1]];}
+  function styleNoteC(n,key){
+    var I=labelC(key);n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    var a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}n.addModifier(a,0);
+  }
+  function renderCRefrain(div){
+    const W=1040;
+    // v1 transcription (from "위대~" through the end) — PITCHES TO BE VERIFIED against the lead sheet.
+    const sys=[
+      {ch:[null,'C2',null,'Am',null], ties:[[0,3,1,0],[1,0,1,1],[2,3,2,4],[3,2,3,3],[4,4,4,5]],
+        en:[['','','How','great'],['','','is','our','God'],['Sing','with','me','How','','great'],['is','our','God','',''],['And','all','will','','see','','']], m:[
+        [{r:'h'},{r:'q'},{k:'g/4',d:'8',ly:'위'},{k:'c/5',d:'8',ly:'대'}],
+        [{k:'c/5',d:'h',ly:'~'},{k:'c/5',d:'8',ly:'~'},{k:'g/4',d:'8',ly:'하'},{k:'d/5',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'}],
+        [{k:'e/5',d:'8',ly:'찬'},{k:'d/5',d:'16',ly:'양'},{k:'c/5',d:'16',ly:'해'},{k:'d/5',d:'8',ly:'위'},{k:'d/5',d:'8',ly:'~'},{k:'c/5',d:'h',ly:'대'}],
+        [{k:'g/4',d:'8d',ly:'하'},{k:'d/5',d:'16',ly:'신'},{k:'c/5',d:'8',ly:'주'},{k:'c/5',d:'8',ly:'~'},{r:'h'}],
+        [{k:'g/4',d:'8',ly:'모'},{k:'g/4',d:'8',ly:'두'},{k:'e/5',d:'8',ly:'알'},{k:'d/5',d:'8',ly:'게'},{k:'c/5',d:'8',ly:'되'},{k:'c/5',d:'8',ly:'~'},{k:'d/5',d:'q',ly:'리'}]
+      ]},
+      {ch:['F2','G','C2',null,null], repBeg:[3], ties:[[0,5,1,0],[1,3,1,4],[1,4,2,0],[3,2,3,3],[3,6,4,0]],
+        en:[['','','','','How','great'],['','is','our','God',''],[''],['Name','a-','bove','','all','names',''],['','']], m:[
+        [{k:'c/5',d:'8',ly:'~'},{k:'c/5',d:'8',ly:'라'},{k:'c/5',d:'q',ly:'~'},{r:'q'},{k:'g/4',d:'8',ly:'위'},{k:'d/5',d:'8',ly:'대'}],
+        [{k:'d/5',d:'h',ly:'~'},{k:'g/4',d:'8',ly:'하'},{k:'g/4',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'},{k:'c/5',d:'8',ly:'~'}],
+        [{k:'c/5',d:'w'}],
+        [{k:'e/5',d:'8',ly:'모'},{k:'f/5',d:'8',ly:'든'},{k:'e/5',d:'8',ly:'이'},{k:'e/5',d:'8',ly:'~'},{k:'d/5',d:'8',ly:'름'},{k:'d/5',d:'8',ly:'위'},{k:'c/5',d:'q',ly:'에'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'h'}]
+      ]},
+      {ch:['Am',null,'F2','G','C2',null], repEnd:[5], ties:[[0,2,0,3],[0,6,1,0],[2,1,2,2],[2,4,3,0],[3,4,4,0],[4,0,5,0]],
+        en:[['Wor-','thy','of','','all','praise',''],['','','','My'],['heart','sing','','How','great'],['','','is','our','God'],[''],['','']], m:[
+        [{k:'e/5',d:'q',ly:'뛰'},{k:'f/5',d:'8',ly:'어'},{k:'e/5',d:'8',ly:'나'},{k:'e/5',d:'8',ly:'~'},{k:'d/5',d:'8',ly:'신'},{k:'d/5',d:'8',ly:'이'},{k:'c/5',d:'8',ly:'름'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'q'},{r:'8'},{k:'c/5',d:'8',ly:'다'}],
+        [{k:'e/5',d:'8',ly:'양'},{k:'f/5',d:'8',ly:'해'},{k:'e/5',d:'8',ly:'~'},{k:'g/4',d:'8',ly:'위'},{k:'d/5',d:'h',ly:'대'}],
+        [{k:'d/5',d:'h',ly:'~'},{r:'8'},{k:'g/4',d:'8',ly:'하'},{k:'g/4',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'}],
+        [{k:'c/5',d:'w',ly:'~'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'h'}]
+      ]}
+    ];
+    const TICK={'w':4,'h':2,'q':1,'8':0.5,'16':0.25};
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp,en){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNoteC(n,sp.k);
+      if(sp.ly){var la=new VF.Annotation(sp.ly);la.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{la.setStyle({fillStyle:'#2b2620'});la.setFont('Jua, sans-serif',13,'normal');}catch(e){}n.addModifier(la,0);}
+      // English lyric — smaller grey italic line, BOTTOM-justified so it stacks directly under the Korean.
+      // English lyric is collected into enLbls and drawn as fixed-baseline SVG text below (keeps it flat + sizable).
+      return n;
+    }
+    const sysH=195,topPad=30;   // roomy gap between systems: room for the solfege + Korean + English lyric lines
+    // +26 clears the last system's BOTTOM lyric line, which sits below the reserved band.
+    const H=topPad+sys.length*sysH+26;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const chordLbls=[],enLbls=[];
+    sys.forEach(function(S,si){
+      const meas=S.m,chords=S.ch||[],y=topPad+si*sysH+8;
+      const hasPickup=!!S.pickup, M=meas.length, x0=4, clefW=46;
+      const puW=hasPickup?64:0;
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW-puW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];let puNotes=null;
+      if(hasPickup){
+        const st=new VF.Stave(x,y,clefW+puW);st.addClef('treble');
+        if(si===0)st.addTimeSignature('4/4');
+        st.setEndBarType(VF.Barline.type.NONE);
+        st.setContext(ctx).draw();
+        puNotes=S.pickup.map(function(sp){return build(sp);});
+        const v=new VF.Voice({num_beats:beats(S.pickup),beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(puNotes);
+        new VF.Formatter().joinVoices([v]).format([v],puW-6);
+        v.draw(ctx,st);
+        if(puNotes.length>1){try{new VF.Beam(puNotes).setContext(ctx).draw();}catch(e){}}
+        x+=clefW+puW;
+      }
+      for(let m=0;m<M;m++){
+        let w=widths[m];if(hasPickup&&m===0)w-=clefW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0&&!hasPickup)st.addClef('treble');
+        if(si===0&&m===0&&!hasPickup)st.addTimeSignature('4/4');
+        if((S.repBeg||[]).indexOf(m)>=0)st.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+        if((S.repEnd||[]).indexOf(m)>=0)st.setEndBarType(VF.Barline.type.REPEAT_END);
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const enM=S.en&&S.en[m];
+        const notes=specs.map(function(sp,i){return build(sp,enM&&enM[i]);});sysNotes[m]=notes;
+        const beamsArr=[];let grp=[];let bpos=0;
+        const flushBeam=function(){if(grp.length>1)beamsArr.push(new VF.Beam(grp.slice()));grp.length=0;};
+        for(let i=0;i<specs.length;i++){const sp=specs[i],e8=!sp.r&&(sp.d.charAt(0)==='8'||sp.d.charAt(0)==='1');
+          var bd=sp.r||sp.d,bb=(TICK[bd.replace('d','')]||0)*(bd.indexOf('d')>=0?1.5:1);
+          if(e8){grp.push(notes[i]);bpos+=bb;if(Math.abs(bpos-Math.round(bpos))<1e-6)flushBeam();}
+          else{bpos+=bb;flushBeam();}}
+        flushBeam();
+        const v=new VF.Voice({num_beats:beats(specs)||4,beat_value:4});v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){var cyTop=y-10;try{cyTop=st.getYForLine(0)-8;}catch(e){}chordLbls.push({x:st.getNoteStartX(),y:cyTop,t:chords[m]});}
+        if(enM){enM.forEach(function(et,i){if(!et||!notes[i])return;var nx;try{nx=notes[i].getAbsoluteX();}catch(e){return;}enLbls.push({x:nx,y:y+142,t:et});});}
+        x+=w;
+      }
+      (S.ties||[]).forEach(function(t){
+        const first=(t[0]<0)?(puNotes&&puNotes[t[1]]):(sysNotes[t[0]]&&sysNotes[t[0]][t[1]]);
+        const last=sysNotes[t[2]]&&sysNotes[t[2]][t[3]];
+        if(!first||!last)return;
+        const tie=new VF.StaveTie({first_note:first,last_note:last,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(-1);}catch(e){}tie.setContext(ctx).draw();
+      });
+    });
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});enLbls.forEach(function(e){t+='<text x="'+(e.x+5)+'" y="'+e.y+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="11" font-style="italic" fill="#8a7f6d">'+String(e.t).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
   }
 
   function go(){
+    var cm=document.getElementById('cmelody');if(cm){try{renderCRefrain(cm);}catch(e){console.error('cmelody',e);}}
     var ml=document.getElementById('gmelody');if(ml){try{renderMelody(ml);}catch(e){console.error('gmelody',e);}}
-    var mlg=document.getElementById('gmellegend');if(mlg){try{renderLegend(mlg);}catch(e){}}
     var sc=document.getElementById('gscale');if(sc){try{renderScale(sc);}catch(e){console.error('gscale',e);}}
     var kb=document.getElementById('gkbd');if(kb){try{renderKbd(kb);}catch(e){console.error('gkbd',e);}}
     var lg=document.getElementById('glegend');if(lg){try{renderLegend(lg);}catch(e){}}
@@ -1010,5 +1343,218 @@ document.getElementById('barchart').innerHTML=bars.map(b=>{
 })();
 </script>
 
+<script>
+/* ---------- C KEY : keyboard map + melody + chords + four-beat (빛나는 왕의 왕) ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded (C key)');return;}
+  // letter -> [solfege (fixed-do, C major), color]
+  const NOTE={c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa','#7FB23E'],g:['Sol','#3C90DD'],a:['La','#7E6BC4'],b:['Si','#C85FA0']};
+  function info(key){return NOTE[key.charAt(0)];}
+  function styleNote(n,key){
+    const I=info(key);if(!I)return;
+    n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    const a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}
+    n.addModifier(a,0);
+  }
+
+  function renderScale(div){
+    const W=760,H=140;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const st=new VF.Stave(4,18,W-12);st.addClef('treble');st.setContext(ctx).draw();
+    const keys=['c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5','a/5','b/5','c/6'];
+    const notes=keys.map(function(k){const n=new VF.StaveNote({keys:[k],duration:'q'});styleNote(n,k);return n;});
+    const v=new VF.Voice({num_beats:keys.length,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],W-120);
+    v.draw(ctx,st);
+  }
+
+  function renderKbd(div){
+    const whites=['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+    const hl={C:'c',D:'d',E:'e',F:'f',G:'g',A:'a',B:'b'};
+    const ww=44,wh=178,bw=26,bh=100;
+    const W=whites.length*ww,H=wh;
+    let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    whites.forEach(function(n,i){
+      const x=i*ww,L=hl[n[0]],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
+      if(c){const cx=x+ww/2,cy=wh-52;
+        s+='<circle cx="'+cx+'" cy="'+cy+'" r="16" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="13" fill="#fff">'+I[0]+'</text>';}
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-10)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="11" fill="#b7ab92">'+n[0]+'</text>';
+    });
+    const hasBlack={C:1,D:1,F:1,G:1,A:1};
+    whites.forEach(function(n,i){
+      if(i>=whites.length-1)return;
+      if(!hasBlack[n[0]])return;
+      const x=(i+1)*ww-bw/2;
+      s+='<rect x="'+x+'" y="0" width="'+bw+'" height="'+bh+'" rx="4" fill="#2b2620" stroke="#2b2620" stroke-width="1.5"/>';
+    });
+    s+='</svg>';
+    div.innerHTML=s;
+  }
+
+  function renderLegend(div){
+    const order=['c','d','e','f','g','a','b'];
+    div.innerHTML=order.map(function(l){var I=NOTE[l];return '<span class="gk-chip"><i style="background:'+I[1]+'"></i>'+I[0]+'</span>';}).join('');
+  }
+
+  function renderMelody(div){
+    const W=672;
+    // Refrain "위대하신 주 …" transcribed from the 빛나는 왕의 왕 lead sheet (pitch contour verified).
+    const data=[
+      {ch:['C',null,'Am'], m:[
+        [{k:'b/4',d:'h'},{k:'a/4',d:'8'},{k:'g/4',d:'8'},{k:'c/5',d:'8'},{k:'b/4',d:'8'}],
+        [{k:'b/4',d:'q'},{r:'q'},{k:'d/5',d:'8'},{k:'c/5',d:'8'},{k:'b/4',d:'8'},{k:'c/5',d:'8'}],
+        [{k:'c/5',d:'h'},{k:'b/4',d:'q'},{k:'a/4',d:'q'}]
+      ]},
+      {ch:['Am','F','G'], m:[
+        [{k:'g/4',d:'8'},{k:'f/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'b/4',d:'q'},{k:'c/5',d:'q'}],
+        [{k:'c/5',d:'q'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{r:'q'},{k:'g/4',d:'q'}],
+        [{k:'b/4',d:'q'},{k:'c/5',d:'q'},{k:'b/4',d:'h'}]
+      ]}
+    ];
+    const sysH=140,topPad=14;
+    const H=topPad+data.length*sysH;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNote(n,sp.k);
+      return n;
+    }
+    data.forEach(function(sys,si){
+      const meas=sys.m,chords=sys.ch||[];
+      const y=topPad+si*sysH+8;
+      const M=meas.length,x0=4,firstW=240,restW=(W-8-x0-firstW)/(M-1);
+      let x=x0;
+      for(let m=0;m<M;m++){
+        const w=m===0?firstW:restW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0)st.addClef('treble');
+        if(si===0&&m===0)st.addTimeSignature('4/4');
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const notes=specs.map(build);
+        if(chords[m]){var ca=new VF.Annotation(chords[m]);ca.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);try{ca.setStyle({fillStyle:'#6a5f4d'});}catch(e){}notes[0].addModifier(ca,0);}
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){
+          const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
+          if(eighth){grp.push(notes[i]);}else{flushBeam();}
+        }
+        flushBeam();
+        const nb=beats(specs)||4;
+        const v=new VF.Voice({num_beats:nb,beat_value:4});
+        v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        x+=w;
+      }
+    });
+  }
+
+  // chord progression shared by chord section + four-beat section
+  const COL={C:'#E24B4A',Am:'#7E6BC4',F:'#3C90DD',G:'#EF8A3C'};
+  const PROG=[
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'Am',rh:['a/3','c/4','e/4'], lh:'a/2'},
+    {name:'Am',rh:['a/3','c/4','e/4'], lh:'a/2'},
+    {name:'F', rh:['f/3','a/3','c/4'], lh:'f/2'},
+    {name:'G', rh:['g/3','b/3','d/4'], lh:'g/2'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'}
+  ];
+
+  // render two rows of 4 measures; buildBars(ch,col) returns {rh:[...notes], lh:[...notes]}
+  function renderGrid(div,buildBars){
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=162,tY0=16;
+    const H=tY0+rows*sysGap;
+    const restW=(W-16-x0-firstW)/(perRow-1);
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    for(let row=0;row<rows;row++){
+      const tY=tY0+row*sysGap,bY=tY+96;
+      let x=x0,firstT,firstB,lastT,lastB;
+      for(let c=0;c<perRow;c++){
+        const ch=PROG[row*perRow+c],w=c===0?firstW:restW,col=COL[ch.name];
+        const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+        if(c===0){t.addClef('treble').addTimeSignature('4/4');
+          b.addClef('bass').addTimeSignature('4/4');firstT=t;firstB=b;}
+        t.setContext(ctx).draw();b.setContext(ctx).draw();
+        if(c===perRow-1){lastT=t;lastB=b;}
+        const bars=buildBars(ch,col);
+        const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+        try{a.setStyle({fillStyle:col});}catch(e){}
+        bars.rh[0].addModifier(a,0);
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.lh);
+        new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
+        vt.draw(ctx,t);vb.draw(ctx,b);
+        x+=w;
+      }
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+      new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    }
+    // viewBox를 실제 콘텐츠 범위에 맞춰, 왼쪽 브레이스/오선지가 잘리지 않고 모두 테두리 안에 들어오게 한다.
+    const svg=div.querySelector('svg');
+    if(svg){try{const bb=svg.getBBox();
+      const x0v=Math.floor(bb.x-4),fullW=Math.ceil(bb.x+bb.width+4)-x0v,fullH=Math.ceil(bb.y+bb.height+10);
+      svg.setAttribute('viewBox',x0v+' 0 '+fullW+' '+fullH);
+      svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svg.removeAttribute('height');svg.setAttribute('width','100%');}catch(e){}}
+  }
+
+  function chordNote(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});if(d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}return n;}
+  // 왼손(베이스) 음표도 코드 색으로 — 쉼표는 검정 그대로 둔다.
+  function bassNote(key,d,col){const n=new VF.StaveNote({keys:[key],duration:d,clef:'bass'});try{n.setStyle({fillStyle:col,strokeStyle:col});}catch(e){}return n;}
+
+  // 코드 섹션 : 온음표 (한 마디에 한 번)
+  function renderChords(div){
+    renderGrid(div,function(ch,col){
+      return {
+        rh:[chordNote(ch.rh,'w',col)],
+        lh:[bassNote(ch.lh,'w',col)]
+      };
+    });
+  }
+
+  // 포비트 섹션 : 오른손 ●－●－ (1박 치고 2박 쉼 · 3박 치고 4박 쉼), 왼손 ●－－● (1박 치고 2·3박 쉼 · 4박 치기)
+  function renderFourBeat(div){
+    renderGrid(div,function(ch,col){
+      // 오른손: 1박 음표 → 2박 4분쉼표 → 3박 음표 → 4박 4분쉼표
+      const rh=[
+        chordNote(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'}),
+        chordNote(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'})
+      ];
+      // 왼손: 1박 음표 → 2·3박 2분쉼표 → 4박 음표
+      const lh=[
+        bassNote(ch.lh,'q',col),
+        new VF.StaveNote({keys:['d/3'],duration:'hr',clef:'bass'}),
+        bassNote(ch.lh,'q',col)
+      ];
+      return {rh:rh,lh:lh};
+    });
+  }
+
+  function go(){
+    var sc=document.getElementById('cscale');if(sc){try{renderScale(sc);}catch(e){console.error('cscale',e);}}
+    var kb=document.getElementById('ckbd');if(kb){try{renderKbd(kb);}catch(e){console.error('ckbd',e);}}
+    var lg=document.getElementById('clegend');if(lg){try{renderLegend(lg);}catch(e){}}
+    var cc=document.getElementById('cchords');if(cc){try{renderChords(cc);}catch(e){console.error('cchords',e);}}
+    var fb=document.getElementById('cfourbeat');if(fb){try{renderFourBeat(fb);}catch(e){console.error('cfourbeat',e);}}
+  }
+  go();
+})();
+</script>
 </body>
 </html>

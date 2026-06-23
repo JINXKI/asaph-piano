@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=960">
+<title>배치 옵션</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFFFF;--ink:#3a342c;--do:#E24B4A;--sol:#3C90DD;--fa:#7FB23E;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#d8d0bc;font-family:'Gaegu',sans-serif;color:var(--ink);padding:24px;display:flex;flex-direction:column;align-items:center;gap:28px;}
+
+h1{font-family:'Jua',sans-serif;font-size:20px;color:#5a4f3f;text-align:center;max-width:900px;}
+
+.options-row{display:flex;gap:20px;align-items:flex-start;max-width:940px;width:100%;}
+
+/* 페이지 미니어처 */
+.mini-page{width:200px;flex-shrink:0;background:#fff;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:10px 10px 14px;display:flex;flex-direction:column;gap:5px;position:relative;}
+.mini-page .pgnum{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-family:'Jua',sans-serif;font-size:10px;color:#a99a82;}
+.block{border-radius:6px;padding:6px 8px;font-family:'Jua',sans-serif;font-size:11px;text-align:center;line-height:1.35;}
+.b-title{background:#F5EDD6;border:1.5px solid #D4C8A8;color:#7a6f5d;}
+.b-table{background:#EDF6FF;border:1.5px solid #A8D0F0;color:#1a4a7a;min-height:54px;display:flex;align-items:center;justify-content:center;}
+.b-pizza{background:#FFF3E0;border:1.5px solid #F0C080;color:#7a4000;min-height:30px;display:flex;align-items:center;justify-content:center;}
+.b-clap{background:#F0FFF0;border:1.5px solid #90C890;color:#1a5a1a;min-height:40px;display:flex;align-items:center;justify-content:center;}
+.b-dot{background:#FFF9E6;border:2px solid #E3C657;color:#7a5a00;min-height:36px;display:flex;align-items:center;justify-content:center;}
+.b-beam{background:#F0FFF0;border:2px solid #90C890;color:#1a5a1a;min-height:36px;display:flex;align-items:center;justify-content:center;}
+.b-new{background:#F5F0FF;border:2px solid #C4B4E8;color:#5a3a9a;min-height:36px;display:flex;align-items:center;justify-content:center;}
+.b-gap{height:10px;}
+
+/* 옵션 카드 */
+.opt-card{flex:1;background:#fff;border-radius:14px;padding:16px 14px;box-shadow:0 2px 10px rgba(0,0,0,.10);cursor:pointer;border:3px solid transparent;transition:border-color .15s;}
+.opt-card:hover{border-color:#5BA7E0;}
+.opt-card.selected{border-color:#E24B4A;background:#FFFAF8;}
+.opt-title{font-family:'Jua',sans-serif;font-size:16px;color:#2f6ab0;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.opt-pros{font-size:13px;color:#4a7a2a;line-height:1.7;margin-top:8px;}
+.opt-cons{font-size:13px;color:#9a4a2a;line-height:1.7;margin-top:4px;}
+.opt-pages{display:flex;gap:8px;margin-top:10px;align-items:flex-start;justify-content:center;flex-wrap:wrap;}
+.chip{font-family:'Jua',sans-serif;font-size:12px;padding:2px 8px;border-radius:10px;display:inline-block;color:#fff;}
+.chip-now{background:#A8D0F0;}
+.chip-new{background:#C4B4E8;}
+
+.rec-badge{background:#E24B4A;color:#fff;font-family:'Jua',sans-serif;font-size:11px;padding:2px 8px;border-radius:10px;}
+
+.divider{font-size:22px;color:#c0b8a8;display:flex;align-items:center;padding-top:60px;}
+
+.page-label{font-family:'Jua',sans-serif;font-size:10px;color:#a99a82;text-align:center;margin-bottom:3px;}
+</style>
+</head>
+<body>
+
+<h1>📐 붓점 + 빔 섹션 — 어디에 넣을까요?<br><span style="font-size:15px;color:#9a8f7d">현재 페이지 구조를 보면서 골라주세요</span></h1>
+
+<!-- 현재 구조 표시 -->
+<div style="background:#F5EDD6;border-radius:14px;padding:14px 20px;max-width:900px;width:100%;">
+  <div style="font-family:'Jua',sans-serif;font-size:15px;color:#7a6f5d;margin-bottom:10px;text-align:center;">현재 페이지 구조</div>
+  <div style="display:flex;gap:12px;align-items:flex-start;justify-content:center;flex-wrap:wrap;">
+    <div>
+      <div class="page-label">6쪽 (현재)</div>
+      <div class="mini-page" style="width:130px">
+        <div class="block b-title">⭐ 음표와 쉼표, 박자</div>
+        <div class="block b-table">📊 음표·쉼표·박자<br>테이블</div>
+        <div class="block b-pizza">🍕 피자 활동</div>
+        <div class="pgnum">6</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;font-size:20px;color:#c0b8a8;padding-top:40px">→</div>
+    <div>
+      <div class="page-label">7쪽 (현재)</div>
+      <div class="mini-page" style="width:130px">
+        <div class="block b-title">👏 박수치기</div>
+        <div class="block b-clap" style="min-height:80px">박자 막대 차트</div>
+        <div class="pgnum">7</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;font-size:20px;color:#c0b8a8;padding-top:40px">→</div>
+    <div>
+      <div class="page-label">8~11쪽 (현재)</div>
+      <div class="mini-page" style="width:130px">
+        <div class="block b-clap" style="min-height:80px;background:#F5F0FF;border-color:#C4B4E8;color:#5a3a9a;">12키 음계<br>다이어토닉 코드</div>
+        <div class="pgnum">8~11</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 배치 옵션 3가지 -->
+<div class="options-row">
+
+  <!-- 옵션 A -->
+  <div class="opt-card" onclick="sel(this,'a')">
+    <div class="opt-title">
+      <span style="background:#5BA7E0;color:#fff;padding:2px 10px;border-radius:10px;">A안</span>
+      6쪽 하단에 바로 추가
+    </div>
+    <div class="opt-pages">
+      <div>
+        <div class="page-label">6쪽 (변경 후)</div>
+        <div class="mini-page">
+          <div class="block b-title">⭐ 음표와 쉼표, 박자</div>
+          <div class="block b-table">📊 테이블</div>
+          <div class="block b-pizza">🍕 피자 활동</div>
+          <div class="block b-dot">🔴 붓점 설명</div>
+          <div class="block b-beam">🌿 빔 설명</div>
+          <div class="pgnum">6</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-label">7쪽 (그대로)</div>
+        <div class="mini-page">
+          <div class="block b-title">👏 박수치기</div>
+          <div class="block b-clap" style="min-height:80px">박자 막대 차트</div>
+          <div class="pgnum">7</div>
+        </div>
+      </div>
+    </div>
+    <div class="opt-pros">✅ 페이지 추가 없음<br>✅ 관련 내용이 한 페이지에</div>
+    <div class="opt-cons">⚠️ 6쪽이 꽉 차서 좀 빽빽할 수 있음</div>
+  </div>
+
+  <!-- 옵션 B (추천) -->
+  <div class="opt-card" onclick="sel(this,'b')">
+    <div class="opt-title">
+      <span style="background:#9FCB5C;color:#fff;padding:2px 10px;border-radius:10px;">B안</span>
+      새 7쪽으로 분리
+      <span class="rec-badge">추천</span>
+    </div>
+    <div class="opt-pages">
+      <div>
+        <div class="page-label">6쪽 (그대로)</div>
+        <div class="mini-page">
+          <div class="block b-title">⭐ 음표와 쉼표, 박자</div>
+          <div class="block b-table">📊 테이블</div>
+          <div class="block b-pizza">🍕 피자 활동</div>
+          <div class="pgnum">6</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-label">★ 새 7쪽</div>
+        <div class="mini-page" style="border:2.5px solid #E24B4A;">
+          <div class="block b-dot">🔴 붓점 설명</div>
+          <div class="block b-gap"></div>
+          <div class="block b-beam">🌿 빔 설명</div>
+          <div class="pgnum" style="color:#E24B4A;">7 (신규)</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-label">8쪽 (기존 7쪽)</div>
+        <div class="mini-page">
+          <div class="block b-clap" style="min-height:80px">👏 박수치기</div>
+          <div class="pgnum">8</div>
+        </div>
+      </div>
+    </div>
+    <div class="opt-pros">✅ 각 페이지가 여유로움<br>✅ 인쇄 시 깔끔하게 분리<br>✅ 붓점·빔만 집중해서 볼 수 있음</div>
+    <div class="opt-cons">⚠️ 총 페이지 1장 늘어남</div>
+  </div>
+
+  <!-- 옵션 C -->
+  <div class="opt-card" onclick="sel(this,'c')">
+    <div class="opt-title">
+      <span style="background:#ED7A8E;color:#fff;padding:2px 10px;border-radius:10px;">C안</span>
+      테이블 바로 아래 + 피자 아래
+    </div>
+    <div class="opt-pages">
+      <div>
+        <div class="page-label">6쪽 (변경 후)</div>
+        <div class="mini-page">
+          <div class="block b-title">⭐ 음표와 쉼표, 박자</div>
+          <div class="block b-table">📊 테이블</div>
+          <div class="block b-dot">🔴 붓점 설명</div>
+          <div class="block b-pizza">🍕 피자 활동</div>
+          <div class="block b-beam">🌿 빔 설명</div>
+          <div class="pgnum">6</div>
+        </div>
+      </div>
+      <div>
+        <div class="page-label">7쪽 (그대로)</div>
+        <div class="mini-page">
+          <div class="block b-clap" style="min-height:80px">👏 박수치기</div>
+          <div class="pgnum">7</div>
+        </div>
+      </div>
+    </div>
+    <div class="opt-pros">✅ 붓점은 테이블 바로 옆에<br>✅ 학습 흐름이 자연스러움</div>
+    <div class="opt-cons">⚠️ 6쪽이 가장 빽빽해짐<br>⚠️ 피자와 빔이 떨어져서 어색</div>
+  </div>
+
+</div>
+
+<div style="font-family:'Jua',sans-serif;font-size:16px;color:#5a4f3f;text-align:center;max-width:900px;line-height:1.9">
+  어떤 배치가 좋으세요? 클릭하거나 터미널에서 A/B/C로 답해주세요 😊<br>
+  <span style="font-size:13px;color:#a99a82">저는 <strong>B안 (새 페이지로 분리)</strong>을 추천해요 — 각 내용이 여유롭게 들어가고 인쇄도 깔끔해요</span>
+</div>
+
+<script>
+function sel(el, choice) {
+  document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if (window.recordChoice) recordChoice(choice, el.querySelector('.opt-title').textContent.trim());
+}
+</script>
+</body>
+</html>

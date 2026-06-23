@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5선지 ↔ 건반 v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+  --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+  --bg:#F5EDD6;--border:#E3D8C0;--ink:#3a342c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+body{padding:20px;max-width:860px;margin:0 auto;}
+h1{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:4px;}
+.sub{text-align:center;font-size:13px;color:#7a6f5d;margin-bottom:18px;}
+.hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;
+  padding:5px 14px;display:inline-block;font-size:13px;margin-bottom:14px;}
+
+.card{background:#fff;border:3px solid var(--border);border-radius:18px;
+  padding:20px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;}
+.card:hover{border-color:#a89a7c;box-shadow:0 4px 14px rgba(0,0,0,.1);}
+.card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+.badge{position:absolute;top:12px;right:14px;background:#3C90DD;color:#fff;
+  font-family:'Jua',sans-serif;font-size:13px;padding:2px 12px;border-radius:20px;display:none;}
+.card.selected .badge{display:block;}
+.card-title{font-family:'Jua',sans-serif;font-size:16px;margin-bottom:5px;}
+.card-desc{font-size:12px;color:#7a6f5d;margin-bottom:12px;line-height:1.5;}
+.section-box{background:#FAFAF5;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.bottom-note{text-align:center;margin-top:14px;font-size:12px;color:#9a8f7d;}
+</style>
+<script>
+/*
+ * G MAJOR EXAMPLE
+ * Scale: G A B C D E F# G
+ * Solfège (movable do): 도 레 미 파 솔 라 시 도
+ * Fingers (right hand): 1 2 3 1 2 3 4 5
+ *
+ * Keyboard layout (G to G, 8 white keys + 5 black keys)
+ * White slots:  G  A  B  C  D  E  F  G
+ * Active:       ✓  ✓  ✓  ✓  ✓  ✓  ✗  ✓   (F natural is inactive)
+ * Solfège idx:  0  1  2  3  4  5  -  6(G high)
+ *
+ * Black keys between white slots:
+ *   G# (0-1): inactive   A# (1-2): inactive
+ *   C# (3-4): inactive   D# (4-5): inactive
+ *   F# (6-7): ACTIVE → 시 (index 6 in scale)
+ */
+
+const C=['var(--do)','var(--re)','var(--mi)','var(--fa)',
+         'var(--sol)','var(--la)','var(--si)','var(--do)'];
+const SF=['도','레','미','파','솔','라','시','도'];
+const FN=['1','2','3','1','2','3','4','5'];
+
+/* ── keyboard dimensions ── */
+const KW=46, KG=4, KH=96, BKW=26, BKH=58, SLOT=KW+KG; // 50px per slot
+
+/* 8 white key x-positions (G A B C D E F G) */
+const WKX=[0,50,100,150,200,250,300,350]; // left edge of each white key
+const SVG_W=WKX[7]+KW; // 396
+
+/* white key active flags: G A B C D E F(inactive) G */
+const WK_ACTIVE=[true,true,true,true,true,true,false,true];
+/* solfège index for each white key slot (-1 = inactive) */
+const WK_SF=[0,1,2,3,4,5,-1,7];
+
+/* black key configs [label, between slots i and i+1, active, sf_index] */
+const BK=[
+  {name:'G#', i:0, active:false, sf:-1},
+  {name:'A#', i:1, active:false, sf:-1},
+  {name:'C#', i:3, active:false, sf:-1},
+  {name:'D#', i:4, active:false, sf:-1},
+  {name:'F#', i:6, active:true,  sf:6},   // 시! = F#
+];
+/* Black key x center = WKX[i]+KW+KG/2 */
+BK.forEach(b=>{ b.cx = WKX[b.i]+KW+KG/2; b.lx = b.cx-BKW/2; });
+
+/* ── staff note x-centers (evenly spaced across SVG_W) ── */
+const NX=Array.from({length:8},(_,i)=>SVG_W/16+i*(SVG_W/8)); // 24.75, 74.25, ...
+
+/* ── G major note Y positions on treble clef (staff lines at 20,28,36,44,52) ── */
+/* From top: G5(16), F#5(20), E5(24), D5(28), C5(32), B4(36), A4(40), G4(44) */
+const SL_TOP=20; // first staff line y
+const NY=[
+  SL_TOP+24, // G4 (on 2nd line from bottom = line 1 up = SL[1])
+  SL_TOP+20, // A4 (space between line 1 and 2)
+  SL_TOP+16, // B4 (middle line = SL[2])
+  SL_TOP+12, // C5 (space between line 2 and 3)
+  SL_TOP+8,  // D5 (line 3 = SL[3])
+  SL_TOP+4,  // E5 (space between line 3 and 4)
+  SL_TOP+0,  // F#5 (top line = SL[4])
+  SL_TOP-4,  // G5 (space above top line)
+];
+const STAFF_SVG_H=80;
+
+/* ══ SVG BUILDERS ══ */
+
+function buildStaff(opt){
+  // opt A: solfège above, no finger below (finger shown separately)
+  // opt B: solfège above, finger below
+  const topLabel=12; // y for solfège text
+  let svg=`<svg viewBox="0 0 ${SVG_W} ${STAFF_SVG_H}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+
+  /* staff lines (5 lines, 8px apart, bottom line = SL_TOP+32) */
+  for(let i=0;i<5;i++){
+    const y=SL_TOP+i*8-0; // reindex: top line first
+    /* Actually draw them reversed so top of treble = lowest y */
+    const yl=SL_TOP+(4-i)*8; /* i=0→bottom(SL_TOP+32), i=4→top(SL_TOP) */
+    svg+=`<line x1="0" y1="${yl}" x2="${SVG_W}" y2="${yl}" stroke="#bbb" stroke-width="1.2"/>`;
+  }
+  /* bottom line = SL_TOP+32 */
+  /* ledger: not needed for G major (G4 is on a staff line, no ledger needed!) */
+  /* G4 sits on 2nd line from bottom. 5 lines: E4(SL_TOP+32), G4(SL_TOP+24), B4(SL_TOP+16), D5(SL_TOP+8), F5(SL_TOP+0) */
+
+  /* Hmm, F#5 sits on the TOP line which is F5 — close enough for a mockup */
+
+  NX.forEach((x,i)=>{
+    const y=NY[i];
+    /* solfège label above */
+    svg+=`<text x="${x}" y="${topLabel}" text-anchor="middle"
+      font-family="Jua,sans-serif" font-size="12" font-weight="bold" fill="${C[i]}">${SF[i]}</text>`;
+    /* small circle note (동그라미, r=5) */
+    svg+=`<circle cx="${x}" cy="${y}" r="5" fill="${C[i]}"/>`;
+    /* stem */
+    const up = i < 4;
+    if(up) svg+=`<line x1="${x+4.5}" y1="${y}" x2="${x+4.5}" y2="${y-18}" stroke="${C[i]}" stroke-width="1.5"/>`;
+    else   svg+=`<line x1="${x-4.5}" y1="${y}" x2="${x-4.5}" y2="${y+18}" stroke="${C[i]}" stroke-width="1.5"/>`;
+    /* finger number below staff */
+    if(opt==='B'){
+      svg+=`<text x="${x}" y="${STAFF_SVG_H-4}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" fill="${C[i]}">${FN[i]}</text>`;
+    }
+  });
+
+  svg+=`</svg>`;
+  return svg;
+}
+
+function buildKeyboard(opt){
+  // opt 'label-inside': solfège + finger number inside white keys
+  // opt 'label-top':    solfège + finger at top of each key
+  // opt 'label-bottom': solfège at bottom only
+  const svgH = KH + (opt==='label-top'?0:0);
+  let svg=`<svg viewBox="0 0 ${SVG_W} ${svgH}" width="100%" xmlns="http://www.w3.org/2000/svg">`;
+
+  /* WHITE KEYS */
+  WKX.forEach((x,i)=>{
+    const active=WK_ACTIVE[i];
+    const sfIdx=WK_SF[i];
+    const col= active && sfIdx>=0 ? C[sfIdx] : '#ccc';
+    const fillCol= active && sfIdx>=0 ? C[sfIdx]+'1A' : '#f9f9f9';
+
+    svg+=`<rect x="${x+1}" y="0" width="${KW-2}" height="${KH}" rx="5"
+      fill="${fillCol}" stroke="${col}" stroke-width="${active?2.5:1.5}"/>`;
+
+    if(active && sfIdx>=0){
+      /* solfège at bottom */
+      svg+=`<text x="${x+KW/2}" y="${KH-28}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" font-weight="bold" fill="${col}">${SF[sfIdx]}</text>`;
+      /* finger number below solfège */
+      svg+=`<text x="${x+KW/2}" y="${KH-12}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="12" fill="#7a6f5d">${FN[sfIdx]}</text>`;
+    } else if(!active){
+      /* inactive key: small X or just grayed */
+      svg+=`<text x="${x+KW/2}" y="${KH-14}" text-anchor="middle"
+        font-family="Gaegu,sans-serif" font-size="10" fill="#ddd">F</text>`;
+    }
+  });
+
+  /* BLACK KEYS */
+  BK.forEach(b=>{
+    const active=b.active;
+    const sfIdx=b.sf;
+    const fill= active ? C[sfIdx]+'44' : '#aaa';
+    const stroke= active ? C[sfIdx] : '#777';
+    const strokeW= active ? 2.5 : 1.5;
+
+    svg+=`<rect x="${b.lx}" y="0" width="${BKW}" height="${BKH}" rx="4"
+      fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}"/>`;
+
+    if(active && sfIdx>=0){
+      /* active black key: show solfège */
+      svg+=`<text x="${b.cx}" y="${BKH-18}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="11" font-weight="bold" fill="${C[sfIdx]}">${SF[sfIdx]}</text>`;
+      svg+=`<text x="${b.cx}" y="${BKH-5}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="10" fill="${C[sfIdx]}">${FN[sfIdx]}</text>`;
+    }
+  });
+
+  svg+=`</svg>`;
+  return svg;
+}
+
+function buildFingerRow(){
+  return `<div style="display:flex;align-items:center;padding:3px 0;margin:4px 0;">
+    <div style="font-family:'Jua',sans-serif;font-size:10px;color:#aaa;
+      white-space:nowrap;min-width:52px;line-height:1.2;">🖐<br>손가락<br>번호</div>
+    <div style="flex:1;display:flex;">
+      ${FN.map((n,i)=>`
+        <div style="flex:1;text-align:center;
+          font-family:'Jua',sans-serif;font-size:17px;font-weight:bold;color:${C[i]};">${n}</div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+function sel(el){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,
+      text:el.querySelector('.card-title').textContent})}).catch(()=>{});
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('staff-a').innerHTML=buildStaff('A');
+  document.getElementById('finger-a').innerHTML=buildFingerRow();
+  document.getElementById('piano-a').innerHTML=buildKeyboard('label-inside');
+
+  document.getElementById('staff-b').innerHTML=buildStaff('A');
+  document.getElementById('finger-b').innerHTML=buildFingerRow();
+  document.getElementById('piano-b').innerHTML=buildKeyboard('label-inside');
+});
+</script>
+</head>
+<body>
+
+<h1>5선지 ↔ 건반 매핑 (G 장조)</h1>
+<p class="sub">검은 건반 표시 + 작은 원 + G 장조 예시. 어떤 레이아웃이 좋으세요?</p>
+<div style="text-align:center;margin-bottom:14px;">
+  <span class="hint">👇 마음에 드는 디자인 클릭</span>
+</div>
+
+<!-- ── DESIGN A: 계이름 위 / 작은 원 5선지 / 손가락번호 행 / 건반 ── -->
+<div class="card" data-choice="A" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">A. 계이름(위) → 작은 원 5선지 → 손가락번호 행 → 건반</div>
+  <div class="card-desc">
+    G 장조 예시. 도레미는 흰 건반, 시(F#)는 검은 건반 — 색으로 연결.
+    검은 건반은 가볍게 채운 윤곽. F(파#이 아닌 파 자연음)는 회색으로 비활성.
+  </div>
+  <div class="section-box">
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:4px 2px;" id="staff-a"></div>
+    <div style="border:1px dashed #d8d0c0;border-radius:6px;background:#f7f4ee;
+         padding:2px 4px;margin:5px 0;" id="finger-a"></div>
+    <div id="piano-a"></div>
+  </div>
+</div>
+
+<!-- ── DESIGN B: 계이름 위 / 5선지 / 손가락번호 행 / 건반 (wider spacing) ── -->
+<div class="card" data-choice="B" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">B. 같은 구조, 더 넓은 여백 버전</div>
+  <div class="card-desc">
+    A와 동일한 정보 구조. 섹션 간 여백을 더 두어 읽기 편한 버전.
+  </div>
+  <div class="section-box" style="gap:8px;display:flex;flex-direction:column;">
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:6px 2px;" id="staff-b"></div>
+    <div style="border:1px dashed #d8d0c0;border-radius:6px;background:#f7f4ee;
+         padding:4px 4px;" id="finger-b"></div>
+    <div style="padding-top:4px;" id="piano-b"></div>
+  </div>
+</div>
+
+<div class="bottom-note" style="margin-top:16px;">
+  클릭하거나 터미널에서 의견 주세요.<br>
+  <small>손가락 번호 행 위치·스타일, 건반 크기 등 조정 가능합니다.</small>
+</div>
+
+</body>
+</html>

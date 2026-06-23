@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5선지 ↔ 건반 v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+  --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+  --bg:#F5EDD6;--border:#E3D8C0;--ink:#3a342c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+body{padding:20px;max-width:860px;margin:0 auto;}
+h1{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:4px;}
+.sub{text-align:center;font-size:13px;color:#7a6f5d;margin-bottom:18px;}
+.hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;
+  padding:5px 14px;display:inline-block;font-size:13px;margin-bottom:14px;}
+.card{background:#fff;border:3px solid var(--border);border-radius:18px;
+  padding:20px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;}
+.card:hover{border-color:#a89a7c;box-shadow:0 4px 14px rgba(0,0,0,.1);}
+.card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+.badge{position:absolute;top:12px;right:14px;background:#3C90DD;color:#fff;
+  font-family:'Jua',sans-serif;font-size:13px;padding:2px 12px;border-radius:20px;display:none;}
+.card.selected .badge{display:block;}
+.card-title{font-family:'Jua',sans-serif;font-size:16px;margin-bottom:5px;}
+.card-desc{font-size:12px;color:#7a6f5d;margin-bottom:12px;line-height:1.5;}
+.box{background:#FAFAF5;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.bottom-note{text-align:center;margin-top:14px;font-size:12px;color:#9a8f7d;}
+</style>
+<script>
+/*
+ * G MAJOR — 2 OCTAVES
+ *
+ * Solfège (movable do):  도 레 미 파 솔 라 시 도  (same pattern each octave)
+ * Fingers (right hand):  1  2  3  1  2  3  4  5
+ *
+ * Staff: shows G4→G5 (treble clef, 1 octave = 8 circles)
+ *
+ * Keyboard: white-key outline only, 2 octaves (G3 → G5)
+ *   Slots 0-7:  G3 A3 B3 C4 D4 E4 [F#4] G4
+ *   Slots 7-14: G4 A4 B4 C5 D5 E5 [F#5] G5
+ *   [F#] = no separate black key; this slot represents the F# position,
+ *           shown as a narrow key with "#" label so students know
+ *           it maps to the black key on the real piano.
+ *
+ * Scale degree → slot mapping:
+ *   도(0)  레(1)  미(2)  파(3)  솔(4)  라(5)  시#(6)  도(7)
+ */
+
+const SF=['도','레','미','파','솔','라','시','도'];
+const FN=['1','2','3','1','2','3','4','5'];
+const CL=['var(--do)','var(--re)','var(--mi)','var(--fa)',
+          'var(--sol)','var(--la)','var(--si)','var(--do)'];
+
+/*
+ * 2-octave keyboard slot array (16 slots total — shared G4 is at index 7)
+ *   sfIdx: which solfège degree (0-7)
+ *   sharp: true = this slot represents a # note (no real white key; show as narrow)
+ */
+const KEYS=[
+  /* octave 1 */
+  {sfIdx:0,sharp:false}, // G3  도
+  {sfIdx:1,sharp:false}, // A3  레
+  {sfIdx:2,sharp:false}, // B3  미
+  {sfIdx:3,sharp:false}, // C4  파
+  {sfIdx:4,sharp:false}, // D4  솔
+  {sfIdx:5,sharp:false}, // E4  라
+  {sfIdx:6,sharp:true }, // F#4 시 ★
+  /* shared boundary */
+  {sfIdx:7,sharp:false}, // G4/do boundary
+  /* octave 2 */
+  {sfIdx:1,sharp:false}, // A4  레
+  {sfIdx:2,sharp:false}, // B4  미
+  {sfIdx:3,sharp:false}, // C5  파
+  {sfIdx:4,sharp:false}, // D5  솔
+  {sfIdx:5,sharp:false}, // E5  라
+  {sfIdx:6,sharp:true }, // F#5 시 ★
+  {sfIdx:7,sharp:false}, // G5  도
+];
+// Note: sfIdx:0 maps to the high 도 at the end (same color as low 도)
+// sfIdx:7 maps to SF[7]='도' — used for the 도 at slot 7 and 14
+
+/* ── keyboard SVG ── */
+/* Normal key width=38, sharp key width=20, both height=92 */
+const NKW=38, SKW=22, KH=92;
+
+function buildKeyboard(){
+  // pre-calculate x positions
+  const xs=[];
+  let x=0;
+  KEYS.forEach(k=>{ xs.push(x); x+=k.sharp?SKW+2:NKW+2; });
+  const SVG_W=x-2;
+
+  let svg=`<svg viewBox="0 0 ${SVG_W} ${KH}" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">`;
+
+  /* octave divider line */
+  const divX=xs[7]; // x where octave 2 starts (shared G4)
+  svg+=`<line x1="${divX-1}" y1="0" x2="${divX-1}" y2="${KH}"
+    stroke="#ddd" stroke-width="1" stroke-dasharray="4 3"/>`;
+
+  KEYS.forEach((k,i)=>{
+    const kx=xs[i];
+    const kw=k.sharp?SKW:NKW;
+    const col=CL[k.sfIdx];
+    const sf=SF[k.sfIdx];
+    const fn=FN[k.sfIdx];
+
+    /* key rect — outline only, light tint fill */
+    svg+=`<rect x="${kx+1}" y="1" width="${kw-2}" height="${KH-2}" rx="4"
+      fill="${col}14" stroke="${col}" stroke-width="2"/>`;
+
+    /* for sharp keys: small # badge at top */
+    if(k.sharp){
+      svg+=`<text x="${kx+kw/2}" y="14" text-anchor="middle"
+        font-family="Gaegu,sans-serif" font-size="9" font-weight="bold" fill="${col}">#</text>`;
+    }
+
+    /* solfège label */
+    svg+=`<text x="${kx+kw/2}" y="${KH-22}" text-anchor="middle"
+      font-family="Jua,sans-serif" font-size="${k.sharp?10:13}" font-weight="bold" fill="${col}">${sf}</text>`;
+
+    /* finger number */
+    svg+=`<text x="${kx+kw/2}" y="${KH-7}" text-anchor="middle"
+      font-family="Jua,sans-serif" font-size="${k.sharp?9:12}" fill="#7a6f5d">${fn}</text>`;
+  });
+
+  /* octave labels */
+  svg+=`<text x="2" y="${KH+12}" font-family="Jua,sans-serif" font-size="10" fill="#aaa">◀ 1옥타브</text>`;
+  svg+=`<text x="${xs[7]+2}" y="${KH+12}" font-family="Jua,sans-serif" font-size="10" fill="#aaa">◀ 2옥타브</text>`;
+
+  svg+=`</svg>`;
+  return {svg, svgW:SVG_W};
+}
+
+/* ── staff SVG (G4→G5, treble clef) ── */
+/* Staff lines y: 28(F5) 36(D5) 44(B4) 52(G4) 60(E4)  — spacing 8px */
+/* G major note y positions: */
+const SL0=28; // top staff line (F5)
+const NOTE_Y=[
+  SL0+24, // G4 on 2nd line from bottom
+  SL0+20, // A4 space
+  SL0+16, // B4 middle line
+  SL0+12, // C5 space
+  SL0+8,  // D5
+  SL0+4,  // E5 space
+  SL0+0,  // F#5 on top line
+  SL0-4,  // G5 space above top
+];
+const STAFF_H=72;
+
+function buildStaff(svgW){
+  const noteXs=Array.from({length:8},(_,i)=>svgW/16+i*(svgW/8));
+  let svg=`<svg viewBox="0 0 ${svgW} ${STAFF_H}" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">`;
+
+  /* 5 staff lines */
+  for(let i=0;i<5;i++){
+    const y=SL0+i*8;
+    svg+=`<line x1="0" y1="${y}" x2="${svgW}" y2="${y}" stroke="#ccc" stroke-width="1.2"/>`;
+  }
+
+  noteXs.forEach((nx,i)=>{
+    const ny=NOTE_Y[i];
+    const col=CL[i];
+    const sf=SF[i];
+
+    /* solfège above */
+    svg+=`<text x="${nx}" y="12" text-anchor="middle"
+      font-family="Jua,sans-serif" font-size="12" font-weight="bold" fill="${col}">${sf}</text>`;
+
+    /* small circle (동그라미, r=4.5) */
+    svg+=`<circle cx="${nx}" cy="${ny}" r="4.5" fill="${col}"/>`;
+
+    /* stem */
+    if(i<4) svg+=`<line x1="${nx+4}" y1="${ny}" x2="${nx+4}" y2="${ny-16}" stroke="${col}" stroke-width="1.5"/>`;
+    else     svg+=`<line x1="${nx-4}" y1="${ny}" x2="${nx-4}" y2="${ny+16}" stroke="${col}" stroke-width="1.5"/>`;
+  });
+
+  svg+=`</svg>`;
+  return svg;
+}
+
+function sel(el){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,
+      text:el.querySelector('.card-title').textContent})}).catch(()=>{});
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const kb=buildKeyboard();
+  const staffSVG=buildStaff(600); // staff width ~ same visual width as keyboard
+
+  // DESIGN A
+  document.getElementById('staff-a').innerHTML=staffSVG;
+  document.getElementById('piano-a').innerHTML=kb.svg;
+
+  // DESIGN B (same content, slightly different spacing)
+  document.getElementById('staff-b').innerHTML=staffSVG;
+  document.getElementById('piano-b').innerHTML=kb.svg;
+});
+</script>
+</head>
+<body>
+
+<h1>G 장조 — 5선지 + 건반 2 옥타브</h1>
+<p class="sub">흰 건반 윤곽선만 · 시=F#는 좁은 키로 표시 · 손가락 번호 건반 안에 · 계이름 위에</p>
+<div style="text-align:center;margin-bottom:14px;">
+  <span class="hint">👇 클릭으로 선택</span>
+</div>
+
+<!-- DESIGN A: 계이름 위 → 5선지 → 건반 2세트 -->
+<div class="card" data-choice="A" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">A. 계이름(위) → 작은 원 5선지 → 건반 2옥타브</div>
+  <div class="card-desc">
+    흰 건반 윤곽선만 · F#(시)는 좁은 키로 구분 · 손가락 번호 건반 안 · 점선으로 옥타브 구분
+  </div>
+  <div class="box">
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:6px 2px;margin-bottom:8px;" id="staff-a"></div>
+    <div id="piano-a" style="overflow-x:auto;"></div>
+    <div style="font-size:10px;color:#bbb;margin-top:6px;text-align:center;">★ 시(F#)는 실제 피아노에서 검은 건반입니다</div>
+  </div>
+</div>
+
+<!-- DESIGN B: 더 큰 건반 -->
+<div class="card" data-choice="B" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">B. 동일 구조 — 넓은 여백 버전</div>
+  <div class="card-desc">A와 동일하지만 섹션 간 여백을 더 두고, 건반 설명 없애기.</div>
+  <div class="box" style="display:flex;flex-direction:column;gap:10px;">
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:8px 4px;" id="staff-b"></div>
+    <div id="piano-b" style="overflow-x:auto;"></div>
+  </div>
+</div>
+
+<div class="bottom-note">
+  클릭하거나 터미널에서 의견 주세요!<br>
+  <small>F# 키 표시 방식, 옥타브 구분 방법 등 조정 가능합니다.</small>
+</div>
+</body>
+</html>

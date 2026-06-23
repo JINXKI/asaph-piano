@@ -1,0 +1,390 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="vexflow.js"></script>
+<style>body{margin:0;background:#fff;font-family:Jua,sans-serif}#cmelody{width:1040px}</style>
+</head><body>
+<div id="cmelody"></div>
+<script>
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded (G key)');return;}
+  // letter -> [English solfege (fixed-do, G major), color]
+  const NOTE={g:['Sol','#3C90DD'],a:['La','#7E6BC4'],b:['Si','#C85FA0'],c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa#','#7FB23E']};
+  function info(key){return NOTE[key.charAt(0)];}
+  function styleNote(n,key){
+    const I=info(key);if(!I)return;
+    n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    const a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}
+    n.addModifier(a,0);
+  }
+
+  function renderScale(div){
+    const W=860,H=152;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const st=new VF.Stave(4,18,W-12);st.addClef('treble').addKeySignature('G');st.setContext(ctx).draw();
+    const keys=['g/3','a/3','b/3','c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5'];
+    const notes=keys.map(function(k){const n=new VF.StaveNote({keys:[k],duration:'q'});styleNote(n,k);return n;});
+    const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],W-140);
+    v.draw(ctx,st);
+  }
+
+  function renderKbd(div){
+    const whites=['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'];
+    const hl={'G3':'g','A3':'a','B3':'b','C4':'c','D4':'d','E4':'e','F#4':'f','G4':'g','A4':'a','B4':'b','C5':'c','D5':'d','E5':'e','F#5':'f','G5':'g'};
+    const ww=52,wh=174,bw=32,bh=98;
+    const W=whites.length*ww,H=wh;
+    let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    whites.forEach(function(n,i){
+      const x=i*ww,L=hl[n],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
+      if(c){const cx=x+ww/2,cy=wh-50;
+        s+='<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="12" fill="#fff">'+I[0]+'</text>';}
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-9)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#b7ab92">'+n[0]+'</text>';
+    });
+    const hasBlack={C:1,D:1,F:1,G:1,A:1};
+    whites.forEach(function(n,i){
+      if(i>=whites.length-1)return;
+      if(!hasBlack[n[0]])return;
+      const sharp=n[0]+'#'+n[1],x=(i+1)*ww-bw/2,L=hl[sharp],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+x+'" y="0" width="'+bw+'" height="'+bh+'" rx="4" fill="'+(c||'#2b2620')+'" stroke="#2b2620" stroke-width="1.5"/>';
+      if(c)s+='<text x="'+(x+bw/2)+'" y="'+(bh-12)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#fff">'+I[0]+'</text>';
+    });
+    s+='</svg>';
+    div.innerHTML=s;
+  }
+
+  function renderLegend(div){
+    const order=['g','a','b','c','d','e','f'];
+    div.innerHTML=order.map(function(l){var I=NOTE[l];return '<span class="gk-chip"><i style="background:'+I[1]+'"></i>'+I[0]+'</span>';}).join('');
+  }
+
+  function renderMelody(div){
+    const W=1040;  // wide render; CSS scales it to the card so labels never overlap
+    // All pitches/rhythms verified from melody.png notehead-coordinate analysis.
+    const VERSE=[
+      [{r:'q'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'g/4',d:'q'},{k:'d/4',d:'q'}],
+      [{k:'d/4',d:'q'},{k:'e/4',d:'q'},{k:'f/4',d:'q'},{k:'g/4',d:'q'}],
+      [{r:'q'},{k:'a/4',d:'q'},{k:'a/4',d:'q'},{k:'g/4',d:'q'}],
+      [{k:'e/4',d:'h'},{r:'h'}]
+    ];
+    const data=[
+      {ch:['G','D','Em7','C'], ly:[['','모','든','축','복'],['주','신','주','님'],['','찬','양','하'],['리','']], en:[['','Eve-','ry','bless-','ing'],['You','pour','out',"I'll"],['','Turn','back','to'],['praise','']], m:VERSE},
+      {ch:['G','D','Em7','C'], ly:[['','어','둔','날','이'],['다','가','와','도'],['','난','외','치'],['리','']], en:[['','When','the','dark-','ness'],['clos-','es','in','Lord'],['','Still','I','will'],['say','']], m:VERSE},
+      {ch:[null,'G','D','Em7'], ly:[['주','의','이','름'],['을','찬','','양','','해'],['','주','의','이','름'],['을']], en:[['Bless-','ed','be','the'],['name','of','','the','','Lord'],['','Bless-','ed','be','Your'],['name']], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0]], m:[
+        [{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'w'}]
+      ]},
+      {ch:['C','G','D','Em7','C'], ch2:[[3,2,'D']], ly:[['','주','의','이','름'],['을','찬','','양','','해'],['','영','화','로','운'],['주','이','름','','찬','양'],['','']], en:[['','Bless-','ed','be','the'],['name','of','','the','','Lord'],['','Bless-','ed','be','Your'],['glo-','ri-','ous','','name',''],['','']], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0],[3,2,3,3],[3,5,4,0]], m:[
+        [{r:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'b/4',d:'q'},{k:'c/5',d:'8'},{k:'b/4',d:'8'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'q'}],
+        [{k:'g/4',d:'hd'},{r:'q'}]
+      ]}
+    ];
+    const sysH=195,topPad=14;   // wide gap between systems so the lyric line has plenty of breathing room
+    // Trim trailing dead space: reserve only the last system's content height, not a full band.
+    // Reserve must clear the last system's BOTTOM labels: note + finger no. + solfege + Korean + English lyric lines (≈ 168px).
+    const H=topPad+(data.length-1)*sysH+168;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    const chordLbls=[];
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp,ly,en){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNote(n,sp.k);
+      // Korean lyric — same style as 위대하신 주: Jua 13px, BOTTOM-justified so VexFlow stacks it under the solfege.
+      if(ly){var la=new VF.Annotation(ly);la.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{la.setStyle({fillStyle:'#2b2620'});la.setFont('Jua, sans-serif',13,'normal');}catch(e){}n.addModifier(la,0);}
+      // English lyric — smaller grey italic line, BOTTOM-justified so it stacks directly under the Korean.
+      if(en){var ea=new VF.Annotation(en);ea.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{ea.setStyle({fillStyle:'#8a7f6d'});ea.setFont('Jua, sans-serif',10,'italic');}catch(e){}n.addModifier(ea,0);}
+      return n;
+    }
+    data.forEach(function(sys,si){
+      const meas=sys.m,chords=sys.ch||[];
+      const y=topPad+si*sysH+8;
+      const M=meas.length,x0=4,clefW=58;
+      // Width per measure proportional to note count (+base), so dense bars get room and held notes don't hog space.
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];
+      for(let m=0;m<M;m++){
+        const w=widths[m];
+        const st=new VF.Stave(x,y,w);
+        if(m===0)st.addClef('treble').addKeySignature('G');
+        if(si===0&&m===0)st.addTimeSignature('4/4');
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const lyM=sys.ly&&sys.ly[m];
+        const enM=sys.en&&sys.en[m];
+        const notes=specs.map(function(sp,i){return build(sp,lyM&&lyM[i],enM&&enM[i]);});sysNotes[m]=notes;
+        // Right-hand finger numbers (verse: thumb on Re; refrain: thumb on Sol)
+        const FING=(si<=1)?{d:1,e:2,f:3,g:4,a:5}:{g:1,a:2,b:3,c:4,d:5};
+        // Tied-to notes (not re-struck) get no finger number.
+        const tieTargets={};(sys.sl||[]).forEach(function(s){tieTargets[s[2]+':'+s[3]]=true;});
+        specs.forEach(function(sp,i){
+          if(sp.r||tieTargets[m+':'+i])return;var fn=FING[sp.k.charAt(0)];if(!fn)return;
+          var fa=new VF.Annotation(String(fn));
+          fa.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+          try{fa.setFont('Jua, sans-serif',10,'normal');}catch(e){}
+          try{fa.setStyle({fillStyle:'#5f8f2e'});}catch(e){}
+          notes[i].addModifier(fa,0);
+        });
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){
+          const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
+          if(eighth){grp.push(notes[i]);}else{flushBeam();}
+        }
+        flushBeam();
+        const nb=beats(specs)||4;
+        const v=new VF.Voice({num_beats:nb,beat_value:4});
+        v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){var cyTop=y-10;try{cyTop=st.getYForLine(0)-8;}catch(e){}chordLbls.push({x:st.getNoteStartX(),y:cyTop,t:chords[m]});}
+        x+=w;
+      }
+      (sys.sl||[]).forEach(function(s){
+        var fn=sysNotes[s[0]]&&sysNotes[s[0]][s[1]],ln=sysNotes[s[2]]&&sysNotes[s[2]][s[3]];
+        if(!fn||!ln)return;
+        var tie=new VF.StaveTie({first_note:fn,last_note:ln,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(1);}catch(e){}
+        tie.setContext(ctx).draw();
+      });
+      (sys.ch2||[]).forEach(function(c){
+        var nt=sysNotes[c[0]]&&sysNotes[c[0]][c[1]];if(!nt)return;
+        var cx;try{cx=nt.getAbsoluteX();}catch(e){return;}
+        chordLbls.push({x:cx-4,y:topPad+si*sysH+8-10,t:c[2]});
+      });
+    });
+    // chord symbols as plain SVG text, lifted above the finger numbers (no overlap)
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
+  }
+
+  // Praise His Name (G key) — chord progression for the four-beat & chord pages.
+  // Same I-I-vi-vi-IV-V-I-I shape as the C-key page 14, transposed to G major
+  // (these are exactly this song's chords: G / Em / C / D). Root position,
+  // LH one octave below each RH root. D's "f" reads F# under the G key signature.
+  const COL_G={G:'#E24B4A',Em:'#7E6BC4',C:'#3C90DD',D:'#EF8A3C'};
+  const PROG_G=[
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'Em',rh:['e/4','g/4','b/4'], lh:'e/3'},
+    {name:'Em',rh:['e/4','g/4','b/4'], lh:'e/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'D', rh:['d/4','f/4','a/4'], lh:'d/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/3'}
+  ];
+
+  // Two rows of 4 measures with the G key signature; buildBars(ch,col) returns
+  // {rh:[...notes], lh:[...notes]}. Mirrors the page-14 renderGrid layout.
+  function renderGridG(div,buildBars){
+    // Compact spacing (matches the C-key renderGrid) so both cards fit one A4 sheet without clipping.
+    // 2번째 줄(C D G G)을 더 아래로 내려 그 코드 글자가 위 시스템의 낮은음자리표를 안 가리게 간격을 넓힘.
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=186,tY0=16;
+    const H=tY0+rows*sysGap;
+    const restW=(W-16-x0-firstW)/(perRow-1);
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    for(let row=0;row<rows;row++){
+      const tY=tY0+row*sysGap,bY=tY+96;
+      let x=x0,firstT,firstB,lastT,lastB;
+      for(let c=0;c<perRow;c++){
+        const ch=PROG_G[row*perRow+c],w=c===0?firstW:restW,col=COL_G[ch.name];
+        const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+        if(c===0){t.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+          b.addClef('bass').addKeySignature('G').addTimeSignature('4/4');firstT=t;firstB=b;}
+        t.setContext(ctx).draw();b.setContext(ctx).draw();
+        if(c===perRow-1){lastT=t;lastB=b;}
+        const bars=buildBars(ch,col);
+        const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+        try{a.setStyle({fillStyle:col});}catch(e){}
+        bars.rh[0].addModifier(a,0);
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.lh);
+        new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
+        vt.draw(ctx,t);vb.draw(ctx,b);
+        x+=w;
+      }
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+      new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    }
+    // viewBox를 실제 콘텐츠 범위에 맞춰, 왼쪽 브레이스/오선지가 잘리지 않고 모두 테두리 안에 들어오게 한다.
+    const svg=div.querySelector('svg');
+    if(svg){try{const bb=svg.getBBox();
+      const x0v=Math.floor(bb.x-4),fullW=Math.ceil(bb.x+bb.width+4)-x0v,fullH=Math.ceil(bb.y+bb.height+10);
+      svg.setAttribute('viewBox',x0v+' 0 '+fullW+' '+fullH);
+      svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svg.removeAttribute('height');svg.setAttribute('width','100%');}catch(e){}}
+  }
+
+  function chordG(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});return n;}
+  // 왼손(베이스) 음표도 코드 색으로 — 쉼표는 검정 그대로 둔다.
+  function bassG(key,d,col){const n=new VF.StaveNote({keys:[key],duration:d,clef:'bass'});try{n.setStyle({fillStyle:col,strokeStyle:col});}catch(e){}return n;}
+
+  // 포비트 섹션 : 오른손 ●－●－ (1박 치고 2박 쉼 · 3박 치고 4박 쉼), 왼손 ●－－● (1박 치고 2·3박 쉼 · 4박 치기) — 14페이지와 동일 리듬
+  function renderPractice(div){
+    renderGridG(div,function(ch,col){
+      const rh=[
+        chordG(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'}),
+        chordG(ch.rh,'q',col),
+        new VF.StaveNote({keys:['b/4'],duration:'qr'})
+      ];
+      const lh=[
+        bassG(ch.lh,'q',col),
+        new VF.StaveNote({keys:['d/3'],duration:'hr',clef:'bass'}),
+        bassG(ch.lh,'q',col)
+      ];
+      return {rh:rh,lh:lh};
+    });
+  }
+
+  // 코드 섹션 : 온음표 (한 마디에 한 번) — 14페이지와 동일 리듬
+  function renderChordPractice(div){
+    renderGridG(div,function(ch,col){
+      return {
+        rh:[chordG(ch.rh,'w',col)],
+        lh:[bassG(ch.lh,'w',col)]
+      };
+    });
+  }
+
+  // ===== 위대하신 주 — refrain melody (C major). Colored noteheads + 계이름 + 가사. =====
+  function labelC(key){var I=NOTE[key.charAt(0)];return [key.charAt(0)==='f'?'Fa':I[0],I[1]];}
+  function styleNoteC(n,key){
+    var I=labelC(key);n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    var a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}n.addModifier(a,0);
+  }
+  function renderCRefrain(div){
+    const W=1040;
+    // v1 transcription (from "위대~" through the end) — PITCHES TO BE VERIFIED against the lead sheet.
+    const sys=[
+      {ch:[null,'C2',null,'Am',null], ties:[[0,1,1,0],[1,3,1,4],[2,2,2,5],[3,2,3,3],[4,4,4,5]], m:[
+        [{k:'g/4',d:'8',ly:'위'},{k:'c/5',d:'8',ly:'대'}],
+        [{k:'c/5',d:'h',ly:'~'},{k:'g/4',d:'8',ly:'하'},{k:'d/5',d:'8d',ly:'신'},{k:'c/5',d:'16',ly:'주'},{k:'c/5',d:'8',ly:'~'}],
+        [{k:'e/5',d:'q',ly:'찬'},{r:'q'},{k:'d/5',d:'8',ly:'양'},{k:'c/5',d:'8',ly:'해'},{k:'d/5',d:'8',ly:'위'},{k:'c/5',d:'8',ly:'대'}],
+        [{k:'g/4',d:'8',ly:'하'},{k:'d/5',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'},{k:'c/5',d:'8',ly:'~'},{r:'h'}],
+        [{k:'g/4',d:'8',ly:'모'},{k:'g/4',d:'8',ly:'두'},{k:'e/5',d:'8',ly:'알'},{k:'d/5',d:'8',ly:'게'},{k:'c/5',d:'8',ly:'되'},{k:'c/5',d:'8',ly:'~'},{k:'d/5',d:'q',ly:'리'}]
+      ]},
+      {ch:['F2','G','C2',null,null], repBeg:[3], ties:[[0,5,1,0],[1,3,1,4],[1,4,2,0],[3,2,3,3],[3,6,4,0]],
+        en:[['','','','','How','great'],['','is','our','God',''],[''],['Name','a-','bove','','all','names',''],['','']], m:[
+        [{k:'c/5',d:'8',ly:'~'},{k:'c/5',d:'8',ly:'라'},{k:'c/5',d:'q',ly:'~'},{r:'q'},{k:'g/4',d:'8',ly:'위'},{k:'d/5',d:'8',ly:'대'}],
+        [{k:'d/5',d:'h',ly:'~'},{k:'g/4',d:'8',ly:'하'},{k:'g/4',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'},{k:'c/5',d:'8',ly:'~'}],
+        [{k:'c/5',d:'w'}],
+        [{k:'e/5',d:'8',ly:'모'},{k:'f/5',d:'8',ly:'든'},{k:'e/5',d:'8',ly:'이'},{k:'e/5',d:'8',ly:'~'},{k:'d/5',d:'8',ly:'름'},{k:'d/5',d:'8',ly:'위'},{k:'c/5',d:'q',ly:'에'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'h'}]
+      ]},
+      {ch:['Am',null,'F2','G','C2',null], repEnd:[5], ties:[[0,2,0,3],[0,6,1,0],[2,1,2,2],[2,4,3,0],[3,4,4,0],[4,0,5,0]],
+        en:[['Wor-','thy','of','','all','praise',''],['','','','My'],['heart','sing','','How','great'],['','','is','our','God'],[''],['','']], m:[
+        [{k:'e/5',d:'q',ly:'뛰'},{k:'f/5',d:'8',ly:'어'},{k:'e/5',d:'8',ly:'나'},{k:'e/5',d:'8',ly:'~'},{k:'d/5',d:'8',ly:'신'},{k:'d/5',d:'8',ly:'이'},{k:'c/5',d:'8',ly:'름'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'q'},{r:'8'},{k:'c/5',d:'8',ly:'다'}],
+        [{k:'e/5',d:'8',ly:'양'},{k:'f/5',d:'8',ly:'해'},{k:'e/5',d:'8',ly:'~'},{k:'g/4',d:'8',ly:'위'},{k:'d/5',d:'h',ly:'대'}],
+        [{k:'d/5',d:'h',ly:'~'},{r:'8'},{k:'g/4',d:'8',ly:'하'},{k:'g/4',d:'8',ly:'신'},{k:'c/5',d:'8',ly:'주'}],
+        [{k:'c/5',d:'w',ly:'~'}],
+        [{k:'c/5',d:'h',ly:'~'},{r:'h'}]
+      ]}
+    ];
+    const TICK={'w':4,'h':2,'q':1,'8':0.5,'16':0.25};
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp,en){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNoteC(n,sp.k);
+      if(sp.ly){var la=new VF.Annotation(sp.ly);la.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{la.setStyle({fillStyle:'#2b2620'});la.setFont('Jua, sans-serif',13,'normal');}catch(e){}n.addModifier(la,0);}
+      // English lyric — smaller grey italic line, BOTTOM-justified so it stacks directly under the Korean.
+      if(en){var ea=new VF.Annotation(en);ea.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{ea.setStyle({fillStyle:'#8a7f6d'});ea.setFont('Jua, sans-serif',10,'italic');}catch(e){}n.addModifier(ea,0);}
+      return n;
+    }
+    const sysH=195,topPad=30;   // roomy gap between systems: room for the solfege + Korean + English lyric lines
+    // +26 clears the last system's BOTTOM lyric line, which sits below the reserved band.
+    const H=topPad+sys.length*sysH+26;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const chordLbls=[];
+    sys.forEach(function(S,si){
+      const meas=S.m,chords=S.ch||[],y=topPad+si*sysH+8;
+      const hasPickup=!!S.pickup, M=meas.length, x0=4, clefW=46;
+      const puW=hasPickup?64:0;
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW-puW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];let puNotes=null;
+      if(hasPickup){
+        const st=new VF.Stave(x,y,clefW+puW);st.addClef('treble');
+        if(si===0)st.addTimeSignature('4/4');
+        st.setEndBarType(VF.Barline.type.NONE);
+        st.setContext(ctx).draw();
+        puNotes=S.pickup.map(function(sp){return build(sp);});
+        const v=new VF.Voice({num_beats:beats(S.pickup),beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(puNotes);
+        new VF.Formatter().joinVoices([v]).format([v],puW-6);
+        v.draw(ctx,st);
+        if(puNotes.length>1){try{new VF.Beam(puNotes).setContext(ctx).draw();}catch(e){}}
+        x+=clefW+puW;
+      }
+      for(let m=0;m<M;m++){
+        let w=widths[m];if(hasPickup&&m===0)w-=clefW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0&&!hasPickup)st.addClef('treble');
+        if(si===0&&m===0&&!hasPickup)st.addTimeSignature('4/4');
+        if((S.repBeg||[]).indexOf(m)>=0)st.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+        if((S.repEnd||[]).indexOf(m)>=0)st.setEndBarType(VF.Barline.type.REPEAT_END);
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const enM=S.en&&S.en[m];
+        const notes=specs.map(function(sp,i){return build(sp,enM&&enM[i]);});sysNotes[m]=notes;
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){const sp=specs[i],e8=!sp.r&&(sp.d.charAt(0)==='8'||sp.d==='16');if(e8){grp.push(notes[i]);}else{flushBeam();}}
+        flushBeam();
+        const v=new VF.Voice({num_beats:beats(specs)||4,beat_value:4});v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){var cyTop=y-10;try{cyTop=st.getYForLine(0)-8;}catch(e){}chordLbls.push({x:st.getNoteStartX(),y:cyTop,t:chords[m]});}
+        x+=w;
+      }
+      (S.ties||[]).forEach(function(t){
+        const first=(t[0]<0)?(puNotes&&puNotes[t[1]]):(sysNotes[t[0]]&&sysNotes[t[0]][t[1]]);
+        const last=sysNotes[t[2]]&&sysNotes[t[2]][t[3]];
+        if(!first||!last)return;
+        const tie=new VF.StaveTie({first_note:first,last_note:last,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(-1);}catch(e){}tie.setContext(ctx).draw();
+      });
+    });
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
+  }
+
+  function go(){
+    var cm=document.getElementById('cmelody');if(cm){try{renderCRefrain(cm);}catch(e){console.error('cmelody',e);}}
+    var ml=document.getElementById('gmelody');if(ml){try{renderMelody(ml);}catch(e){console.error('gmelody',e);}}
+    var sc=document.getElementById('gscale');if(sc){try{renderScale(sc);}catch(e){console.error('gscale',e);}}
+    var kb=document.getElementById('gkbd');if(kb){try{renderKbd(kb);}catch(e){console.error('gkbd',e);}}
+    var lg=document.getElementById('glegend');if(lg){try{renderLegend(lg);}catch(e){}}
+    var pr=document.getElementById('gpractice');if(pr){try{renderPractice(pr);}catch(e){console.error('gpractice',e);}}
+    var gc=document.getElementById('gchords');if(gc){try{renderChordPractice(gc);}catch(e){console.error('gchords',e);}}
+  }
+  go();
+})();
+</script>
+
+<script>
+/* ---------- C KEY : keyboard map + melody + chords + four-beat (빛나는 왕의 왕) ---------- */
+</script>
+</body></html>

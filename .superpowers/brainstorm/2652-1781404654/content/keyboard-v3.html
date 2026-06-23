@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5선지 ↔ 건반 매핑 v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+  --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+  --bg:#F5EDD6;--border:#E3D8C0;--ink:#3a342c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+body{padding:20px;max-width:860px;margin:0 auto;}
+h1{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:4px;}
+.sub{text-align:center;font-size:13px;color:#7a6f5d;margin-bottom:18px;}
+.hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;
+  padding:5px 14px;display:inline-block;font-size:13px;margin-bottom:14px;}
+
+.card{background:#fff;border:3px solid var(--border);border-radius:18px;
+  padding:20px;cursor:pointer;transition:all .2s;position:relative;margin-bottom:16px;}
+.card:hover{border-color:#a89a7c;box-shadow:0 4px 14px rgba(0,0,0,.1);}
+.card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+.badge{position:absolute;top:12px;right:14px;background:#3C90DD;color:#fff;
+  font-family:'Jua',sans-serif;font-size:13px;padding:2px 12px;border-radius:20px;display:none;}
+.card.selected .badge{display:block;}
+.card-title{font-family:'Jua',sans-serif;font-size:16px;margin-bottom:5px;}
+.card-desc{font-size:12px;color:#7a6f5d;margin-bottom:12px;line-height:1.5;}
+
+.section-box{background:#FAFAF5;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.row-tag{font-family:'Jua',sans-serif;font-size:10px;color:#aaa;letter-spacing:.5px;margin-bottom:2px;}
+.bottom-note{text-align:center;margin-top:14px;font-size:12px;color:#9a8f7d;}
+</style>
+<script>
+const C=['var(--do)','var(--re)','var(--mi)','var(--fa)','var(--sol)','var(--la)','var(--si)','var(--do)'];
+const SF=['도','레','미','파','솔','라','시','도'];
+const FN=['1','2','3','1','2','3','4','5'];
+const FNC=['①','②','③','①','②','③','④','⑤'];
+const EN=['C','D','E','F','G','A','B','C'];
+
+/* ── 8 evenly-spaced note x-centers, matching 8 white keys ── */
+/* Key slot = 52px each. 8 keys → total = 416px. Centers: 26,78,130,182,234,286,338,390 */
+const NX=[26,78,130,182,234,286,338,390];
+
+/* Staff note Y positions (treble clef, C4–C5, staff lines at y=28,36,44,52,60) */
+const NY={
+  C4:68, D4:64, E4:60, F4:56, G4:52, A4:48, B4:44, C5:40
+};
+const NOTE_Y=[NY.C4,NY.D4,NY.E4,NY.F4,NY.G4,NY.A4,NY.B4,NY.C5];
+
+function staffSVG(showSolfege, showFinger, showFnLabel){
+  const topPad = showSolfege ? 20 : 4;
+  const botPad = showFinger ? 24 : 6;
+  const staffTop = topPad;
+  // staff lines at staffTop + 0,8,16,24,32
+  const SL=[0,8,16,24,32].map(d=>staffTop+d);
+  // note y relative: same offsets from SL[4] (bottom line)
+  const ledgerY=SL[4]+8;  // C4 ledger line
+  const noteY=[
+    ledgerY,          // C4
+    ledgerY-4,        // D4
+    SL[4],            // E4
+    SL[4]-4,          // F4
+    SL[3],            // G4
+    SL[3]-4,          // A4
+    SL[2],            // B4
+    SL[2]-4,          // C5
+  ];
+  const svgH = staffTop + 32 + botPad + (showFnLabel?14:0);
+
+  let out=`<svg viewBox="0 0 416 ${svgH}" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">`;
+
+  // staff lines
+  SL.forEach(y=>{
+    out+=`<line x1="0" y1="${y}" x2="416" y2="${y}" stroke="#bbb" stroke-width="1.2"/>`;
+  });
+  // ledger line for C4
+  out+=`<line x1="${NX[0]-12}" y1="${ledgerY}" x2="${NX[0]+12}" y2="${ledgerY}" stroke="#bbb" stroke-width="1.2"/>`;
+
+  NX.forEach((x,i)=>{
+    const col=C[i];
+    const y=noteY[i];
+    // solfège label above staff
+    if(showSolfege){
+      out+=`<text x="${x}" y="${staffTop-6}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="12" font-weight="bold" fill="${col}">${SF[i]}</text>`;
+    }
+    // note ellipse — small enough to sit between lines (ry=4.5)
+    out+=`<ellipse cx="${x}" cy="${y}" rx="9.5" ry="5"
+      fill="${col}" transform="rotate(-18 ${x} ${y})"/>`;
+    // stems up for lower notes, down for higher
+    const stemUp = i < 4;
+    if(stemUp){
+      out+=`<line x1="${x+8}" y1="${y-3}" x2="${x+8}" y2="${y-26}" stroke="${col}" stroke-width="1.8"/>`;
+    } else {
+      out+=`<line x1="${x-8}" y1="${y+3}" x2="${x-8}" y2="${y+24}" stroke="${col}" stroke-width="1.8"/>`;
+    }
+    // finger number below staff
+    if(showFinger){
+      out+=`<text x="${x}" y="${staffTop+32+botPad-4}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" fill="${col}">${FN[i]}</text>`;
+    }
+  });
+
+  if(showFnLabel && showFinger){
+    const lblY=staffTop+32+botPad+10;
+    out+=`<text x="0" y="${lblY}" font-family="Jua,sans-serif" font-size="9" fill="#bbb">손가락 번호</text>`;
+  }
+
+  out+='</svg>';
+  return out;
+}
+
+/* ── White-only piano SVG (outline style, print-friendly) ── */
+/* 8 white keys C D E F G A B C, slot=52px, key width=48, gap=4 */
+/* Black key POSITIONS shown as tiny tick marks at top only */
+function pianoSVG(opt){
+  const KW=48, G=4, KH=90, BH=18;
+  const svgW=416;
+  // white key left edges
+  const KX=[0,52,104,156,208,260,312,364];
+  // black key center X between white keys (C#,D#,_,F#,G#,A#,_)
+  const BKX=[
+    KX[0]+KW+G/2,   // C#
+    KX[1]+KW+G/2,   // D#
+    // no black between E-F
+    KX[3]+KW+G/2,   // F#
+    KX[4]+KW+G/2,   // G#
+    KX[5]+KW+G/2,   // A#
+  ];
+
+  let out=`<svg viewBox="0 0 ${svgW} ${KH+(opt==='B'?0:0)}" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">`;
+
+  KX.forEach((x,i)=>{
+    const col=C[i];
+    // key outline only (no fill)
+    out+=`<rect x="${x}" y="0" width="${KW}" height="${KH}" rx="5"
+      fill="none" stroke="${col}" stroke-width="2"/>`;
+
+    if(opt==='A'){
+      // solfège at bottom of key
+      out+=`<text x="${x+KW/2}" y="${KH-28}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" font-weight="bold" fill="${col}">${SF[i]}</text>`;
+      // finger number at very bottom
+      out+=`<text x="${x+KW/2}" y="${KH-12}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="12" fill="#7a6f5d">${FN[i]}</text>`;
+    } else if(opt==='B'){
+      // only solfège
+      out+=`<text x="${x+KW/2}" y="${KH-12}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" font-weight="bold" fill="${col}">${SF[i]}</text>`;
+    } else if(opt==='C'){
+      // finger number only, in a small circle at top of key
+      out+=`<circle cx="${x+KW/2}" cy="14" r="10" fill="${col}" opacity="0.15"/>`;
+      out+=`<text x="${x+KW/2}" y="19" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="12" font-weight="bold" fill="${col}">${FN[i]}</text>`;
+      out+=`<text x="${x+KW/2}" y="${KH-12}" text-anchor="middle"
+        font-family="Jua,sans-serif" font-size="13" font-weight="bold" fill="${col}">${SF[i]}</text>`;
+    }
+  });
+
+  // black key position ticks (just small notch at top, not filled)
+  BKX.forEach(bx=>{
+    out+=`<rect x="${bx-8}" y="0" width="16" height="${BH}" rx="3"
+      fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="2 2"/>`;
+  });
+
+  out+='</svg>';
+  return out;
+}
+
+function sel(el){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,
+      text:el.querySelector('.card-title').textContent})}).catch(()=>{});
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('staff-a').innerHTML=staffSVG(true,false,false);
+  document.getElementById('piano-a').innerHTML=pianoSVG('A');
+
+  document.getElementById('staff-b').innerHTML=staffSVG(true,false,false);
+  document.getElementById('finger-b').innerHTML=fingerRowHTML();
+  document.getElementById('piano-b').innerHTML=pianoSVG('B');
+
+  document.getElementById('staff-c').innerHTML=staffSVG(true,true,true);
+  document.getElementById('piano-c').innerHTML=pianoSVG('C');
+});
+
+function fingerRowHTML(){
+  // Hand finger diagram row: show 손가락 번호 as a labeled row with finger icons
+  return `<div style="display:flex;align-items:center;gap:0;padding:4px 0;">
+    <div style="font-family:'Jua',sans-serif;font-size:10px;color:#aaa;white-space:nowrap;padding-right:6px;min-width:0;">🖐 손가락</div>
+    ${FN.map((n,i)=>`
+    <div style="flex:1;text-align:center;">
+      <span style="font-family:'Jua',sans-serif;font-size:15px;font-weight:bold;color:${C[i]}">${n}</span>
+    </div>`).join('')}
+  </div>`;
+}
+</script>
+</head>
+<body>
+
+<h1>5선지 ↔ 건반 매핑 v3</h1>
+<p class="sub">노트 크기 수정 + 손가락 번호 개선 + 흰 건반 윤곽선만. 어떤 방식이 좋으세요?</p>
+<div style="text-align:center;margin-bottom:14px;">
+  <span class="hint">👇 마음에 드는 디자인 클릭</span>
+</div>
+
+<!-- ── DESIGN A: 계이름 위, 손가락번호 건반 안 ── -->
+<div class="card" data-choice="A" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">A. 5선지 위=계이름 / 건반 안=계이름+손가락번호</div>
+  <div class="card-desc">5선지 노트 위에 계이름만 표시. 건반 키 안에 계이름(위)+손가락번호(아래). 깔끔하고 직관적.</div>
+  <div class="section-box">
+    <div class="row-tag">── 계이름 / 5선지 ──</div>
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:4px;" id="staff-a"></div>
+    <div style="margin-top:8px;" id="piano-a"></div>
+  </div>
+</div>
+
+<!-- ── DESIGN B: 계이름 위, 손가락번호 별도 행, 건반 안=계이름 ── -->
+<div class="card" data-choice="B" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">B. 5선지 위=계이름 / 손가락번호 별도 행 / 건반 안=계이름</div>
+  <div class="card-desc">5선지 아래에 "🖐 손가락" 레이블이 붙은 번호 행을 별도로 추가. 손가락 번호임을 즉시 알 수 있음.</div>
+  <div class="section-box">
+    <div class="row-tag">── 계이름 / 5선지 ──</div>
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:4px;" id="staff-b"></div>
+    <div style="background:#f7f4ee;border-radius:6px;border:1px dashed #d0c8b8;padding:0 4px;margin:6px 0;" id="finger-b"></div>
+    <div id="piano-b"></div>
+  </div>
+</div>
+
+<!-- ── DESIGN C: 5선지 위=계이름 아래=손가락번호, 건반 위=손가락번호 안=계이름 ── -->
+<div class="card" data-choice="C" onclick="sel(this)">
+  <div class="badge">선택됨 ✓</div>
+  <div class="card-title">C. 5선지 위=계이름, 아래=손가락번호 / 건반 위=번호 안=계이름</div>
+  <div class="card-desc">5선지 노트 아래에 손가락 번호 행. 건반 키 상단에도 번호, 하단에 계이름 반복. 정보가 이중으로 연결.</div>
+  <div class="section-box">
+    <div class="row-tag">── 계이름 / 5선지 / 손가락번호 ──</div>
+    <div style="background:#fff;border-radius:8px;border:1px solid #e8e0d0;padding:4px;" id="staff-c"></div>
+    <div style="margin-top:8px;" id="piano-c"></div>
+  </div>
+</div>
+
+<div class="bottom-note">
+  클릭하거나 터미널에서 의견 주세요.<br>
+  <small>예: "B 방식인데 손가락 번호를 건반 안에도 넣어줘" 같은 조합도 OK!</small>
+</div>
+</body>
+</html>

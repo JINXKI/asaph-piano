@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=794">
+<title>ASAPH PIANO Teaching Material</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<script src="vexflow.js"></script>
+<style>
+  :root{--cream:#FFFFFF;--ink:#3a342c;--do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
+    --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;
+    /* unified design tokens */
+    --line:#EAE1CD;          /* one soft hairline for every border */
+    --soft:#9a8f7d;          /* muted text */
+    --r:16px;                /* card radius */
+    --r-sm:10px;             /* inner cell radius */
+    --pad:14px;              /* standard inner padding / gap */
+    --track-ink:#5a5048;     /* lightened rhythm-track outline (was harsh black) */
+    /* accent palette = the table header colours (do/re/mi/fa/sol/la family) */
+    --hp:#ED7A8E;--ho:#F0A94E;--hg:#9FCB5C;--hb:#5BA7E0;--hv:#A98FD0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#F6F1E6;}
+  body{font-family:'Gaegu',sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;}
+  .page{width:794px;min-height:1123px;background:var(--cream);padding:44px 42px;position:relative;box-shadow:0 6px 24px rgba(120,100,60,.12);border-radius:6px;}
+  /* spread the sections so they fill the page instead of clumping at the top */
+  .page:not(.imgpage):not(.scalepage){display:flex;flex-direction:column;justify-content:space-between;}
+  .page:not(.imgpage):not(.scalepage)::after{position:absolute;}
+
+  /* ===== UNIFIED CARD SYSTEM (matches the Notes/Rests/Beats table tone) ===== */
+  .card{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff;}
+  .card-head{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;line-height:1.2;}
+  .card-body{background:#fff;padding:var(--pad);}
+  .card-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:10px;}
+  .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;border:2px dashed var(--line);border-radius:var(--r);color:#a99a82;gap:12px;text-align:center;padding:0 30px;}
+  .ph .big{font-family:'Jua',sans-serif;font-size:32px;} .ph .sm{font-size:19px;}
+
+  h1{font-family:'Gaegu',sans-serif;font-weight:700;font-size:42px;color:#5b4a3a;text-align:center;line-height:1.05;
+     display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;
+     width:fit-content;max-width:100%;margin:2px auto 14px;position:relative;padding-bottom:13px;}
+  h1::after{content:"";position:absolute;left:7%;right:7%;bottom:2px;height:5px;border-radius:4px;
+     background:var(--tline,#EBB36A);filter:url(#pencil);opacity:.8;}
+  h1 small{font-size:24px;color:#9a8f7d;font-weight:400;}
+  .t-dot{width:17px;height:17px;border-radius:50%;background:var(--do);display:inline-block;}
+  .callout{position:absolute;top:38px;right:42px;background:#FFF6DC;border:1.5px solid #E3C657;border-radius:var(--r);padding:7px 13px;font-size:15px;line-height:1.25;text-align:center;max-width:210px;}
+
+  .tablewrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;text-align:center;table-layout:fixed;}
+  thead th{font-family:'Gaegu',sans-serif;font-weight:700;font-size:19px;color:#6b5544;padding:10px 4px 11px;line-height:1.15;position:relative;}
+  thead th::after{content:"";position:absolute;left:7px;right:7px;bottom:4px;height:2px;border-radius:2px;filter:url(#pencil);opacity:.85;}
+  th.h1c{background:#FDEFF1;} th.h2c{background:#FDF2E5;} th.h3c{background:#F1F7E4;} th.h4c{background:#EAF3FC;} th.h5c{background:#F2ECFA;}
+  th.h1c::after{background:#E6849C;} th.h2c::after{background:#EBA257;} th.h3c::after{background:#9DC563;} th.h4c::after{background:#76B0E2;} th.h5c::after{background:#A98FD0;}
+  tbody td{border-top:1.5px solid var(--line);padding:5px 4px;vertical-align:middle;}
+  td.nm{background:#FCEFF1;} td.nm .ko{font-family:'Jua',sans-serif;font-size:21px;} td.nm .en{font-size:14px;color:var(--soft);}
+  td.beat{font-family:'Jua',sans-serif;font-size:28px;color:#2f7dc0;}
+  .applecell{display:flex;flex-direction:column;align-items:stretch;gap:3px;}
+  .applerow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;min-height:56px;}
+  .applerow .aslot{flex:1;display:flex;align-items:center;justify-content:flex-start;min-width:0;}
+  .applecap{font-family:'Jua',sans-serif;font-size:15px;color:#6f5fae;}
+  .act{margin-top:var(--pad);background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:14px 18px;}
+  .act-h{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:10px;}
+  .pizrow{display:flex;justify-content:space-around;align-items:flex-start;}
+  .pizcell{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .pizcell .nm{font-family:'Jua',sans-serif;font-size:18px;}
+  .piztop{display:flex;align-items:center;gap:8px;}
+  .pizeq{font-family:'Jua',sans-serif;font-size:26px;color:#9a8f7d;}
+  .ansrow{display:flex;align-items:center;gap:6px;font-family:'Jua',sans-serif;font-size:20px;}
+  .ansblank{width:46px;height:38px;border:2px solid var(--track-ink);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Jua',sans-serif;font-size:26px;color:var(--ink);}
+  .ansblank.ans-filled{background:#FFF3D6;color:var(--re);border-color:var(--re);}
+  /* REST COLORING ACTIVITY */
+  .colorhint{text-align:center;font-family:'Jua',sans-serif;font-size:16px;color:#7a6f5d;margin-bottom:6px;}
+  .restcolor{display:flex;flex-direction:column;gap:8px;}
+  .rcrow{display:flex;align-items:center;gap:14px;}
+  .rclbl{width:54px;display:flex;align-items:center;justify-content:center;}
+  .rctrack{flex:1;display:flex;height:38px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
+  .rccell{flex:1;border-right:1.5px solid var(--line);position:relative;}
+  .rccell:last-child{border-right:none;}
+  .rccell .half{position:absolute;top:0;bottom:0;left:50%;border-left:1.5px dashed #D8CBB2;}
+  .rccell .halffill{position:absolute;top:0;bottom:0;left:0;width:50%;background:#9DC3E6;}
+
+  /* BARS */
+  .bars-hint{text-align:center;font-family:'Jua',sans-serif;font-size:21px;color:#7a6f5d;margin-bottom:6px;}
+  .legend{text-align:center;font-size:17px;color:#8a7d68;margin-bottom:18px;}
+  .sw-solid{display:inline-block;width:26px;border-top:2.5px solid var(--track-ink);vertical-align:middle;margin-right:4px;}
+  .sw-dot{display:inline-block;width:26px;border-top:3px dotted #9a8f7d;vertical-align:middle;margin:0 4px 0 12px;}
+  .barchart{display:flex;flex-direction:column;gap:18px;}
+  .bar{display:flex;align-items:center;gap:14px;}
+  .blbl{width:170px;display:flex;align-items:center;gap:8px;font-family:'Jua',sans-serif;font-size:22px;}
+  .blbl .emo{font-size:30px;}
+  .track{flex:1;display:flex;height:84px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
+  .cell{flex:1;display:flex;align-items:center;justify-content:center;}
+
+  /* SCALE PAGES */
+  .scalepage{padding:28px 40px 36px;}
+  .scalepage h2{font-family:'Gaegu',sans-serif;font-weight:700;font-size:30px;color:#5b4a3a;text-align:center;line-height:1.05;
+     margin:0 auto 16px;display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
+     width:fit-content;max-width:100%;position:relative;padding-bottom:12px;}
+  .scalepage h2::after{content:"";position:absolute;left:6%;right:6%;bottom:1px;height:4px;border-radius:3px;
+     background:var(--tline,#EBB36A);filter:url(#pencil);opacity:.8;}
+  .scalepage h2 small{font-size:15px;color:#9a8f7d;font-weight:400;}
+  .cont-h2{font-size:15px!important;margin-bottom:7px!important;color:#a99a82!important;}
+  .cont-h2 small{font-size:12px!important;}
+  .keyblock{margin-bottom:10px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:#fff;}
+  .keylabel{display:flex;align-items:center;gap:10px;padding:5px 14px;font-family:'Jua',sans-serif;border-bottom:1.5px solid var(--line);border-radius:var(--r-sm) var(--r-sm) 0 0;}
+  .keylabel .keyname{font-size:19px;font-weight:bold;}
+  .keylabel .keysig{font-size:12px;opacity:.65;}
+  .staves svg{display:block;}
+  .roman-row{display:flex;justify-content:space-around;padding:3px 6px 3px 64px;font-size:11px;font-family:'Jua',sans-serif;color:#8a7d68;background:#FBF8F0;border-top:1.5px dashed var(--line);}
+
+  /* PDF IMAGE PAGES */
+  .imgpage{padding:0;overflow:hidden;height:1123px;}
+  .imgpage img{width:100%;height:100%;object-fit:contain;display:block;}
+
+  /* PAGE NUMBERS */
+  body{counter-reset:pgnum;}
+  .page{counter-increment:pgnum;}
+  .page::after{
+    content:counter(pgnum);
+    position:absolute;bottom:0;left:0;right:0;
+    height:28px;line-height:28px;
+    text-align:center;
+    font-family:'Jua',sans-serif;font-size:14px;
+    border-top:1.5px solid var(--line);
+    color:#7a6f5d;z-index:99;
+  }
+
+  /* ===== PICTURE-BOOK HAND-DRAWN HEADERS (colored-pencil look) ===== */
+  .hdr{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;
+    font-family:'Gaegu',sans-serif;font-weight:700;font-size:21px;line-height:1.18;
+    color:#6b5544;background:var(--wash,#FBF6EE);padding:11px 20px 13px;text-align:center;}
+  .hdr::after{content:"";position:absolute;left:14px;right:14px;bottom:5px;height:2px;
+    background:var(--pen,#cbb8a0);border-radius:2px;filter:url(#pencil);opacity:.85;pointer-events:none;}
+  /* hue crayons */
+  .h-pink{--pen:#E6849C;--wash:#FDEFF1;}
+  .h-orange{--pen:#EBA257;--wash:#FDF2E5;}
+  .h-green{--pen:#9DC563;--wash:#F1F7E4;}
+  .h-blue{--pen:#76B0E2;--wash:#EAF3FC;}
+  .h-purple{--pen:#A98FD0;--wash:#F2ECFA;}
+  .h-red{--pen:#E4756F;--wash:#FCEDEB;}
+  .hdr .hop{color:#c4b29c;font-size:21px;}
+  .hdr .hdot{width:13px;height:13px;border-radius:50%;background:#6b5544;display:inline-block;}
+  .hdr .heq{color:#c4b29c;font-size:21px;}
+  .hdr .hgrow{color:var(--pen);font-size:23px;}
+
+  /* PAGE 6 added : DOTTED NOTES + BEAM (compact) */
+  .p7-wrap{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .p7-head{font-family:'Jua',sans-serif;font-size:18px;color:var(--ink);background:#FCEFF1;padding:11px 16px;display:flex;align-items:center;justify-content:center;gap:9px;}
+  .p7-body{background:#fff;padding:var(--pad);}
+  .p7-rule{border-radius:var(--r-sm);padding:4px 10px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;margin-bottom:6px;}
+  .p7-cards{display:flex;flex-direction:column;gap:8px;}
+  .p7-card{display:flex;flex-direction:row;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--line);border-left:5px solid var(--hp);border-radius:var(--r-sm);padding:8px 14px;}
+  .p7-feq{display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;min-width:118px;}
+  .p7-dot{width:7px;height:7px;border-radius:50%;background:#2b2620;display:inline-block;flex-shrink:0;}
+  .p7-beats{font-family:'Jua',sans-serif;font-size:15px;color:var(--sol);flex-shrink:0;min-width:84px;}
+  .p7-fname{font-family:'Jua',sans-serif;font-size:14px;color:var(--ink);min-width:96px;flex-shrink:0;}
+  .p7-note-op{color:var(--soft);font-size:18px;font-family:'Jua',sans-serif;}
+  .p7-note-eq{color:var(--do);font-size:18px;font-family:'Jua',sans-serif;}
+  .p7-beam-cmp{display:flex;gap:8px;}
+  .p7-bcrd{flex:1;background:#fff;border:1.5px solid var(--line);border-top-width:4px;border-radius:var(--r-sm);padding:6px 8px;text-align:center;}
+  .p7-bctitle{font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d;margin-top:4px;margin-bottom:0;}
+
+  /* PRACTICE PANELS */
+  .act-panel{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .act-ph{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;}
+  .act-pb{background:#fff;padding:var(--pad);}
+  .act-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .drill-row{display:flex;gap:10px;margin-bottom:10px;}
+  .drill-row:last-child{margin-bottom:0;}
+  .drill-card{flex:1;background:#fff;border:2px dashed #D8CBB2;border-radius:var(--r-sm);padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;}
+  .drill-eq{display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Jua',sans-serif;font-size:16px;flex-wrap:wrap;}
+  .ans-box{width:44px;height:28px;border:2px solid var(--track-ink);border-radius:8px;display:inline-block;flex-shrink:0;}
+  .drill-q{font-family:'Jua',sans-serif;font-size:12px;color:var(--soft);}
+  /* MATCH (draw-a-line) */
+  .match-board{display:flex;justify-content:space-between;align-items:stretch;gap:12px;background:#fff;border:2px dashed #D8CBB2;border-radius:var(--r-sm);padding:16px 18px;position:relative;}
+  .match-col{display:flex;flex-direction:column;justify-content:space-around;gap:16px;}
+  .match-item{display:flex;align-items:center;gap:10px;}
+  .match-item.right{flex-direction:row-reverse;}
+  .match-card{display:flex;align-items:center;justify-content:center;width:142px;min-height:50px;}
+  .match-dot{width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid var(--track-ink);flex-shrink:0;}
+  .match-eg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .len-grid{display:grid;grid-template-columns:120px 1fr;gap:12px 14px;align-items:center;}
+  .len-lbl{display:flex;align-items:center;gap:7px;font-family:'Jua',sans-serif;font-size:14px;color:var(--ink);}
+  .len-eg{font-family:'Jua',sans-serif;font-size:12px;color:#fff;background:var(--ho);border-radius:20px;padding:2px 9px;}
+  .len-bar{height:48px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;display:flex;background:#fff;}
+  .len-c{flex:1;border-right:1.5px solid var(--line);position:relative;}
+  .len-c:last-child{border-right:none;}
+  .len-c::before{content:"";position:absolute;left:50%;top:6px;bottom:6px;border-left:1.5px dashed #D8CBB2;}
+  .p7-len{position:relative;display:flex;flex:1;min-width:120px;height:24px;border:2px solid var(--track-ink);border-radius:6px;overflow:hidden;background:#fff;}
+  .p7-fill{position:absolute;top:0;bottom:0;left:0;z-index:0;}
+  .p7-len .seg{flex:1;border-right:1.5px solid var(--line);position:relative;z-index:1;}
+  .p7-len .seg:last-child{border-right:none;}
+  .p7-len .seg::before{content:"";position:absolute;left:50%;top:2px;bottom:2px;border-left:1.5px dashed #D8CBB2;}
+  /* RHYTHM STRIP */
+  .rhm-box{margin-top:var(--pad);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;}
+  .rhm-ph{font-family:'Jua',sans-serif;font-size:17px;color:#fff;padding:8px 16px;text-align:center;background:var(--hb);}
+  .rhm-pb{background:#fff;padding:var(--pad);}
+  .rhm-sub{font-family:'Jua',sans-serif;font-size:13px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .rhm-strip{background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:6px 12px;}
+
+  /* FOBEAT */
+  .fobeat{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px 22px;margin-top:var(--pad);}
+  .fobeat-title{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:16px;}
+  .fob-grid{display:grid;grid-template-columns:80px repeat(4,1fr);}
+  .fob-hdr-space{border-bottom:1.5px solid var(--line);margin-bottom:10px;}
+  .fob-hdr{display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:10px;border-bottom:1.5px solid var(--line);margin-bottom:10px;}
+  .fob-num{font-family:'Jua',sans-serif;font-size:20px;color:#6a5f4d;}
+  .fob-hemoji{font-size:24px;line-height:1;white-space:nowrap;}
+  .fob-pill{font-family:'Jua',sans-serif;font-size:16px;padding:3px 12px;border-radius:20px;color:#fff;}
+  .fob-lbl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-right:6px;}
+  .fob-emoji{font-size:36px;line-height:1;}
+  .fob-name{font-family:'Jua',sans-serif;font-size:15px;}
+  .fob-name.L{color:#3C90DD;} .fob-name.R{color:#EF8A3C;}
+  .fob-track{grid-column:2/6;height:88px;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;display:flex;background:#fff;margin-bottom:12px;}
+  .fob-cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--line);}
+  .fob-cell:last-child{border-right:none;}
+  .fob-cell.aL{background:#EAF4FF;} .fob-cell.aR{background:#FFF3E8;}
+  /* clap grid (age 4 advanced rhythm) */
+  .clap-row{display:flex;gap:10px;margin-bottom:12px;}
+  .clap-meas{flex:1;display:flex;border:2px solid var(--track-ink);border-radius:var(--r-sm);overflow:hidden;background:#fff;}
+  .clap-cell{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0;border-right:1.5px solid var(--line);}
+  .clap-cell:last-child{border-right:none;}
+  .clap-note{height:36px;display:flex;align-items:flex-end;justify-content:center;}
+  .clap-cell.rest .clap-note svg path,.clap-cell.rest .clap-note svg rect{opacity:.55;}
+  .clap-pic{font-size:28px;line-height:1;}
+  .clap-word{font-family:'''Gaegu''',sans-serif;font-size:15px;color:#5a4f3f;font-weight:700;}
+  .clap-num{font-family:'''Jua''',sans-serif;font-size:15px;color:#b6ab98;}
+  .clap-cell.fast{background:#EAF4FF;}
+  .clap-cell.fast .clap-pic{font-size:20px;}
+  .clap-cell.rest{background:#F2EEE4;}
+  .clap-cell.rest .clap-word,.clap-cell.rest .clap-num{color:#c3baa8;}
+  .clap-cell.hold{background:#FFF3E8;}
+  .clap-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-family:'''Jua''',sans-serif;font-size:12px;color:#7a7060;margin-top:4px;}
+
+  /* TIE */
+  .tie-eg{display:flex;flex-direction:column;gap:8px;}
+  .tie-row{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-left:5px solid var(--hb);border-radius:var(--r-sm);padding:9px 14px;}
+  .tie-lbl{font-family:'Jua',sans-serif;font-size:14px;min-width:150px;line-height:1.45;}
+  .tie-lbl small{font-size:11px;color:var(--soft);}
+  .tie-vis{flex:1;display:flex;align-items:center;justify-content:center;}
+  .tie-res{font-family:'Jua',sans-serif;font-size:15px;color:var(--do);min-width:92px;text-align:right;line-height:1.35;}
+  .tie-warn{margin-top:8px;background:#EAF4FF;border:1.5px solid #90BFEC;border-radius:var(--r-sm);padding:7px 12px;text-align:center;font-family:'Jua',sans-serif;font-size:13px;color:#1a4a7a;}
+  .cmp-row{display:flex;gap:10px;align-items:stretch;}
+  .cmp-card{flex:1;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 10px;text-align:center;}
+  .cmp-card .ct{font-family:'Jua',sans-serif;font-size:14px;margin-bottom:5px;}
+  .cmp-card .cd{font-size:12px;color:#7a6f5d;line-height:1.55;}
+  .cmp-vs{display:flex;align-items:center;font-family:'Jua',sans-serif;font-size:18px;color:#a99a82;}
+
+  /* G-KEY MAPPING PAGE */
+  .gkey-page{padding:24px 40px 40px;}
+  .gk-card{border:1.5px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:11px;overflow:hidden;}
+  .gk-head{display:flex;align-items:center;gap:8px;padding:8px 16px;font-family:'Jua',sans-serif;font-size:18px;color:#fff;}
+  .gk-body{padding:14px 14px 16px;}
+  .gk-sub{font-family:'Jua',sans-serif;font-size:14px;color:var(--soft);text-align:center;margin-bottom:8px;}
+  .gk-staff{display:flex;justify-content:center;}
+  .gk-staff svg{display:block;width:100%;height:auto;}
+  .gk-kbd{display:flex;justify-content:center;margin-top:4px;}
+  .gk-kbd svg{display:block;max-width:100%;}
+  .gk-arrow{text-align:center;font-size:22px;color:#C8B8A0;line-height:1;margin:2px 0;}
+  .gk-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:12px;}
+  .gk-chip{display:flex;align-items:center;gap:6px;font-family:'Jua',sans-serif;font-size:14px;color:#5a4f3f;}
+  .gk-chip i{width:15px;height:15px;border-radius:50%;display:inline-block;flex-shrink:0;}
+
+  @media print{
+    @page{size:A4;margin:0;}
+    html,body{background:#fff;gap:0;padding:0;}
+    .page{box-shadow:none;width:210mm;min-height:297mm;height:auto;padding:12mm 10mm;page-break-after:always;overflow:visible;}
+    .imgpage{height:297mm;overflow:hidden;}
+    .page:last-child{page-break-after:auto;}
+  }
+</style>
+</head>
+<body>
+
+<!-- hand-drawn "colored-pencil" edge filter (wobbles borders so they look sketched) -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+  <filter id="pencil" x="-5%" y="-20%" width="110%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.016 0.014" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<!-- ORIGINAL 5 PAGES from PDF -->
+<div class="page imgpage"><img src="pages/page1.jpg" alt="Page 1 Cover"></div>
+<div class="page imgpage"><img src="pages/page2.jpg" alt="Page 2 Quiz"></div>
+<div class="page imgpage"><img src="pages/page3.jpg" alt="Page 3 Keyboard & Note Names"></div>
+<div class="page imgpage"><img src="pages/page4.jpg" alt="Page 4 Finger Numbers"></div>
+<div class="page imgpage"><img src="pages/page5.jpg" alt="Page 5 Sharps & Flats"></div>
+
+<!-- PAGE 6 : APPLE TABLE + PIZZA -->
+<div class="page">
+  <h1>Notes, <span style="color:var(--fa)">Rests</span> & <span style="color:var(--sol)">Beats</span></h1>
+  <div class="tablewrap"><table>
+    <colgroup><col style="width:15%"><col style="width:13%"><col style="width:13%"><col style="width:11%"><col style="width:48%"></colgroup>
+    <thead><tr><th class="h1c">Name</th><th class="h2c">Note</th><th class="h3c">Rest</th><th class="h4c">Beats</th><th class="h5c">Count with apples!</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+
+  <div class="act" style="margin-top:14px;padding:8px 18px"><div class="pizrow" id="pizrow"></div></div>
+
+  <div class="act" style="margin-top:14px;padding:8px 18px">
+    <div class="restcolor" id="restcolor"></div>
+  </div>
+</div>
+
+<!-- PAGE 9 : CLAP + RHYTHM EXERCISE -->
+<div class="page">
+  <h1 style="--tline:#76B0E2">Clap the Beat</h1>
+  <div class="barchart" id="barchart"></div>
+</div>
+
+<!-- PAGE 7 : DOTTED NOTES + PRACTICE -->
+<div class="page">
+  <h1 style="--tline:#E6849C"><span class="t-dot"></span> <span style="color:var(--do)">Dotted Note</span></h1>
+  <div class="p7-wrap">
+    <div class="hdr h-pink"><svg width="19" height="28" viewBox="0 0 40 58" style="vertical-align:middle"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#6b5544"/><line x1="24" y1="38" x2="24" y2="8" stroke="#6b5544" stroke-width="2.6"/></svg> <span class="hop">+</span> <span class="hdot"></span> <span class="heq">=</span> <span class="hgrow">½ longer!</span></div>
+    <div class="p7-body">
+      <div class="p7-cards">
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:50%;background:#9DC3E6"></div><div class="p7-fill" style="left:50%;width:25%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:25%;background:#9DC3E6"></div><div class="p7-fill" style="left:25%;width:12.5%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="p7-card">
+          <div class="p7-feq">
+            <svg width="22" height="32" viewBox="0 0 40 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <span class="p7-note-op">+</span><span class="p7-dot"></span><span class="p7-note-eq">=</span>
+            <svg width="27" height="32" viewBox="0 0 48 58"><ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/><line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/><path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="32" cy="40" r="3.2" fill="#2b2620"/></svg>
+          </div>
+          <div class="p7-len"><div class="p7-fill" style="left:0;width:12.5%;background:#9DC3E6"></div><div class="p7-fill" style="left:12.5%;width:6.25%;background:#ED7A8E"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dotted note practice -->
+  <div class="act-panel">
+    <div class="hdr h-orange">Color the length!</div>
+    <div class="act-pb">
+      <div class="len-grid">
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c" style="background:#9DC3E6"></div><div class="len-c" style="background:#9DC3E6"></div><div class="len-c" style="background:#ED7A8E"></div><div class="len-c"></div></div>
+
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div></div>
+
+        <div class="len-lbl">
+          <svg width="34" height="48" viewBox="0 0 52 72"><ellipse cx="18" cy="54" rx="8" ry="6" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="25" y1="52" x2="25" y2="12" stroke="#2b2620" stroke-width="2.4"/><path d="M25 12 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="37" cy="54" r="3.8" fill="#2b2620"/></svg>
+        </div>
+        <div class="len-bar"><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div><div class="len-c"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Tie theory + practice — same page as dotted notes ===== -->
+  <h1 style="margin-top:30px;--tline:#76B0E2">Tie</h1>
+  <div style="margin-top:var(--pad);display:flex;align-items:center;justify-content:center;gap:26px;border:1.5px solid var(--line);background:#F6FAFF;border-radius:var(--r);padding:14px 24px;">
+    <svg width="150" height="68" viewBox="0 0 150 70">
+      <ellipse cx="38" cy="38" rx="14" ry="10" transform="rotate(-20 38 38)" fill="#3C90DD"/>
+      <line x1="51" y1="34" x2="51" y2="6" stroke="#3C90DD" stroke-width="5"/>
+      <ellipse cx="112" cy="38" rx="14" ry="10" transform="rotate(-20 112 38)" fill="#3C90DD"/>
+      <line x1="125" y1="34" x2="125" y2="6" stroke="#3C90DD" stroke-width="5"/>
+      <path d="M40 49 Q75 70 110 49" fill="none" stroke="#E24B4A" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <div style="font-family:'Jua',sans-serif;font-size:28px;color:#3C90DD;">👏 <span style="color:#E24B4A;">Play once</span> → hold ✋</div>
+  </div>
+
+  <!-- Tie practice example (notes + clap/hold) -->
+  <div style="margin-top:var(--pad);border:1.5px solid var(--line);background:#fff;border-radius:var(--r);padding:14px 16px;">
+    <div style="display:flex;gap:16px;justify-content:center;align-items:flex-start;">
+
+      <!-- quarter ‿ quarter -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#3C90DD"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#3C90DD"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span></div>
+      </div>
+
+      <!-- half ‿ quarter -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#3C90DD"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span><span>➡️</span></div>
+      </div>
+
+      <!-- half ‿ half -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 16px;">
+        <svg width="150" height="74" viewBox="0 0 150 78">
+          <ellipse cx="40" cy="44" rx="13" ry="9" transform="rotate(-20 40 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="52" y1="40" x2="52" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <ellipse cx="110" cy="44" rx="13" ry="9" transform="rotate(-20 110 44)" fill="#fff" stroke="#3C90DD" stroke-width="3.5"/>
+          <line x1="122" y1="40" x2="122" y2="8" stroke="#3C90DD" stroke-width="4.5"/>
+          <path d="M42 54 Q75 76 108 54" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="display:flex;gap:8px;font-size:26px;line-height:1;"><span>👏</span><span>➡️</span><span>➡️</span><span>➡️</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 8 : BEAM + PRACTICE -->
+<div class="page">
+  <h1 style="--tline:#9DC563"><span style="color:var(--fa)">Beam</span></h1>
+  <div class="p7-wrap">
+    <div class="p7-body">
+      <div class="p7-beam-cmp">
+        <div class="p7-bcrd" style="border-top-color:#5BA7E0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#A98FD0">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <svg width="20" height="36" viewBox="0 0 40 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="54" height="36" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#9FCB5C">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;">
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="80" height="36" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="6" width="120" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="p7-beam-cmp" style="margin-top:8px;">
+        <div class="p7-bcrd" style="border-top-color:#F0A94E">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M64 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M64 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="40" height="6" rx="2" fill="#2b2620"/><rect x="50" y="20" width="14" height="6" rx="1" fill="#2b2620"/></svg>
+          </div>
+        </div>
+        <div class="p7-bcrd" style="border-top-color:#ED7A8E">
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
+            <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M66 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M106 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            <div style="font-size:15px;color:#ccc;padding-bottom:10px">=</div>
+            <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="80" height="6" rx="2" fill="#2b2620"/><rect x="66" y="20" width="40" height="6" rx="2" fill="#2b2620"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beaming practice : draw a line to find the matching pair -->
+  <div class="act-panel">
+    <div class="act-pb">
+      <div class="match-board">
+        <!-- example answer : flag #1 ↔ two eighth notes beamed -->
+        <svg class="match-eg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="26" y1="12" x2="74" y2="50" stroke="#E24B4A" stroke-width="0.6" stroke-dasharray="2.5 2"/></svg>
+        <!-- left : flagged notes -->
+        <div class="match-col">
+          <!-- 1) two eighth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M60 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 2) two sixteenth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M24 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M60 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M60 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 3) four eighth notes, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="132" height="46" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M146 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 4) mixed : dotted eighth + sixteenth, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M24 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="10" stroke="#2b2620" stroke-width="2.4"/><path d="M64 10 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/><path d="M64 20 q13 5 9 18" fill="none" stroke="#2b2620" stroke-width="2.4"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- 5) mixed : eighth + two sixteenths, flagged -->
+          <div class="match-item left">
+            <div class="match-card">
+              <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M26 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M66 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M66 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="10" stroke="#2b2620" stroke-width="2.2"/><path d="M106 10 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/><path d="M106 20 q13 4 9 18" fill="none" stroke="#2b2620" stroke-width="2.2"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+        </div>
+
+        <!-- right : beamed notes — shuffled order -->
+        <div class="match-col">
+          <!-- four eighth notes beamed  → 3 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="132" height="46" viewBox="0 0 170 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="140" cy="54" rx="7" ry="5" transform="rotate(-20 140 54)" fill="#2b2620"/><line x1="146" y1="52" x2="146" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="120" height="7" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- mixed eighth + two sixteenths beamed  → 5 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="118" height="46" viewBox="0 0 140 70"><ellipse cx="20" cy="54" rx="7" ry="5" transform="rotate(-20 20 54)" fill="#2b2620"/><line x1="26" y1="52" x2="26" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="60" cy="54" rx="7" ry="5" transform="rotate(-20 60 54)" fill="#2b2620"/><line x1="66" y1="52" x2="66" y2="14" stroke="#2b2620" stroke-width="2.2"/><ellipse cx="100" cy="54" rx="7" ry="5" transform="rotate(-20 100 54)" fill="#2b2620"/><line x1="106" y1="52" x2="106" y2="14" stroke="#2b2620" stroke-width="2.2"/><rect x="26" y="10" width="80" height="6" rx="2" fill="#2b2620"/><rect x="66" y="20" width="40" height="6" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- two eighth notes beamed  → 1 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="7" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- mixed dotted eighth + sixteenth beamed  → 4 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><circle cx="31" cy="53" r="2.8" fill="#2b2620"/><ellipse cx="58" cy="54" rx="7" ry="5" transform="rotate(-20 58 54)" fill="#2b2620"/><line x1="64" y1="52" x2="64" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="40" height="6" rx="2" fill="#2b2620"/><rect x="50" y="20" width="14" height="6" rx="1" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+          <!-- two sixteenth notes beamed  → 2 -->
+          <div class="match-item right">
+            <div class="match-card">
+              <svg width="92" height="48" viewBox="0 0 100 70"><ellipse cx="18" cy="54" rx="7" ry="5" transform="rotate(-20 18 54)" fill="#2b2620"/><line x1="24" y1="52" x2="24" y2="14" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="54" cy="54" rx="7" ry="5" transform="rotate(-20 54 54)" fill="#2b2620"/><line x1="60" y1="52" x2="60" y2="14" stroke="#2b2620" stroke-width="2.4"/><rect x="24" y="10" width="36" height="6" rx="2" fill="#2b2620"/><rect x="24" y="20" width="36" height="6" rx="2" fill="#2b2620"/></svg>
+            </div>
+            <div class="match-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clap & count -->
+  <div class="rhm-box" style="border-color:#CDBEE6;">
+    <div class="hdr h-purple">Clap &amp; Count</div>
+    <div class="rhm-pb">
+      <div id="claprows"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12-KEY SCALE / DIATONIC CHORD (3 keys × 4 pages) -->
+<div class="page scalepage">
+  <h2>Diatonic Scales &amp; Chords</h2>
+  <div class="kbwrap" data-page="0"></div>
+</div>
+<div class="page scalepage">
+  <div class="kbwrap" data-page="1"></div>
+</div>
+<div class="page scalepage">
+  <div class="kbwrap" data-page="2"></div>
+</div>
+<div class="page scalepage">
+  <div class="kbwrap" data-page="3"></div>
+</div>
+
+<!-- G KEY : keyboard mapping + four-beat practice -->
+<div class="page scalepage gkey-page">
+  <h2>Melody Practice <small>Praise His Name · G key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-red">G Key Keyboard Map</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gscale"></div>
+      <div class="gk-staff" id="gkbd" style="margin-top:10px;"></div>
+      <div class="gk-legend" id="glegend"></div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-green">Melody — Praise His Name</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gmelody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- G KEY (cont.) : four-beat practice + chords -->
+<div class="page scalepage gkey-page">
+  <h2>Melody Practice <small>Praise His Name · G key (계속)</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-blue">G key Four-Beat Practice</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gpractice"></div>
+      <div class="gk-legend">
+        <span class="gk-chip">🤚🏻 R.H. — Sol · Si · Re</span>
+        <span class="gk-chip">✋🏻 L.H. — Sol</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-purple">Play Chords Together</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="gchords"></div>
+      <div class="gk-legend">
+        <span class="gk-chip"><i style="background:#E24B4A"></i>C</span>
+        <span class="gk-chip"><i style="background:#7E6BC4"></i>Am</span>
+        <span class="gk-chip"><i style="background:#3C90DD"></i>F</span>
+        <span class="gk-chip"><i style="background:#EF8A3C"></i>G</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRAISE SONG SHEET : 주이름 찬양 -->
+<div class="page imgpage"><img src="pages/praise2.jpg" alt="Praise ② · Praise His Name"></div>
+
+<!-- C KEY : keyboard map (2 octaves) -->
+<div class="page scalepage gkey-page">
+  <h2>Melody Practice <small>위대하신 주 · How Great Is Our God · C key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-red">C Key Keyboard Map</div>
+    <div class="gk-body">
+      <div class="gk-staff" id="cscale"></div>
+      <div class="gk-staff" id="ckbd" style="margin-top:10px;"></div>
+      <div class="gk-legend" id="clegend"></div>
+    </div>
+  </div>
+</div>
+
+<!-- C KEY : 위대하신 주 후렴 멜로디 -->
+<div class="page scalepage gkey-page">
+  <h2>Melody Practice <small>위대하신 주 · 후렴 · C key</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-green">Melody — 위대하신 주 <span style="font-size:14px;font-weight:normal;opacity:.8;">후렴</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">🤚🏻 오른손 멜로디 — 위대하신 주, 찬양해 위대하신 주, 모두 알게 되리라, 위대하신 주</div>
+      <div class="gk-staff" id="cmelody"></div>
+      <div class="gk-legend">
+        <span class="gk-chip"><i style="background:#E24B4A"></i>도</span>
+        <span class="gk-chip"><i style="background:#EF8A3C"></i>레</span>
+        <span class="gk-chip"><i style="background:#E0A81E"></i>미</span>
+        <span class="gk-chip"><i style="background:#7FB23E"></i>파</span>
+        <span class="gk-chip"><i style="background:#3C90DD"></i>솔</span>
+        <span class="gk-chip"><i style="background:#7E6BC4"></i>라</span>
+        <span class="gk-chip"><i style="background:#C85FA0"></i>시</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C KEY (cont.) : chords + four-beat -->
+<div class="page scalepage gkey-page">
+  <h2>Melody Practice <small>위대하신 주 · C key (계속)</small></h2>
+
+  <div class="gk-card">
+    <div class="hdr h-purple">오른손·왼손 코드 <span style="font-size:14px;font-weight:normal;opacity:.8;">온음표 · 한 마디에 한 번 · 8마디</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">오른손 도·미·솔 한꺼번에, 왼손 도 — 한 마디에 온음표로 길게 누르기</div>
+      <div class="gk-staff" id="cchords"></div>
+      <div class="gk-legend">
+        <span class="gk-chip"><i style="background:#E24B4A"></i>C</span>
+        <span class="gk-chip"><i style="background:#7E6BC4"></i>Am</span>
+        <span class="gk-chip"><i style="background:#3C90DD"></i>F</span>
+        <span class="gk-chip"><i style="background:#EF8A3C"></i>G</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gk-card">
+    <div class="hdr h-blue">포비트로 연주하기 <span style="font-size:14px;font-weight:normal;opacity:.8;">리듬 추가 · 4/4 · 8마디</span></div>
+    <div class="gk-body">
+      <div class="gk-sub">🤚🏻 오른손 ●－●－ (1박·3박) &nbsp;·&nbsp; ✋🏻 왼손 ●－－● (1박·4박)</div>
+      <div class="gk-staff" id="cfourbeat"></div>
+      <div class="gk-legend">
+        <span class="gk-chip">🤚🏻 오른손 — 1박 · 3박 (반·반)</span>
+        <span class="gk-chip">✋🏻 왼손 — 1박 · 4박</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ---------- NOTE GLYPHS ---------- */
+function head(o,cx,cy){return o?`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" transform="rotate(-20 ${cx} ${cy})" fill="#fff" stroke="#2b2620" stroke-width="2.4"/>`:`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" transform="rotate(-20 ${cx} ${cy})" fill="#2b2620"/>`;}
+function stem(cx,cy){return `<line x1="${cx+6}" y1="${cy-2}" x2="${cx+6}" y2="${cy-34}" stroke="#2b2620" stroke-width="2.4"/>`;}
+function flag(cx,cy,n){let f='';for(let i=0;i<n;i++){const y=cy-34+i*8;f+=`<path d="M${cx+6} ${y} q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>`;}return f;}
+function note(t,w=46){const cx=18,cy=40;let g='';
+  if(t==='whole'){g=`<ellipse cx="${cx}" cy="${cy}" rx="8.5" ry="6" fill="none" stroke="#2b2620" stroke-width="3.2"/><ellipse cx="${cx}" cy="${cy}" rx="3.5" ry="5.5" transform="rotate(-25 ${cx} ${cy})" fill="#fff"/>`;}
+  else if(t==='half'){g=head(true,cx,cy)+stem(cx,cy);}
+  else if(t==='quarter'){g=head(false,cx,cy)+stem(cx,cy);}
+  else if(t==='eighth'){g=head(false,cx,cy)+stem(cx,cy)+flag(cx,cy,1);}
+  else if(t==='sixteenth'){g=head(false,cx,cy)+stem(cx,cy)+flag(cx,cy,2);}
+  return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 40 58">${g}</svg>`;}
+function rest(t,w=40){let g='';
+  if(t==='whole'){g=`<line x1="6" y1="26" x2="30" y2="26" stroke="#2b2620" stroke-width="2"/><rect x="13" y="26" width="13" height="7" fill="#2b2620"/>`;}
+  else if(t==='half'){g=`<line x1="6" y1="33" x2="30" y2="33" stroke="#2b2620" stroke-width="2"/><rect x="13" y="26" width="13" height="7" fill="#2b2620"/>`;}
+  else if(t==='quarter'){g=`<path d="M14 13 L23 25 L15 33 L24 45" fill="none" stroke="#2b2620" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 45 q-9 -2 -5 6 q3 5 8 1" fill="none" stroke="#2b2620" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`;}
+  else if(t==='eighth'){g=`<circle cx="15" cy="26" r="4" fill="#2b2620"/><path d="M18 24 L13 46" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
+  else if(t==='sixteenth'){g=`<circle cx="14" cy="22" r="3.6" fill="#2b2620"/><circle cx="16" cy="33" r="3.6" fill="#2b2620"/><path d="M19 20 L12 48" stroke="#2b2620" stroke-width="2.4" stroke-linecap="round"/>`;}
+  return `<svg width="${w}" height="${w*58/40}" viewBox="0 0 36 58">${g}</svg>`;}
+
+/* ---------- APPLE GLYPHS ---------- */
+function appleWhole(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 24 Q53 14 49 8" fill="none" stroke="var(--stem)" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="14" rx="10" ry="5.5" fill="var(--leaf)" transform="rotate(-22 60 14)"/><path d="M50 30 C39 18 19 22 18 43 C17 63 33 86 50 90 C67 86 83 63 82 43 C81 22 61 18 50 30 Z" fill="var(--skin)"/><ellipse cx="36" cy="40" rx="7" ry="10" fill="#fff" opacity=".25" transform="rotate(-20 36 40)"/><circle cx="41" cy="54" r="3.4" fill="#3a2a2a"/><circle cx="59" cy="54" r="3.4" fill="#3a2a2a"/><path d="M42 62 Q50 70 58 62" fill="none" stroke="#3a2a2a" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="32" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/><ellipse cx="68" cy="62" rx="5" ry="3" fill="var(--blush)" opacity=".7"/></svg>`;}
+function appleCut(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M50 22 Q52 13 49 8" fill="none" stroke="var(--stem)" stroke-width="3.5" stroke-linecap="round"/><ellipse cx="59" cy="13" rx="8" ry="4.5" fill="var(--leaf)" transform="rotate(-22 59 13)"/><circle cx="50" cy="57" r="34" fill="var(--skin)"/><circle cx="50" cy="57" r="25" fill="var(--flesh)"/><circle cx="44" cy="55" r="2.6" fill="#3a2a2a"/><circle cx="56" cy="55" r="2.6" fill="#3a2a2a"/><path d="M45 61 Q50 66 55 61" fill="none" stroke="#3a2a2a" stroke-width="2" stroke-linecap="round"/><ellipse cx="39" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/><ellipse cx="61" cy="61" rx="3.4" ry="2.2" fill="var(--blush)" opacity=".7"/></svg>`;}
+function appleSlice(w){return `<svg width="${w}" height="${w}" viewBox="0 0 100 100"><path d="M40 14 C62 34 62 66 40 86 C36 66 36 34 40 14 Z" fill="var(--flesh)" stroke="#E7C9A0" stroke-width="1.5"/><path d="M40 14 C62 34 62 66 40 86" fill="none" stroke="var(--skin)" stroke-width="6" stroke-linecap="round"/><circle cx="46" cy="44" r="2" fill="var(--seed)"/><circle cx="47" cy="58" r="2" fill="var(--seed)"/></svg>`;}
+function pizza(size,slices){const c=size/2,r=size*0.40,crust=size*0.455;let cuts='';
+  if(slices>1){for(let i=0;i<slices;i++){const a=(Math.PI*2/slices)*i-Math.PI/2;cuts+=`<line x1="${c}" y1="${c}" x2="${c+Math.cos(a)*r}" y2="${c+Math.sin(a)*r}" stroke="#E7A23C" stroke-width="2"/>`;}}
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${c}" cy="${c}" r="${crust}" fill="#E8B879" stroke="#C98A3E" stroke-width="${size*0.05}"/><circle cx="${c}" cy="${c}" r="${r}" fill="#FFF7E3" stroke="#E7A23C" stroke-width="2.5"/>${cuts}<circle cx="${c}" cy="${c}" r="${size*0.045}" fill="#E7A23C"/></svg>`;}
+
+/* ---------- APPLES: whole apples (1/2/4) + cut rounds (8) + slices (16) ---------- */
+const rows=[
+  {en:'Whole',note:'whole',beat:'4',apple:'whole',n:1,asz:56},
+  {en:'Half',note:'half',beat:'2',apple:'whole',n:2,asz:48},
+  {en:'Quarter',note:'quarter',beat:'1',apple:'whole',n:4,asz:36},
+  {en:'Eighth',note:'eighth',beat:'½',apple:'cut',n:8,asz:30},
+  {en:'Sixteenth',note:'sixteenth',beat:'¼',apple:'slice',n:16,asz:18},
+];
+function ag(t,w){return t==='whole'?appleWhole(w):t==='cut'?appleCut(w):appleSlice(w);}
+document.getElementById('tbody').innerHTML=rows.map(r=>{let a='';for(let i=0;i<r.n;i++)a+=(r.note==='half'?`<div class="aslot">${ag(r.apple,r.asz)}</div>`:ag(r.apple,r.asz));
+  return `<tr><td class="nm"><div class="ko">${r.en}</div></td><td>${note(r.note,38)}</td><td>${rest(r.note,36)}</td><td class="beat">${r.beat}</td><td><div class="applecell"><div class="applerow">${a}</div></div></td></tr>`;}).join('');
+
+/* ---------- PIZZA ACTIVITY ---------- */
+const pacts=[{t:'half',n:2},{t:'quarter',n:4},{t:'eighth',n:8}];
+document.getElementById('pizrow').innerHTML=pacts.map((p,i)=>{
+  const ex=(i===0);
+  return `<div class="pizcell"><div class="piztop">${note(p.t,42)}<span class="pizeq">=</span><span class="ansblank${ex?' ans-filled':''}">${ex?p.n:''}</span></div>${pizza(96,ex?p.n:0)}</div>`;
+}).join('');
+
+/* ---------- REST COLORING ACTIVITY (4-beat track, color the rest's length) ---------- */
+const restColor=[
+  {en:'Whole rest',type:'whole',beat:'4 beats',cells:4},
+  {en:'Half rest',type:'half',beat:'2 beats',cells:2},
+  {en:'Quarter rest',type:'quarter',beat:'1 beat',cells:1},
+  {en:'Eighth rest',type:'eighth',beat:'½ beat',cells:0.5},
+];
+document.getElementById('restcolor').innerHTML=restColor.map((r,idx)=>{
+  let track='';
+  const ex=(idx===0), full=Math.floor(r.cells), hasHalf=(r.cells%1)>0;
+  for(let i=0;i<4;i++){
+    let style='',extra='';
+    if(ex){
+      if(i<full) style=' style="background:#9DC3E6"';
+      else if(i===full && hasHalf) extra='<span class="halffill"></span>';
+    }
+    track+=`<div class="rccell"${style}><span class="half"></span>${extra}</div>`;
+  }
+  return `<div class="rcrow"><div class="rclbl">${rest(r.type,40)}</div><div class="rctrack">${track}</div></div>`;
+}).join('');
+
+/* ---------- BARS (solid = note onset, dotted = beat grid) ---------- */
+const bars=[
+  {type:'whole',name:'Whole',col:'#E24B4A',cells:4,notes:[0],solid:[],dotted:[1,2,3],emo:''},
+  {type:'half',name:'Half',col:'#EF8A3C',cells:4,notes:[0,2],solid:[2],dotted:[1,3],emo:''},
+  {type:'quarter',name:'Quarter',col:'#7FB23E',cells:4,notes:[0,1,2,3],solid:[1,2,3],dotted:[],emo:''},
+  {type:'eighth',name:'Eighth',col:'#3C90DD',cells:8,notes:[0,1,2,3,4,5,6,7],solid:[2,4,6],dotted:[1,3,5,7],emo:''},
+  {type:'sixteenth',name:'Sixteenth',col:'#D9B11E',cells:16,notes:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],solid:[4,8,12],dotted:[1,2,3,5,6,7,9,10,11,13,14,15],emo:''},
+];
+const cellSz={4:46,8:26,16:15};
+document.getElementById('barchart').innerHTML=bars.map(b=>{
+  let cells='';
+  for(let i=0;i<b.cells;i++){
+    let bd='none';
+    if(i<b.cells-1){ const div=i+1; bd = b.solid.includes(div)?'2.5px solid var(--track-ink)':(b.dotted.includes(div)?'2px dotted #b3a890':'none'); }
+    const content = b.notes.includes(i)?note(b.type,cellSz[b.cells]):'';
+    cells+=`<div class="cell" style="border-right:${bd}">${content}</div>`;
+  }
+  return `<div class="bar"><div class="blbl" style="color:${b.col}">${b.emo?`<span class="emo">${b.emo}</span>`:''}${note(b.type,30)} ${b.name}</div><div class="track">${cells}</div></div>`;
+}).join('');
+</script>
+
+<script>
+/* ---------- advanced rhythm clap cells (age 4) ---------- */
+(function(){
+  /* lyrics stay in Korean · everything else is visualized with notes + pictures (age 4 only) */
+  const lines=[
+    [ [{t:'rest'},{t:'fast',w:'모든'},{t:'clap',w:'축'},{t:'clap',w:'복'}],
+      [{t:'clap',w:'주'},{t:'clap',w:'신'},{t:'clap',w:'주'},{t:'clap',w:'님'}],
+      [{t:'rest'},{t:'clap',w:'찬'},{t:'clap',w:'양'},{t:'clap',w:'하'}],
+      [{t:'hold',w:'리'},{t:'holdcont'},{t:'rest',g:'half'},{t:'rest',g:'cont'}] ],
+    [ [{t:'rest'},{t:'fast',w:'어둔'},{t:'clap',w:'날'},{t:'clap',w:'이'}],
+      [{t:'clap',w:'다'},{t:'clap',w:'가'},{t:'clap',w:'와'},{t:'clap',w:'도'}],
+      [{t:'rest'},{t:'clap',w:'난'},{t:'clap',w:'외'},{t:'clap',w:'치'}],
+      [{t:'hold',w:'리'},{t:'holdcont'},{t:'rest',g:'half'},{t:'rest',g:'cont'}] ],
+  ];
+  const pic={clap:'👏',fast:'👏👏',rest:'😴',hold:'👏',holdcont:'➡️'};
+  function beamPair(){return '<svg width="36" height="42" viewBox="0 0 52 58"><ellipse cx="13" cy="44" rx="7" ry="5" transform="rotate(-20 13 44)" fill="#2b2620"/><line x1="19" y1="42" x2="19" y2="10" stroke="#2b2620" stroke-width="2.4"/><ellipse cx="34" cy="44" rx="7" ry="5" transform="rotate(-20 34 44)" fill="#2b2620"/><line x1="40" y1="42" x2="40" y2="10" stroke="#2b2620" stroke-width="2.4"/><rect x="19" y="8" width="21" height="5.5" rx="2" fill="#2b2620"/></svg>';}
+  function glyph(c){
+    if(c.t==='clap')return note('quarter',24);
+    if(c.t==='fast')return beamPair();
+    if(c.t==='hold')return note('half',24);          // 2-beat hold = half note
+    if(c.t==='rest'){
+      if(c.g==='half')return rest('half',24);        // 3-4 beat rest = one half rest
+      if(c.g==='cont')return '';                      // continuation cell of the half rest (no note)
+      return rest('quarter',22);                      // 1-beat rest = quarter rest
+    }
+    return '';                                         // holdcont = hold continuation (no note)
+  }
+  function cell(c){const w=c.w||'';return `<div class="clap-cell ${c.t}"><div class="clap-note">${glyph(c)}</div><div class="clap-pic">${pic[c.t]}</div><div class="clap-word">${w}</div></div>`;}
+  const el=document.getElementById('claprows');
+  if(el) el.innerHTML=lines.map(line=>`<div class="clap-row">`+line.map(m=>`<div class="clap-meas">${m.map(cell).join('')}</div>`).join('')+`</div>`).join('');
+})();
+</script>
+
+<script>
+/* ---------- 12-KEY SCALE / DIATONIC CHORD (VexFlow) ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded');return;}
+  const LET=['c','d','e','f','g','a','b'];
+  const keys=[
+    {name:'C',  tonic:'c', sig:'C',  acc:'',   color:'#E24B4A', chords:['C','Dm','Em','F','G','Am','Bdim','C']},
+    {name:'G',  tonic:'g', sig:'G',  acc:'1♯', color:'#EF8A3C', chords:['G','Am','Bm','C','D','Em','F#dim','G']},
+    {name:'D',  tonic:'d', sig:'D',  acc:'2♯', color:'#C8A000', chords:['D','Em','F#m','G','A','Bm','C#dim','D']},
+    {name:'A',  tonic:'a', sig:'A',  acc:'3♯', color:'#7FB23E', chords:['A','Bm','C#m','D','E','F#m','G#dim','A']},
+    {name:'E',  tonic:'e', sig:'E',  acc:'4♯', color:'#3C90DD', chords:['E','F#m','G#m','A','B','C#m','D#dim','E']},
+    {name:'B',  tonic:'b', sig:'B',  acc:'5♯', color:'#7E6BC4', chords:['B','C#m','D#m','E','F#','G#m','A#dim','B']},
+    {name:'Gb', tonic:'g', sig:'Gb', acc:'6♭', color:'#C060A0', chords:['Gb','Abm','Bbm','Cb','Db','Ebm','Fdim','Gb']},
+    {name:'Db', tonic:'d', sig:'Db', acc:'5♭', color:'#E24B4A', chords:['Db','Ebm','Fm','Gb','Ab','Bbm','Cdim','Db']},
+    {name:'Ab', tonic:'a', sig:'Ab', acc:'4♭', color:'#EF8A3C', chords:['Ab','Bbm','Cm','Db','Eb','Fm','Gdim','Ab']},
+    {name:'Eb', tonic:'e', sig:'Eb', acc:'3♭', color:'#C8A000', chords:['Eb','Fm','Gm','Ab','Bb','Cm','Ddim','Eb']},
+    {name:'Bb', tonic:'b', sig:'Bb', acc:'2♭', color:'#7FB23E', chords:['Bb','Cm','Dm','Eb','F','Gm','Adim','Bb']},
+    {name:'F',  tonic:'f', sig:'F',  acc:'1♭', color:'#3C90DD', chords:['F','Gm','Am','Bb','C','Dm','Edim','F']},
+  ];
+  const ROMAN=['I','ii','iii','IV','V','vi','vii°','(I)'];
+  function build(tonic){const s=LET.indexOf(tonic);const letters=[];for(let i=0;i<7;i++)letters.push(LET[(s+i)%7]);
+    const notes=[];let oct=4,prev=-1;for(let i=0;i<7;i++){const idx=LET.indexOf(letters[i]);if(i>0&&idx<prev)oct++;notes.push({l:letters[i],o:oct});prev=idx;}return{letters,notes};}
+  function at(sc,p){const k=((p%7)+7)%7;return sc.letters[k]+'/'+(sc.notes[k].o+Math.floor(p/7));}
+  function drawVoice(ctx,stave,notes){const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);v.addTickables(notes);const w=stave.getNoteEndX()-stave.getNoteStartX()-10;new VF.Formatter().joinVoices([v]).format([v],w);v.draw(ctx,stave);}
+  const oct=(k,n)=>{const p=k.split('/');return p[0]+'/'+(+p[1]+n);};  // shift octave
+  function renderKey(div,key){
+    const W=700,H=320;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const sc=build(key.tonic);
+    const sk=[];for(let p=0;p<15;p++)sk.push(at(sc,p));  // 2-octave scale (tonic → tonic, ×2)
+    /* diatonic 2-octave scale — grand staff (R.H. treble · L.H. bass, 2 octaves apart) */
+    const sT=new VF.Stave(6,50,W-12);sT.addClef('treble').addKeySignature(key.sig);sT.setContext(ctx).draw();
+    const sB=new VF.Stave(6,154,W-12);sB.addClef('bass').addKeySignature(key.sig);sB.setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+    new VF.StaveConnector(sT,sB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    drawVoice(ctx,sT,sk.map(k=>new VF.StaveNote({keys:[k],duration:'w'})));
+    drawVoice(ctx,sB,sk.map(k=>new VF.StaveNote({keys:[oct(k,-2)],duration:'w',clef:'bass'})));
+    /* diatonic triads (treble) */
+    const st2=new VF.Stave(6,258,W-12);st2.addClef('treble').addKeySignature(key.sig);st2.setContext(ctx).draw();
+    const cn=[];for(let i=0;i<8;i++){const sn=new VF.StaveNote({keys:[at(sc,i),at(sc,i+2),at(sc,i+4)],duration:'w'});
+      const a=new VF.Annotation(key.chords[i]);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);sn.addModifier(a,0);cn.push(sn);}
+    drawVoice(ctx,st2,cn);
+  }
+  document.querySelectorAll('.kbwrap').forEach(wrap=>{
+    const pg=+wrap.dataset.page;const slice=keys.slice(pg*3,pg*3+3);
+    slice.forEach(key=>{
+      const block=document.createElement('div');block.className='keyblock';
+      const lab=document.createElement('div');lab.className='keylabel';
+      lab.style.background=key.color+'18';
+      lab.innerHTML=`<span class="keyname" style="color:${key.color}">${key.name} Key</span>`;
+      const st=document.createElement('div');st.className='staves';
+      block.appendChild(lab);block.appendChild(st);wrap.appendChild(block);
+      try{renderKey(st,key);}catch(e){st.innerHTML='<div style="color:#c00;font-size:13px">'+key.name+' render error</div>';console.error(key.name,e);}
+    });
+  });
+})();
+</script>
+
+<script>
+/* ---------- G KEY : keyboard mapping + melody + four-beat practice ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded (G key)');return;}
+  // letter -> [English solfege (fixed-do, G major), color]
+  const NOTE={g:['Sol','#3C90DD'],a:['La','#7E6BC4'],b:['Si','#C85FA0'],c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa#','#7FB23E']};
+  function info(key){return NOTE[key.charAt(0)];}
+  function styleNote(n,key){
+    const I=info(key);if(!I)return;
+    n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    const a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}
+    n.addModifier(a,0);
+  }
+
+  function renderScale(div){
+    const W=860,H=146;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const st=new VF.Stave(4,18,W-12);st.addClef('treble').addKeySignature('G');st.setContext(ctx).draw();
+    const keys=['g/3','a/3','b/3','c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5'];
+    const notes=keys.map(function(k){const n=new VF.StaveNote({keys:[k],duration:'q'});styleNote(n,k);return n;});
+    const v=new VF.Voice({num_beats:4,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],W-140);
+    v.draw(ctx,st);
+  }
+
+  function renderKbd(div){
+    const whites=['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'];
+    const hl={'G3':'g','A3':'a','B3':'b','C4':'c','D4':'d','E4':'e','F#4':'f','G4':'g','A4':'a','B4':'b','C5':'c','D5':'d','E5':'e','F#5':'f','G5':'g'};
+    const ww=52,wh=156,bw=32,bh=98;
+    const W=whites.length*ww,H=wh;
+    let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    whites.forEach(function(n,i){
+      const x=i*ww,L=hl[n],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
+      if(c){const cx=x+ww/2,cy=wh-30;
+        s+='<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="12" fill="#fff">'+I[0]+'</text>';}
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-7)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#b7ab92">'+n[0]+'</text>';
+    });
+    const hasBlack={C:1,D:1,F:1,G:1,A:1};
+    whites.forEach(function(n,i){
+      if(i>=whites.length-1)return;
+      if(!hasBlack[n[0]])return;
+      const sharp=n[0]+'#'+n[1],x=(i+1)*ww-bw/2,L=hl[sharp],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+x+'" y="0" width="'+bw+'" height="'+bh+'" rx="4" fill="'+(c||'#2b2620')+'" stroke="#2b2620" stroke-width="1.5"/>';
+      if(c)s+='<text x="'+(x+bw/2)+'" y="'+(bh-12)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="10" fill="#fff">'+I[0]+'</text>';
+    });
+    s+='</svg>';
+    div.innerHTML=s;
+  }
+
+  function renderLegend(div){
+    const order=['g','a','b','c','d','e','f'];
+    div.innerHTML=order.map(function(l){var I=NOTE[l];return '<span class="gk-chip"><i style="background:'+I[1]+'"></i>'+I[0]+'</span>';}).join('');
+  }
+
+  function renderMelody(div){
+    const W=1040;  // wide render; CSS scales it to the card so labels never overlap
+    // All pitches/rhythms verified from melody.png notehead-coordinate analysis.
+    const VERSE=[
+      [{r:'q'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'g/4',d:'q'},{k:'d/4',d:'q'}],
+      [{k:'d/4',d:'q'},{k:'e/4',d:'q'},{k:'f/4',d:'q'},{k:'g/4',d:'q'}],
+      [{r:'q'},{k:'a/4',d:'q'},{k:'a/4',d:'q'},{k:'g/4',d:'q'}],
+      [{k:'e/4',d:'h'},{r:'h'}]
+    ];
+    const data=[
+      {ch:['G','D','Em7','C'], m:VERSE},
+      {ch:['G','D','Em7','C'], m:VERSE},
+      {ch:[null,'G','D','Em7'], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0]], m:[
+        [{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'w'}]
+      ]},
+      {ch:['C','G','D','Em7','C'], ch2:[[3,2,'D']], sl:[[1,1,1,2],[1,3,1,4],[1,5,2,0],[3,2,3,3],[3,5,4,0]], m:[
+        [{r:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'g/4',d:'qd'},{k:'g/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'}],
+        [{k:'a/4',d:'h'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'8'}],
+        [{k:'b/4',d:'q'},{k:'c/5',d:'8'},{k:'b/4',d:'8'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{k:'g/4',d:'q'}],
+        [{k:'g/4',d:'hd'},{r:'q'}]
+      ]}
+    ];
+    const sysH=140,topPad=14;
+    // Trim trailing dead space: reserve only the last system's content height, not a full band.
+    const H=topPad+(data.length-1)*sysH+84;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    const chordLbls=[];
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNote(n,sp.k);
+      return n;
+    }
+    data.forEach(function(sys,si){
+      const meas=sys.m,chords=sys.ch||[];
+      const y=topPad+si*sysH+8;
+      const M=meas.length,x0=4,clefW=58;
+      // Width per measure proportional to note count (+base), so dense bars get room and held notes don't hog space.
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];
+      for(let m=0;m<M;m++){
+        const w=widths[m];
+        const st=new VF.Stave(x,y,w);
+        if(m===0)st.addClef('treble').addKeySignature('G');
+        if(si===0&&m===0)st.addTimeSignature('4/4');
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const notes=specs.map(build);sysNotes[m]=notes;
+        // Right-hand finger numbers (verse: thumb on Re; refrain: thumb on Sol)
+        const FING=(si<=1)?{d:1,e:2,f:3,g:4,a:5}:{g:1,a:2,b:3,c:4,d:5};
+        // Tied-to notes (not re-struck) get no finger number.
+        const tieTargets={};(sys.sl||[]).forEach(function(s){tieTargets[s[2]+':'+s[3]]=true;});
+        specs.forEach(function(sp,i){
+          if(sp.r||tieTargets[m+':'+i])return;var fn=FING[sp.k.charAt(0)];if(!fn)return;
+          var fa=new VF.Annotation(String(fn));
+          fa.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+          try{fa.setFont('Jua, sans-serif',10,'normal');}catch(e){}
+          try{fa.setStyle({fillStyle:'#5f8f2e'});}catch(e){}
+          notes[i].addModifier(fa,0);
+        });
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){
+          const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
+          if(eighth){grp.push(notes[i]);}else{flushBeam();}
+        }
+        flushBeam();
+        const nb=beats(specs)||4;
+        const v=new VF.Voice({num_beats:nb,beat_value:4});
+        v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){chordLbls.push({x:st.getNoteStartX(),y:y-10,t:chords[m]});}
+        x+=w;
+      }
+      (sys.sl||[]).forEach(function(s){
+        var fn=sysNotes[s[0]]&&sysNotes[s[0]][s[1]],ln=sysNotes[s[2]]&&sysNotes[s[2]][s[3]];
+        if(!fn||!ln)return;
+        var tie=new VF.StaveTie({first_note:fn,last_note:ln,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(1);}catch(e){}
+        tie.setContext(ctx).draw();
+      });
+      (sys.ch2||[]).forEach(function(c){
+        var nt=sysNotes[c[0]]&&sysNotes[c[0]][c[1]];if(!nt)return;
+        var cx;try{cx=nt.getAbsoluteX();}catch(e){return;}
+        chordLbls.push({x:cx-4,y:topPad+si*sysH+8-10,t:c[2]});
+      });
+    });
+    // chord symbols as plain SVG text, lifted above the finger numbers (no overlap)
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
+  }
+
+  function renderPractice(div){
+    const W=660,H=238,M=4,x0=8,firstW=182,restW=(W-16-x0-firstW)/(M-1),tY=24,bY=120;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    function mk(k,d,clef){
+      const n=new VF.StaveNote({keys:[k],duration:d,clef:clef||'treble'});
+      styleNote(n,k);return n;
+    }
+    let x=x0,firstT,firstB,lastT,lastB;
+    for(let m=0;m<M;m++){
+      const w=m===0?firstW:restW;
+      const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+      if(m===0){t.addClef('treble').addKeySignature('G').addTimeSignature('4/4');
+        b.addClef('bass').addKeySignature('G').addTimeSignature('4/4');firstT=t;firstB=b;}
+      t.setContext(ctx).draw();b.setContext(ctx).draw();
+      if(m===M-1){lastT=t;lastB=b;}
+      const rh=[mk('g/4','q'),mk('b/4','q'),mk('d/5','h')];
+      const lh=[mk('g/3','w','bass')];
+      const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
+      const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
+      new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(m===0?92:24));
+      vt.draw(ctx,t);vb.draw(ctx,b);
+      x+=w;
+    }
+    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+    new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+    new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+  }
+
+  function renderChordPractice(div){
+    const COL={C:'#E24B4A',Am:'#7E6BC4',F:'#3C90DD',G:'#EF8A3C'};
+    // Root position (root on the bottom, no inversion), voiced to move by the
+    // smallest step from the previous chord — C→Am drops DOWN instead of leaping up.
+    // LH stays exactly one octave below each RH root.
+    const prog=[
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'Am',rh:['a/3','c/4','e/4'], lh:'a/2'},
+      {name:'Am',rh:['a/3','c/4','e/4'], lh:'a/2'},
+      {name:'F', rh:['f/3','a/3','c/4'], lh:'f/2'},
+      {name:'G', rh:['g/3','b/3','d/4'], lh:'g/2'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+      {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'}
+    ];
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=185,tY0=20;
+    const H=tY0+rows*sysGap;
+    const restW=(W-16-x0-firstW)/(perRow-1);
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    function chord(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});return n;}
+    for(let row=0;row<rows;row++){
+      const tY=tY0+row*sysGap,bY=tY+96;
+      let x=x0,firstT,firstB,lastT,lastB;
+      for(let c=0;c<perRow;c++){
+        const ch=prog[row*perRow+c],w=c===0?firstW:restW,col=COL[ch.name];
+        const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+        if(c===0){t.addClef('treble').addTimeSignature('4/4');
+          b.addClef('bass').addTimeSignature('4/4');firstT=t;firstB=b;}
+        t.setContext(ctx).draw();b.setContext(ctx).draw();
+        if(c===perRow-1){lastT=t;lastB=b;}
+        const rh=[chord(ch.rh,'q',col),chord(ch.rh,'q',col),chord(ch.rh,'h',col)];
+        const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+        try{a.setStyle({fillStyle:col});}catch(e){}
+        rh[0].addModifier(a,0);
+        const lh=[new VF.StaveNote({keys:[ch.lh],duration:'w',clef:'bass'})];
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(lh);
+        new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
+        vt.draw(ctx,t);vb.draw(ctx,b);
+        x+=w;
+      }
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+      new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    }
+  }
+
+  // ===== 위대하신 주 — refrain melody (C major). Colored noteheads + 계이름 + 가사. =====
+  function labelC(key){var I=NOTE[key.charAt(0)];return [key.charAt(0)==='f'?'Fa':I[0],I[1]];}
+  function styleNoteC(n,key){
+    var I=labelC(key);n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    var a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}n.addModifier(a,0);
+  }
+  function renderCRefrain(div){
+    const W=1040;
+    // v1 transcription (from "위대~" through the end) — PITCHES TO BE VERIFIED against the lead sheet.
+    const sys=[
+      {ch:['C2',null,'Am',null], pickup:[{k:'a/4',d:'8',ly:'위'},{k:'c/5',d:'8',ly:'대'}],
+       ties:[[-1,1,0,0]], m:[
+        [{k:'c/5',d:'h'},{k:'b/4',d:'8',ly:'하'},{k:'a/4',d:'8',ly:'신'},{k:'c/5',d:'q',ly:'주'}],
+        [{k:'c/5',d:'8',ly:'찬'},{k:'d/5',d:'8',ly:'양'},{k:'c/5',d:'8',ly:'해'},{k:'b/4',d:'8',ly:'위'},{k:'a/4',d:'q',ly:'대'},{r:'q'}],
+        [{k:'a/4',d:'8',ly:'하'},{k:'b/4',d:'8',ly:'신'},{k:'c/5',d:'h',ly:'주'},{k:'b/4',d:'8',ly:'모'},{k:'c/5',d:'8',ly:'두'}],
+        [{k:'b/4',d:'8',ly:'알'},{k:'a/4',d:'8',ly:'게'},{k:'g/4',d:'8',ly:'되'},{k:'a/4',d:'8',ly:'리'},{k:'b/4',d:'h'}]
+      ]},
+      {ch:['F2',null,'G','C2',null], repBeg:[4], m:[
+        [{k:'a/4',d:'h',ly:'라'},{k:'g/4',d:'8',ly:'위'},{k:'a/4',d:'8',ly:'대'},{k:'b/4',d:'q'}],
+        [{k:'a/4',d:'8',ly:'하'},{k:'b/4',d:'8',ly:'신'},{k:'c/5',d:'h',ly:'주'},{r:'q'}],
+        [{k:'c/5',d:'8',ly:'모'},{k:'b/4',d:'8',ly:'든'},{k:'a/4',d:'8',ly:'이'},{k:'g/4',d:'8',ly:'름'},{k:'a/4',d:'8',ly:'위'},{k:'g/4',d:'8',ly:'에'}],
+        [{k:'g/4',d:'w',ly:'에'}],
+        [{k:'c/5',d:'8',ly:'위'},{k:'b/4',d:'8',ly:'대'},{k:'a/4',d:'q'},{r:'h'}]
+      ]},
+      {ch:['Am','F2','G','C2'], repEnd:[3], m:[
+        [{k:'a/4',d:'8',ly:'뛰'},{k:'b/4',d:'8',ly:'어'},{k:'c/5',d:'8',ly:'나'},{k:'b/4',d:'8',ly:'신'},{k:'a/4',d:'8',ly:'이'},{k:'g/4',d:'8',ly:'름'}],
+        [{k:'f/4',d:'q',ly:'다'},{k:'a/4',d:'8',ly:'찬'},{k:'g/4',d:'8',ly:'양'},{k:'a/4',d:'8',ly:'해'},{k:'b/4',d:'8',ly:'위'},{k:'c/5',d:'q',ly:'대'}],
+        [{k:'b/4',d:'q',ly:'하'},{k:'a/4',d:'q',ly:'신'},{k:'g/4',d:'h',ly:'주'}],
+        [{k:'c/5',d:'w'}]
+      ]}
+    ];
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNoteC(n,sp.k);
+      if(sp.ly){var la=new VF.Annotation(sp.ly);la.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);try{la.setStyle({fillStyle:'#2b2620'});la.setFont('Jua, sans-serif',13,'normal');}catch(e){}n.addModifier(la,0);}
+      return n;
+    }
+    const sysH=112,topPad=22;
+    const H=topPad+sys.length*sysH;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const chordLbls=[];
+    sys.forEach(function(S,si){
+      const meas=S.m,chords=S.ch||[],y=topPad+si*sysH+8;
+      const hasPickup=!!S.pickup, M=meas.length, x0=4, clefW=46;
+      const puW=hasPickup?64:0;
+      const wts=meas.map(function(mm){return mm.length+1.4;});
+      const sumWt=wts.reduce(function(a,b){return a+b;},0);
+      const avail=W-8-x0-clefW-puW;
+      const widths=wts.map(function(wt,i){return (i===0?clefW:0)+wt/sumWt*avail;});
+      let x=x0;const sysNotes=[];let puNotes=null;
+      if(hasPickup){
+        const st=new VF.Stave(x,y,clefW+puW);st.addClef('treble');
+        if(si===0)st.addTimeSignature('4/4');
+        st.setEndBarType(VF.Barline.type.NONE);
+        st.setContext(ctx).draw();
+        puNotes=S.pickup.map(build);
+        const v=new VF.Voice({num_beats:beats(S.pickup),beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(puNotes);
+        new VF.Formatter().joinVoices([v]).format([v],puW-6);
+        v.draw(ctx,st);
+        if(puNotes.length>1){try{new VF.Beam(puNotes).setContext(ctx).draw();}catch(e){}}
+        x+=clefW+puW;
+      }
+      for(let m=0;m<M;m++){
+        let w=widths[m];if(hasPickup&&m===0)w-=clefW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0&&!hasPickup)st.addClef('treble');
+        if(si===0&&m===0&&!hasPickup)st.addTimeSignature('4/4');
+        if((S.repBeg||[]).indexOf(m)>=0)st.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+        if((S.repEnd||[]).indexOf(m)>=0)st.setEndBarType(VF.Barline.type.REPEAT_END);
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const notes=specs.map(build);sysNotes[m]=notes;
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){const sp=specs[i],e8=!sp.r&&sp.d.charAt(0)==='8';if(e8){grp.push(notes[i]);}else{flushBeam();}}
+        flushBeam();
+        const v=new VF.Voice({num_beats:beats(specs)||4,beat_value:4});v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        if(chords[m]){chordLbls.push({x:st.getNoteStartX(),y:y+14,t:chords[m]});}
+        x+=w;
+      }
+      (S.ties||[]).forEach(function(t){
+        const first=(t[0]<0)?(puNotes&&puNotes[t[1]]):(sysNotes[t[0]]&&sysNotes[t[0]][t[1]]);
+        const last=sysNotes[t[2]]&&sysNotes[t[2]][t[3]];
+        if(!first||!last)return;
+        const tie=new VF.StaveTie({first_note:first,last_note:last,first_indices:[0],last_indices:[0]});
+        try{tie.setDirection(-1);}catch(e){}tie.setContext(ctx).draw();
+      });
+    });
+    var svg=div.querySelector('svg');
+    if(svg){svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','xMidYMid meet');var t='';chordLbls.forEach(function(c){t+='<text x="'+c.x+'" y="'+c.y+'" font-family="Jua,sans-serif" font-size="16" font-weight="bold" fill="#6a5f4d">'+c.t+'</text>';});svg.insertAdjacentHTML('beforeend',t);}
+  }
+
+  function go(){
+    var cm=document.getElementById('cmelody');if(cm){try{renderCRefrain(cm);}catch(e){console.error('cmelody',e);}}
+    var ml=document.getElementById('gmelody');if(ml){try{renderMelody(ml);}catch(e){console.error('gmelody',e);}}
+    var sc=document.getElementById('gscale');if(sc){try{renderScale(sc);}catch(e){console.error('gscale',e);}}
+    var kb=document.getElementById('gkbd');if(kb){try{renderKbd(kb);}catch(e){console.error('gkbd',e);}}
+    var lg=document.getElementById('glegend');if(lg){try{renderLegend(lg);}catch(e){}}
+    var pr=document.getElementById('gpractice');if(pr){try{renderPractice(pr);}catch(e){console.error('gpractice',e);}}
+    var gc=document.getElementById('gchords');if(gc){try{renderChordPractice(gc);}catch(e){console.error('gchords',e);}}
+  }
+  go();
+})();
+</script>
+
+<script>
+/* ---------- C KEY : keyboard map + melody + chords + four-beat (빛나는 왕의 왕) ---------- */
+(function(){
+  const VF=(window.Vex&&(Vex.Flow||Vex))||window.VexFlow;
+  if(!VF){console.warn('VexFlow not loaded (C key)');return;}
+  // letter -> [solfege (fixed-do, C major), color]
+  const NOTE={c:['Do','#E24B4A'],d:['Re','#EF8A3C'],e:['Mi','#E0A81E'],f:['Fa','#7FB23E'],g:['Sol','#3C90DD'],a:['La','#7E6BC4'],b:['Si','#C85FA0']};
+  function info(key){return NOTE[key.charAt(0)];}
+  function styleNote(n,key){
+    const I=info(key);if(!I)return;
+    n.setStyle({fillStyle:I[1],strokeStyle:I[1]});
+    const a=new VF.Annotation(I[0]);a.setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+    try{a.setStyle({fillStyle:I[1]});}catch(e){}
+    n.addModifier(a,0);
+  }
+
+  function renderScale(div){
+    const W=760,H=140;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const st=new VF.Stave(4,18,W-12);st.addClef('treble');st.setContext(ctx).draw();
+    const keys=['c/4','d/4','e/4','f/4','g/4','a/4','b/4','c/5','d/5','e/5','f/5','g/5','a/5','b/5','c/6'];
+    const notes=keys.map(function(k){const n=new VF.StaveNote({keys:[k],duration:'q'});styleNote(n,k);return n;});
+    const v=new VF.Voice({num_beats:keys.length,beat_value:4}).setMode(VF.Voice.Mode.SOFT);
+    v.addTickables(notes);
+    new VF.Formatter().joinVoices([v]).format([v],W-120);
+    v.draw(ctx,st);
+  }
+
+  function renderKbd(div){
+    const whites=['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+    const hl={C:'c',D:'d',E:'e',F:'f',G:'g',A:'a',B:'b'};
+    const ww=44,wh=160,bw=26,bh=100;
+    const W=whites.length*ww,H=wh;
+    let s='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    whites.forEach(function(n,i){
+      const x=i*ww,L=hl[n[0]],I=L?NOTE[L]:null,c=I?I[1]:null;
+      s+='<rect x="'+(x+0.75)+'" y="0.75" width="'+(ww-1.5)+'" height="'+(wh-1.5)+'" rx="6" fill="'+(c?c+'22':'#fff')+'" stroke="'+(c||'#d9cfb9')+'" stroke-width="'+(c?3:1.5)+'"/>';
+      if(c){const cx=x+ww/2,cy=wh-32;
+        s+='<circle cx="'+cx+'" cy="'+cy+'" r="16" fill="'+c+'"/><text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="13" fill="#fff">'+I[0]+'</text>';}
+      s+='<text x="'+(x+ww/2)+'" y="'+(wh-8)+'" text-anchor="middle" font-family="Jua,sans-serif" font-size="11" fill="#b7ab92">'+n[0]+'</text>';
+    });
+    const hasBlack={C:1,D:1,F:1,G:1,A:1};
+    whites.forEach(function(n,i){
+      if(i>=whites.length-1)return;
+      if(!hasBlack[n[0]])return;
+      const x=(i+1)*ww-bw/2;
+      s+='<rect x="'+x+'" y="0" width="'+bw+'" height="'+bh+'" rx="4" fill="#2b2620" stroke="#2b2620" stroke-width="1.5"/>';
+    });
+    s+='</svg>';
+    div.innerHTML=s;
+  }
+
+  function renderLegend(div){
+    const order=['c','d','e','f','g','a','b'];
+    div.innerHTML=order.map(function(l){var I=NOTE[l];return '<span class="gk-chip"><i style="background:'+I[1]+'"></i>'+I[0]+'</span>';}).join('');
+  }
+
+  function renderMelody(div){
+    const W=672;
+    // Refrain "위대하신 주 …" transcribed from the 빛나는 왕의 왕 lead sheet (pitch contour verified).
+    const data=[
+      {ch:['C',null,'Am'], m:[
+        [{k:'b/4',d:'h'},{k:'a/4',d:'8'},{k:'g/4',d:'8'},{k:'c/5',d:'8'},{k:'b/4',d:'8'}],
+        [{k:'b/4',d:'q'},{r:'q'},{k:'d/5',d:'8'},{k:'c/5',d:'8'},{k:'b/4',d:'8'},{k:'c/5',d:'8'}],
+        [{k:'c/5',d:'h'},{k:'b/4',d:'q'},{k:'a/4',d:'q'}]
+      ]},
+      {ch:['Am','F','G'], m:[
+        [{k:'g/4',d:'8'},{k:'f/4',d:'8'},{k:'g/4',d:'8'},{k:'a/4',d:'8'},{k:'b/4',d:'q'},{k:'c/5',d:'q'}],
+        [{k:'c/5',d:'q'},{k:'b/4',d:'8'},{k:'a/4',d:'8'},{r:'q'},{k:'g/4',d:'q'}],
+        [{k:'b/4',d:'q'},{k:'c/5',d:'q'},{k:'b/4',d:'h'}]
+      ]}
+    ];
+    const sysH=140,topPad=14;
+    const H=topPad+data.length*sysH;
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    const TICK={'w':4,'h':2,'q':1,'8':0.5};
+    function beats(specs){var t=0;specs.forEach(function(sp){var d=sp.r||sp.d,base=d.replace('d',''),b=TICK[base]||0;if(d.indexOf('d')>=0)b*=1.5;t+=b;});return t;}
+    function build(sp){
+      if(sp.r){return new VF.StaveNote({keys:['b/4'],duration:sp.r+'r'});}
+      const n=new VF.StaveNote({keys:[sp.k],duration:sp.d});
+      if(sp.d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}
+      styleNote(n,sp.k);
+      return n;
+    }
+    data.forEach(function(sys,si){
+      const meas=sys.m,chords=sys.ch||[];
+      const y=topPad+si*sysH+8;
+      const M=meas.length,x0=4,firstW=240,restW=(W-8-x0-firstW)/(M-1);
+      let x=x0;
+      for(let m=0;m<M;m++){
+        const w=m===0?firstW:restW;
+        const st=new VF.Stave(x,y,w);
+        if(m===0)st.addClef('treble');
+        if(si===0&&m===0)st.addTimeSignature('4/4');
+        st.setContext(ctx).draw();
+        const specs=meas[m];
+        const notes=specs.map(build);
+        if(chords[m]){var ca=new VF.Annotation(chords[m]);ca.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);try{ca.setStyle({fillStyle:'#6a5f4d'});}catch(e){}notes[0].addModifier(ca,0);}
+        const beamsArr=[];let grp=[];
+        const flushBeam=function(){for(var s=0;s<grp.length;s+=4){var sub=grp.slice(s,s+4);if(sub.length>1)beamsArr.push(new VF.Beam(sub));}grp=[];};
+        for(let i=0;i<specs.length;i++){
+          const sp=specs[i],eighth=!sp.r&&sp.d.charAt(0)==='8';
+          if(eighth){grp.push(notes[i]);}else{flushBeam();}
+        }
+        flushBeam();
+        const nb=beats(specs)||4;
+        const v=new VF.Voice({num_beats:nb,beat_value:4});
+        v.addTickables(notes);
+        const fw=st.getNoteEndX()-st.getNoteStartX()-6;
+        new VF.Formatter().joinVoices([v]).format([v],fw>40?fw:40);
+        v.draw(ctx,st);
+        beamsArr.forEach(function(bm){bm.setContext(ctx).draw();});
+        x+=w;
+      }
+    });
+  }
+
+  // chord progression shared by chord section + four-beat section
+  const COL={C:'#E24B4A',Am:'#7E6BC4',F:'#3C90DD',G:'#EF8A3C'};
+  const PROG=[
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
+    {name:'Am',rh:['a/4','c/5','e/5'], lh:'a/2'},
+    {name:'F', rh:['f/4','a/4','c/5'], lh:'f/2'},
+    {name:'G', rh:['g/4','b/4','d/5'], lh:'g/2'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'},
+    {name:'C', rh:['c/4','e/4','g/4'], lh:'c/3'}
+  ];
+
+  // render two rows of 4 measures; buildBars(ch,col) returns {rh:[...notes], lh:[...notes]}
+  function renderGrid(div,buildBars){
+    const W=660,perRow=4,rows=2,x0=8,firstW=182,sysGap=162,tY0=16;
+    const H=tY0+rows*sysGap;
+    const restW=(W-16-x0-firstW)/(perRow-1);
+    const r=new VF.Renderer(div,VF.Renderer.Backends.SVG);r.resize(W,H);const ctx=r.getContext();
+    for(let row=0;row<rows;row++){
+      const tY=tY0+row*sysGap,bY=tY+96;
+      let x=x0,firstT,firstB,lastT,lastB;
+      for(let c=0;c<perRow;c++){
+        const ch=PROG[row*perRow+c],w=c===0?firstW:restW,col=COL[ch.name];
+        const t=new VF.Stave(x,tY,w),b=new VF.Stave(x,bY,w);
+        if(c===0){t.addClef('treble').addTimeSignature('4/4');
+          b.addClef('bass').addTimeSignature('4/4');firstT=t;firstB=b;}
+        t.setContext(ctx).draw();b.setContext(ctx).draw();
+        if(c===perRow-1){lastT=t;lastB=b;}
+        const bars=buildBars(ch,col);
+        const a=new VF.Annotation(ch.name);a.setVerticalJustification(VF.Annotation.VerticalJustify.TOP);
+        try{a.setStyle({fillStyle:col});}catch(e){}
+        bars.rh[0].addModifier(a,0);
+        const vt=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.rh);
+        const vb=new VF.Voice({num_beats:4,beat_value:4}).addTickables(bars.lh);
+        new VF.Formatter().joinVoices([vt]).joinVoices([vb]).format([vt,vb],w-(c===0?92:24));
+        vt.draw(ctx,t);vb.draw(ctx,b);
+        x+=w;
+      }
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.BRACE).setContext(ctx).draw();
+      new VF.StaveConnector(firstT,firstB).setType(VF.StaveConnector.type.SINGLE_LEFT).setContext(ctx).draw();
+      new VF.StaveConnector(lastT,lastB).setType(VF.StaveConnector.type.SINGLE_RIGHT).setContext(ctx).draw();
+    }
+  }
+
+  function chordNote(keys,d,col){const n=new VF.StaveNote({keys:keys,duration:d});n.setStyle({fillStyle:col,strokeStyle:col});if(d.indexOf('d')>=0){try{VF.Dot.buildAndAttach([n],{all:true});}catch(e){}}return n;}
+
+  // 코드 섹션 : 온음표 (한 마디에 한 번)
+  function renderChords(div){
+    renderGrid(div,function(ch,col){
+      return {
+        rh:[chordNote(ch.rh,'w',col)],
+        lh:[new VF.StaveNote({keys:[ch.lh],duration:'w',clef:'bass'})]
+      };
+    });
+  }
+
+  // 포비트 섹션 : 오른손 ●－●－ (half+half / 1·3박), 왼손 ●－－● (dotted-half+quarter / 1·4박)
+  function renderFourBeat(div){
+    renderGrid(div,function(ch,col){
+      const lh1=new VF.StaveNote({keys:[ch.lh],duration:'hd',clef:'bass'});
+      try{VF.Dot.buildAndAttach([lh1],{all:true});}catch(e){}
+      const lh2=new VF.StaveNote({keys:[ch.lh],duration:'q',clef:'bass'});
+      return {
+        rh:[chordNote(ch.rh,'h',col),chordNote(ch.rh,'h',col)],
+        lh:[lh1,lh2]
+      };
+    });
+  }
+
+  function go(){
+    var sc=document.getElementById('cscale');if(sc){try{renderScale(sc);}catch(e){console.error('cscale',e);}}
+    var kb=document.getElementById('ckbd');if(kb){try{renderKbd(kb);}catch(e){console.error('ckbd',e);}}
+    var lg=document.getElementById('clegend');if(lg){try{renderLegend(lg);}catch(e){}}
+    var cc=document.getElementById('cchords');if(cc){try{renderChords(cc);}catch(e){console.error('cchords',e);}}
+    var fb=document.getElementById('cfourbeat');if(fb){try{renderFourBeat(fb);}catch(e){console.error('cfourbeat',e);}}
+  }
+  go();
+})();
+</script>
+</body>
+</html>

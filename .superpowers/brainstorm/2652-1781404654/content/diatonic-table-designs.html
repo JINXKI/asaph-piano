@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>다이아토닉 테이블 디자인 옵션</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFDF6;--ink:#3a342c;
+    --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;
+    --sol:#3C90DD;--la:#7E6BC4;--si:#C060A0;
+    --bg:#F5EDD6;--card-bg:#fff;--border:#E3D8C0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);}
+  body{padding:24px 16px;max-width:1100px;margin:0 auto;}
+  h1{font-family:'Jua',sans-serif;font-size:26px;text-align:center;margin-bottom:6px;}
+  .subtitle{text-align:center;font-size:16px;color:#7a6f5d;margin-bottom:28px;}
+
+  /* CARD GRID */
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:700px){.card-grid{grid-template-columns:1fr;}}
+  .design-card{
+    background:var(--card-bg);border:3px solid var(--border);border-radius:20px;
+    padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+  }
+  .design-card:hover{border-color:#a89a7c;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .design-card.selected{border-color:#3C90DD;box-shadow:0 0 0 3px #3C90DD44;}
+  .design-card .badge{
+    position:absolute;top:14px;right:14px;
+    background:#3C90DD;color:#fff;font-family:'Jua',sans-serif;
+    font-size:14px;padding:3px 10px;border-radius:20px;display:none;
+  }
+  .design-card.selected .badge{display:block;}
+  .card-title{font-family:'Jua',sans-serif;font-size:18px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .card-desc{font-size:14px;color:#7a6f5d;margin-bottom:14px;line-height:1.5;}
+
+  /* ── DESIGN A: 스태킹 블록 ── */
+  .stack-table{width:100%;border-collapse:collapse;font-size:13px;text-align:center;}
+  .stack-table th{font-family:'Jua',sans-serif;font-size:13px;padding:5px 3px;border-bottom:2px solid var(--border);}
+  .stack-table td{padding:4px 2px;border-bottom:1px solid #f0e8d8;}
+  .note-do{background:var(--do);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-re{background:var(--re);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-mi{background:var(--mi);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-fa{background:var(--fa);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-sol{background:var(--sol);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-la{background:var(--la);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-si{background:var(--si);color:#fff;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;font-family:'Jua',sans-serif;font-size:13px;}
+  .note-skip{background:#f0ebe0;border-radius:6px;display:inline-block;width:28px;height:28px;line-height:28px;color:#bbb;font-size:11px;}
+  .chord-label{font-family:'Jua',sans-serif;font-size:13px;color:#fff;padding:3px 7px;border-radius:8px;display:inline-block;}
+
+  /* ── DESIGN B: 계단 시각화 ── */
+  .stair-wrap{display:flex;flex-direction:column;gap:6px;}
+  .stair-row{display:flex;align-items:center;gap:6px;}
+  .stair-roman{font-family:'Jua',sans-serif;font-size:14px;width:36px;text-align:right;color:#7a6f5d;}
+  .stair-dots{display:flex;gap:4px;}
+  .dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Jua',sans-serif;font-size:11px;font-weight:bold;}
+  .dot-on{color:#fff;}
+  .dot-off{background:#f0ebe0;color:#ccc;}
+  .stair-arrow{font-size:14px;color:#aaa;}
+  .stair-chord{font-family:'Jua',sans-serif;font-size:14px;min-width:48px;}
+  .stair-quality{font-size:12px;color:#7a6f5d;}
+
+  /* ── DESIGN C: 건반 시각화 ── */
+  .piano-section{margin-bottom:8px;}
+  .piano-label{font-family:'Jua',sans-serif;font-size:12px;color:#7a6f5d;margin-bottom:4px;}
+  .keys-row{display:flex;gap:2px;align-items:flex-end;}
+  .key{
+    width:30px;height:60px;border:2px solid #ccc;border-radius:0 0 6px 6px;
+    display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+    padding-bottom:4px;font-size:11px;font-family:'Jua',sans-serif;
+    background:#fff;position:relative;cursor:default;
+  }
+  .key.active{border-color:#3C90DD;}
+  .key-solfege{font-size:10px;font-weight:bold;}
+  .key-num{font-size:10px;color:#7a6f5d;}
+  .chord-bracket{
+    display:flex;gap:2px;margin-bottom:4px;
+  }
+  .bracket-dot{width:30px;height:10px;display:flex;align-items:center;justify-content:center;font-size:9px;}
+  .bracket-line{height:3px;background:#3C90DD;border-radius:2px;flex:1;}
+
+  /* ── DESIGN D: 원리 설명 테이블 ── */
+  .principle-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .principle-table th{
+    font-family:'Jua',sans-serif;font-size:12px;
+    background:#f7f2e8;padding:6px 4px;border:1px solid var(--border);text-align:center;
+  }
+  .principle-table td{padding:5px 4px;border:1px solid var(--border);text-align:center;vertical-align:middle;}
+  .plus-sign{color:#aaa;font-size:16px;}
+  .eq-sign{color:#aaa;font-size:16px;}
+  .quality-maj{color:#3C90DD;font-weight:bold;}
+  .quality-min{color:#7E6BC4;font-weight:bold;}
+  .quality-dim{color:#E24B4A;font-weight:bold;}
+  .solfege-chip{display:inline-block;padding:2px 6px;border-radius:6px;color:#fff;font-family:'Jua',sans-serif;font-size:12px;}
+
+  /* BOTTOM NOTE */
+  .bottom-note{text-align:center;margin-top:24px;font-size:14px;color:#9a8f7d;}
+  .click-hint{background:#FFFBEE;border:2px solid #E3C657;border-radius:12px;padding:8px 16px;display:inline-block;font-size:14px;margin-bottom:20px;}
+</style>
+<script>
+function selectCard(el){
+  document.querySelectorAll('.design-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  // notify server
+  fetch('/event',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'click',choice:el.dataset.choice,text:el.querySelector('.card-title').textContent})
+  }).catch(()=>{});
+}
+</script>
+</head>
+<body>
+
+<h1>다이아토닉 원리 테이블 — 디자인 고르기</h1>
+<p class="subtitle">스케일이 코드가 되는 원리를 어떻게 보여줄까요? 마음에 드는 디자인을 클릭해 선택해요.</p>
+
+<div style="text-align:center;margin-bottom:20px;">
+  <span class="click-hint">👇 카드를 클릭해서 선택하세요</span>
+</div>
+
+<div class="card-grid">
+
+  <!-- DESIGN A: 스태킹 블록 테이블 -->
+  <div class="design-card" data-choice="A" onclick="selectCard(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">🎨 A. 색깔 블록 테이블</div>
+    <div class="card-desc">스케일 7음을 색깔 블록으로 나열하고, 각 코드에서 사용하는 음(1·3·5번째)을 강조 표시. 한눈에 패턴이 보임.</div>
+    <table class="stack-table">
+      <thead>
+        <tr>
+          <th>코드</th>
+          <th><span class="note-do" style="display:inline-block">도</span></th>
+          <th><span class="note-re" style="display:inline-block">레</span></th>
+          <th><span class="note-mi" style="display:inline-block">미</span></th>
+          <th><span class="note-fa" style="display:inline-block">파</span></th>
+          <th><span class="note-sol" style="display:inline-block">솔</span></th>
+          <th><span class="note-la" style="display:inline-block">라</span></th>
+          <th><span class="note-si" style="display:inline-block">시</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="chord-label" style="background:#E24B4A">I C</span></td>
+          <td><span class="note-do">도</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-mi">미</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-sol">솔</span></td><td><span class="note-skip">·</span></td><td><span class="note-skip">·</span></td>
+        </tr>
+        <tr>
+          <td><span class="chord-label" style="background:#7E6BC4">ii Dm</span></td>
+          <td><span class="note-skip">·</span></td><td><span class="note-re">레</span></td>
+          <td><span class="note-skip">·</span></td><td><span class="note-fa">파</span></td>
+          <td><span class="note-skip">·</span></td><td><span class="note-la">라</span></td><td><span class="note-skip">·</span></td>
+        </tr>
+        <tr>
+          <td><span class="chord-label" style="background:#7E6BC4">iii Em</span></td>
+          <td><span class="note-skip">·</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-mi">미</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-sol">솔</span></td><td><span class="note-skip">·</span></td><td><span class="note-si">시</span></td>
+        </tr>
+        <tr>
+          <td><span class="chord-label" style="background:#7FB23E">IV F</span></td>
+          <td><span class="note-skip">·</span></td><td><span class="note-skip">·</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-fa">파</span></td><td><span class="note-skip">·</span></td>
+          <td><span class="note-la">라</span></td><td><span class="note-skip">·</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:12px;color:#9a8f7d;margin-top:6px;text-align:center">C 장조 예시 · 아래 3개 코드 생략</div>
+  </div>
+
+  <!-- DESIGN B: 계단 dot 시각화 -->
+  <div class="design-card" data-choice="B" onclick="selectCard(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">⚪ B. 계단 점 시각화</div>
+    <div class="card-desc">각 코드마다 스케일 위의 점을 켜고 끄는 방식. "하나 건너 하나" 패턴이 직관적으로 보임.</div>
+    <div class="stair-wrap">
+      <div style="display:flex;gap:6px;padding-left:42px;margin-bottom:2px;">
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--do)">도</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--re)">레</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--mi)">미</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--fa)">파</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--sol)">솔</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--la)">라</div>
+        <div style="width:24px;text-align:center;font-family:'Jua',sans-serif;font-size:11px;color:var(--si)">시</div>
+      </div>
+      <div class="stair-row">
+        <div class="stair-roman">I</div>
+        <div class="stair-dots">
+          <div class="dot dot-on" style="background:var(--do)">도</div>
+          <div class="dot dot-off">레</div>
+          <div class="dot dot-on" style="background:var(--mi)">미</div>
+          <div class="dot dot-off">파</div>
+          <div class="dot dot-on" style="background:var(--sol)">솔</div>
+          <div class="dot dot-off">라</div>
+          <div class="dot dot-off">시</div>
+        </div>
+        <div class="stair-arrow">→</div>
+        <div class="stair-chord" style="color:#E24B4A">C</div>
+        <div class="stair-quality quality-maj">장조</div>
+      </div>
+      <div class="stair-row">
+        <div class="stair-roman">ii</div>
+        <div class="stair-dots">
+          <div class="dot dot-off">도</div>
+          <div class="dot dot-on" style="background:var(--re)">레</div>
+          <div class="dot dot-off">미</div>
+          <div class="dot dot-on" style="background:var(--fa)">파</div>
+          <div class="dot dot-off">솔</div>
+          <div class="dot dot-on" style="background:var(--la)">라</div>
+          <div class="dot dot-off">시</div>
+        </div>
+        <div class="stair-arrow">→</div>
+        <div class="stair-chord" style="color:#7E6BC4">Dm</div>
+        <div class="stair-quality quality-min">단조</div>
+      </div>
+      <div class="stair-row">
+        <div class="stair-roman">iii</div>
+        <div class="stair-dots">
+          <div class="dot dot-off">도</div>
+          <div class="dot dot-off">레</div>
+          <div class="dot dot-on" style="background:var(--mi)">미</div>
+          <div class="dot dot-off">파</div>
+          <div class="dot dot-on" style="background:var(--sol)">솔</div>
+          <div class="dot dot-off">라</div>
+          <div class="dot dot-on" style="background:var(--si)">시</div>
+        </div>
+        <div class="stair-arrow">→</div>
+        <div class="stair-chord" style="color:#7E6BC4">Em</div>
+        <div class="stair-quality quality-min">단조</div>
+      </div>
+      <div class="stair-row">
+        <div class="stair-roman">IV</div>
+        <div class="stair-dots">
+          <div class="dot dot-off">도</div>
+          <div class="dot dot-off">레</div>
+          <div class="dot dot-off">미</div>
+          <div class="dot dot-on" style="background:var(--fa)">파</div>
+          <div class="dot dot-off">솔</div>
+          <div class="dot dot-on" style="background:var(--la)">라</div>
+          <div class="dot dot-off">시</div>
+        </div>
+        <div class="stair-arrow">→</div>
+        <div class="stair-chord" style="color:#7FB23E">F</div>
+        <div class="stair-quality quality-maj">장조</div>
+      </div>
+      <div style="font-size:12px;color:#9a8f7d;text-align:center;margin-top:4px">V, vi, vii° 생략</div>
+    </div>
+  </div>
+
+  <!-- DESIGN C: 수식 테이블 (공식 스타일) -->
+  <div class="design-card" data-choice="C" onclick="selectCard(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">📐 C. 공식 테이블</div>
+    <div class="card-desc">코드 = 근음 + 3도 + 5도. 각 코드를 수식처럼 설명. 코드 품질(장·단·감)과 구성음이 명확하게 보임.</div>
+    <table class="principle-table">
+      <thead>
+        <tr>
+          <th>번호</th><th>근음</th><th></th><th>3도</th><th></th><th>5도</th><th>=</th><th>코드</th><th>성격</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#E24B4A">I</td>
+          <td><span class="solfege-chip" style="background:var(--do)">도</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--mi)">미</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--sol)">솔</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">C</td>
+          <td class="quality-maj">장3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#7E6BC4">ii</td>
+          <td><span class="solfege-chip" style="background:var(--re)">레</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--fa)">파</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--la)">라</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">Dm</td>
+          <td class="quality-min">단3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#7E6BC4">iii</td>
+          <td><span class="solfege-chip" style="background:var(--mi)">미</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--sol)">솔</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--si)">시</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">Em</td>
+          <td class="quality-min">단3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#7FB23E">IV</td>
+          <td><span class="solfege-chip" style="background:var(--fa)">파</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--la)">라</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--do)">도</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">F</td>
+          <td class="quality-maj">장3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#3C90DD">V</td>
+          <td><span class="solfege-chip" style="background:var(--sol)">솔</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--si)">시</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--re)">레</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">G</td>
+          <td class="quality-maj">장3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#7E6BC4">vi</td>
+          <td><span class="solfege-chip" style="background:var(--la)">라</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--do)">도</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--mi)">미</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">Am</td>
+          <td class="quality-min">단3화음</td>
+        </tr>
+        <tr>
+          <td style="font-family:'Jua',sans-serif;color:#E24B4A">vii°</td>
+          <td><span class="solfege-chip" style="background:var(--si)">시</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--re)">레</span></td>
+          <td class="plus-sign">+</td>
+          <td><span class="solfege-chip" style="background:var(--fa)">파</span></td>
+          <td class="eq-sign">=</td>
+          <td style="font-family:'Jua',sans-serif">Bdim</td>
+          <td class="quality-dim">감3화음</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DESIGN D: 피아노 건반 시각화 -->
+  <div class="design-card" data-choice="D" onclick="selectCard(this)">
+    <div class="badge">선택됨 ✓</div>
+    <div class="card-title">🎹 D. 건반 + 손가락 번호</div>
+    <div class="card-desc">피아노 건반 위에 계이름·손가락 번호를 표시. 각 코드가 어떤 건반인지 직접 연결. 가장 직관적.</div>
+
+    <!-- C scale keyboard mock -->
+    <div class="piano-section">
+      <div class="piano-label">C 장조 스케일 — 오른손 손가락 번호</div>
+      <div class="keys-row">
+        <div class="key active" style="border-color:var(--do)">
+          <div class="key-solfege" style="color:var(--do)">도</div>
+          <div class="key-num" style="color:var(--do)">①</div>
+        </div>
+        <div class="key active" style="border-color:var(--re)">
+          <div class="key-solfege" style="color:var(--re)">레</div>
+          <div class="key-num" style="color:var(--re)">②</div>
+        </div>
+        <div class="key active" style="border-color:var(--mi)">
+          <div class="key-solfege" style="color:var(--mi)">미</div>
+          <div class="key-num" style="color:var(--mi)">③</div>
+        </div>
+        <div class="key active" style="border-color:var(--fa)">
+          <div class="key-solfege" style="color:var(--fa)">파</div>
+          <div class="key-num" style="color:var(--fa)">①</div>
+        </div>
+        <div class="key active" style="border-color:var(--sol)">
+          <div class="key-solfege" style="color:var(--sol)">솔</div>
+          <div class="key-num" style="color:var(--sol)">②</div>
+        </div>
+        <div class="key active" style="border-color:var(--la)">
+          <div class="key-solfege" style="color:var(--la)">라</div>
+          <div class="key-num" style="color:var(--la)">③</div>
+        </div>
+        <div class="key active" style="border-color:var(--si)">
+          <div class="key-solfege" style="color:var(--si)">시</div>
+          <div class="key-num" style="color:var(--si)">④</div>
+        </div>
+        <div class="key" style="opacity:.4">
+          <div class="key-solfege">도</div>
+          <div class="key-num">⑤</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="piano-label" style="margin-bottom:6px;">C장조 코드 = 도·미·솔 (손가락 1·3·5)</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;">I: </span>
+        <span class="solfege-chip" style="background:var(--do)">도 ①</span>
+        <span style="color:#aaa">+</span>
+        <span class="solfege-chip" style="background:var(--mi)">미 ③</span>
+        <span style="color:#aaa">+</span>
+        <span class="solfege-chip" style="background:var(--sol)">솔 ⑤</span>
+        <span style="color:#aaa">→</span>
+        <span style="font-family:'Jua',sans-serif;font-size:15px;color:#E24B4A">C (장3화음)</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;">
+        <span style="font-family:'Jua',sans-serif;font-size:13px;">ii: </span>
+        <span class="solfege-chip" style="background:var(--re)">레 ②</span>
+        <span style="color:#aaa">+</span>
+        <span class="solfege-chip" style="background:var(--fa)">파 ①</span>
+        <span style="color:#aaa">+</span>
+        <span class="solfege-chip" style="background:var(--la)">라 ③</span>
+        <span style="color:#aaa">→</span>
+        <span style="font-family:'Jua',sans-serif;font-size:15px;color:#7E6BC4">Dm (단3화음)</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-note">
+  마음에 드는 것 하나를 클릭하거나, 터미널에서 의견을 말해주세요!<br>
+  <small>여러 개를 조합해도 좋아요 — 예: "A의 색깔 블록 + C의 공식" 같은 식으로</small>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>포비트 v10</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFFFFF;--ink:#3a342c;--bg:#F5EDD6;--L:#3C90DD;--R:#EF8A3C;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);font-family:'Gaegu',sans-serif;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;padding:32px;}
+.page{width:794px;background:var(--cream);padding:44px 42px;
+  border-radius:4px;box-shadow:0 6px 28px rgba(0,0,0,.16);}
+h1{font-family:'Jua',sans-serif;font-size:38px;text-align:center;margin-bottom:28px;}
+.section{background:#FFFDF6;border:3px solid #EAD9B6;border-radius:22px;padding:22px 24px 26px;}
+.sec-title{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:20px;}
+.grid{display:grid;grid-template-columns:88px repeat(4,1fr);gap:0;}
+.hdr-spacer{border-bottom:2px solid #E3D8C0;margin-bottom:12px;}
+.beat-hdr{display:flex;flex-direction:column;align-items:center;padding-bottom:12px;
+  border-bottom:2px solid #E3D8C0;margin-bottom:12px;gap:6px;}
+.beat-num{font-family:'Jua',sans-serif;font-size:22px;color:#6a5f4d;}
+.action-pill{font-family:'Jua',sans-serif;font-size:18px;padding:4px 14px;border-radius:20px;color:#fff;}
+.track-label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding-right:8px;}
+.hand-emoji{font-size:40px;line-height:1;}
+.lname{font-family:'Jua',sans-serif;font-size:17px;}
+.lname.L{color:var(--L);} .lname.R{color:var(--R);}
+.track-wrap{grid-column:2/6;height:96px;border:3px solid var(--ink);
+  border-radius:14px;overflow:hidden;display:flex;background:#fff;margin-bottom:14px;}
+.cell{flex:1;display:flex;align-items:center;justify-content:center;border-right:2px solid #E3D8C0;}
+.cell:last-child{border-right:none;}
+.cell.aL{background:#EAF4FF;} .cell.aR{background:#FFF3E8;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>🥁 포비트 연습</h1>
+  <div class="section">
+    <div class="sec-title">손 따라 박수치기</div>
+    <div class="grid">
+
+      <!-- 헤더 -->
+      <div class="hdr-spacer"></div>
+      <div class="beat-hdr"><span class="beat-num">1박</span><span class="action-pill" style="background:#9B59B6;">양손</span></div>
+      <div class="beat-hdr"><span class="beat-num">2박</span><span class="action-pill" style="background:#B8B0A4;">쉬기</span></div>
+      <div class="beat-hdr"><span class="beat-num">3박</span><span class="action-pill" style="background:var(--R);">오른손</span></div>
+      <div class="beat-hdr"><span class="beat-num">4박</span><span class="action-pill" style="background:var(--L);">왼손</span></div>
+
+      <!-- 왼손 -->
+      <div class="track-label">
+        <span class="hand-emoji">✋🏻</span>
+        <span class="lname L">왼손</span>
+      </div>
+      <div class="track-wrap">
+        <div class="cell aL">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell aL">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#3C90DD"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#3C90DD" stroke-width="2.8"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 오른손 -->
+      <div class="track-label">
+        <span class="hand-emoji">🤚🏻</span>
+        <span class="lname R">오른손</span>
+      </div>
+      <div class="track-wrap" style="margin-bottom:0;">
+        <div class="cell aR">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cell aR">
+          <svg width="34" height="52" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#EF8A3C"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#EF8A3C" stroke-width="2.8"/>
+          </svg>
+        </div>
+        <div class="cell">
+          <svg width="28" height="48" viewBox="0 0 40 58">
+            <path d="M14 12 L25 23 L15 29 L25 40 Q11 36 19 48" fill="none" stroke="#C0B8B0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=900">
+<title>붓점 섹션 목업 v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFFFFF;--ink:#3a342c;
+  --do:#E24B4A;--re:#EF8A3C;--mi:#EFC42A;--fa:#7FB23E;--sol:#3C90DD;--la:#7E6BC4;
+  --skin:#E24B4A;--flesh:#FBEAC2;--seed:#6B4A2A;--leaf:#84C24A;--stem:#9A6233;--blush:#F4A6B0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#e8e0cc;font-family:'Gaegu',sans-serif;color:var(--ink);padding:24px;display:flex;flex-direction:column;align-items:center;gap:24px;}
+
+.page{width:794px;background:var(--cream);padding:28px 42px 36px;border-radius:4px;box-shadow:0 6px 28px rgba(0,0,0,.18);}
+.table-placeholder{background:#F8F4EC;border:2px dashed #D4C8A8;border-radius:14px;height:52px;display:flex;align-items:center;justify-content:center;color:#a99a82;font-size:15px;}
+
+/* ── 붓점 기본 섹션 ── */
+.dot-section{margin-top:14px;border:3px solid #EAD9B6;border-radius:22px;padding:16px 18px;background:#FFFDF6;}
+.dot-h{font-family:'Jua',sans-serif;font-size:24px;text-align:center;margin-bottom:4px;}
+.rule-box{background:#FFF9E6;border:2px solid #E3C657;border-radius:14px;padding:8px 16px;text-align:center;font-family:'Jua',sans-serif;font-size:16px;color:#7a5a00;margin-bottom:12px;}
+
+/* ── 공식 카드 (Option A) ── */
+.formula-row{display:flex;justify-content:space-around;gap:10px;}
+.formula-card{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:2.5px solid #E3D8C0;border-radius:18px;padding:12px 14px;flex:1;}
+.formula-eq{display:flex;align-items:center;gap:5px;font-family:'Jua',sans-serif;}
+.op{color:#9a8f7d;font-size:26px;line-height:1;}
+.eq{color:#E24B4A;font-size:26px;line-height:1;}
+.dot-ball{width:10px;height:10px;border-radius:50%;background:#2b2620;display:inline-block;flex-shrink:0;}
+.formula-beats{font-family:'Jua',sans-serif;font-size:18px;color:#5BA7E0;margin-top:2px;}
+.formula-name{font-size:14px;color:#7a6f5d;}
+
+/* ── 붓점 리듬 섹션 ── */
+.rhythm-section{margin-top:14px;border:3px solid #C8E0F8;border-radius:22px;padding:16px 18px;background:#F5FAFF;}
+.rhythm-h{font-family:'Jua',sans-serif;font-size:22px;text-align:center;margin-bottom:4px;color:#2f7dc0;}
+.rhythm-sub{text-align:center;font-size:14px;color:#7a8f9d;margin-bottom:14px;}
+
+.rcard{background:#fff;border:2.5px solid #C8E0F8;border-radius:18px;padding:14px 18px;margin-bottom:10px;}
+.rcard:last-child{margin-bottom:0;}
+.rcard-title{font-family:'Jua',sans-serif;font-size:18px;color:#2f7dc0;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+
+/* staff / notation area */
+.staff-wrap{display:flex;align-items:center;gap:16px;}
+.staff-area{flex:1;}
+.staff-desc{display:flex;flex-direction:column;gap:4px;min-width:200px;}
+.staff-desc .line{font-size:15px;display:flex;align-items:center;gap:6px;}
+.staff-desc .tag{font-family:'Jua',sans-serif;font-size:13px;padding:2px 8px;border-radius:10px;color:#fff;white-space:nowrap;}
+.long-tag{background:#5BA7E0;}
+.short-tag{background:#ED7A8E;}
+.total-line{font-family:'Jua',sans-serif;font-size:17px;color:var(--do);border-top:2px dashed #E3D8C0;padding-top:6px;margin-top:4px;}
+
+/* beat grid */
+.beat-grid{display:flex;height:56px;border:2.5px solid var(--ink);border-radius:12px;overflow:hidden;width:100%;}
+.bg-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;border-right:1.5px dashed #ccc;}
+.bg-cell:last-child{border-right:none;}
+.bg-long{background:#D6EEFF;flex:3;}
+.bg-short{background:#FFD6DC;flex:1;}
+.bg-label{font-family:'Jua',sans-serif;font-size:12px;color:#555;margin-top:2px;}
+
+/* syllable rhythm row */
+.syllable-row{display:flex;margin-top:8px;width:100%;}
+.syl-cell{display:flex;align-items:center;justify-content:center;font-family:'Jua',sans-serif;font-size:18px;text-align:center;}
+.syl-long{flex:3;color:#2f7dc0;}
+.syl-short{flex:1;color:#c0244a;}
+</style>
+</head>
+<body>
+
+<div style="text-align:center;font-family:'Jua',sans-serif;font-size:20px;color:#5a4f3f;max-width:794px">
+  🎵 붓점 섹션 목업 v2 — A안 스타일 + 붓점 리듬 이어지기
+</div>
+
+<!-- ═══════════ 실제 페이지 모습 ═══════════ -->
+<div class="page">
+
+  <div class="table-placeholder">▲ 기존 음표·쉼표·박자 테이블 (변경 없음)</div>
+
+  <!-- ① 붓점 기본 개념 -->
+  <div class="dot-section">
+    <div class="dot-h">🔴 붓점이 뭐예요?</div>
+    <div class="rule-box">
+      음표 뒤에 <span style="color:var(--do);font-size:18px">●</span> 점이 붙으면 → 원래 길이의 <span style="color:var(--do)">반(½)</span>만큼 더 늘어나요!
+    </div>
+    <div class="formula-row">
+
+      <!-- 붓점 2분음표 -->
+      <div class="formula-card">
+        <div class="formula-name">붓점 2분음표</div>
+        <div class="formula-eq">
+          <svg width="28" height="42" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+          </svg>
+          <span class="op">+</span><span class="dot-ball"></span>
+          <span class="eq">=</span>
+          <svg width="34" height="42" viewBox="0 0 48 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#fff" stroke="#2b2620" stroke-width="2.4"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+            <circle cx="32" cy="40" r="3.2" fill="#2b2620"/>
+          </svg>
+        </div>
+        <div class="formula-beats">2박 + 1박 = <span style="color:var(--do)">3박</span></div>
+      </div>
+
+      <!-- 붓점 4분음표 -->
+      <div class="formula-card">
+        <div class="formula-name">붓점 4분음표</div>
+        <div class="formula-eq">
+          <svg width="28" height="42" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+          </svg>
+          <span class="op">+</span><span class="dot-ball"></span>
+          <span class="eq">=</span>
+          <svg width="34" height="42" viewBox="0 0 48 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+            <circle cx="32" cy="40" r="3.2" fill="#2b2620"/>
+          </svg>
+        </div>
+        <div class="formula-beats">1박 + ½박 = <span style="color:var(--do)">1½박</span></div>
+      </div>
+
+      <!-- 붓점 8분음표 -->
+      <div class="formula-card">
+        <div class="formula-name">붓점 8분음표</div>
+        <div class="formula-eq">
+          <svg width="28" height="42" viewBox="0 0 40 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+            <path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+          </svg>
+          <span class="op">+</span><span class="dot-ball"></span>
+          <span class="eq">=</span>
+          <svg width="34" height="42" viewBox="0 0 48 58">
+            <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+            <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+            <path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+            <circle cx="32" cy="40" r="3.2" fill="#2b2620"/>
+          </svg>
+        </div>
+        <div class="formula-beats">½박 + ¼박 = <span style="color:var(--do)">¾박</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ② 붓점 리듬 패턴 — 이어지는 짧은 음표 -->
+  <div class="rhythm-section">
+    <div class="rhythm-h">🩵 붓점 뒤에는 짧은 음표가 따라와요</div>
+    <div class="rhythm-sub">붓점으로 늘어난 만큼을 <strong>짧은 음표</strong>로 채워주면 박자가 딱 맞아요!</div>
+
+    <!-- 패턴 1 : 붓점 4분음표 + 8분음표 (= 2박) -->
+    <div class="rcard">
+      <div class="rcard-title">
+        <span style="background:#5BA7E0;color:#fff;padding:3px 10px;border-radius:12px;font-size:14px">패턴 ①</span>
+        붓점 4분음표 + 8분음표 = 2박
+      </div>
+      <div class="staff-wrap">
+        <div class="staff-area">
+          <!-- beat grid: 4 eighth-note slots, dotted quarter = 3/4, eighth = 1/4 -->
+          <div style="font-size:12px;color:#9a8f7d;font-family:'Jua',sans-serif;margin-bottom:4px;text-align:center">← 2박 →</div>
+          <div class="beat-grid">
+            <div class="bg-cell bg-long" style="flex:3">
+              <!-- dotted quarter note SVG -->
+              <svg width="30" height="40" viewBox="0 0 48 58">
+                <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+                <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+                <circle cx="32" cy="40" r="3.2" fill="#2b2620"/>
+              </svg>
+              <div class="bg-label">1½박</div>
+            </div>
+            <div class="bg-cell bg-short" style="flex:1">
+              <!-- eighth note SVG -->
+              <svg width="22" height="34" viewBox="0 0 40 58">
+                <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+                <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+                <path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+              </svg>
+              <div class="bg-label">½박</div>
+            </div>
+          </div>
+          <!-- syllable hint -->
+          <div class="syllable-row">
+            <div class="syl-cell syl-long">타~아아</div>
+            <div class="syl-cell syl-short">아</div>
+          </div>
+          <div style="text-align:center;font-size:13px;color:#9a8f7d;margin-top:4px;">길~~~고 짧</div>
+        </div>
+        <div class="staff-desc">
+          <div class="line"><span class="tag long-tag">긴 음</span> 붓점 4분음표 = 1½박</div>
+          <div class="line"><span class="tag short-tag">짧은 음</span> 8분음표 = ½박</div>
+          <div class="total-line">합계 → 딱 2박 완성! ✅</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 패턴 2 : 붓점 8분음표 + 16분음표 (= 1박) -->
+    <div class="rcard">
+      <div class="rcard-title">
+        <span style="background:#ED7A8E;color:#fff;padding:3px 10px;border-radius:12px;font-size:14px">패턴 ②</span>
+        붓점 8분음표 + 16분음표 = 1박
+      </div>
+      <div class="staff-wrap">
+        <div class="staff-area">
+          <div style="font-size:12px;color:#9a8f7d;font-family:'Jua',sans-serif;margin-bottom:4px;text-align:center">← 1박 →</div>
+          <div class="beat-grid">
+            <div class="bg-cell bg-long" style="flex:3;background:#FFE8D6">
+              <svg width="30" height="40" viewBox="0 0 48 58">
+                <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+                <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+                <path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+                <circle cx="32" cy="40" r="3.2" fill="#2b2620"/>
+              </svg>
+              <div class="bg-label" style="color:#a05020">¾박</div>
+            </div>
+            <div class="bg-cell bg-short" style="flex:1;background:#FFF0C0">
+              <!-- sixteenth note -->
+              <svg width="20" height="32" viewBox="0 0 40 58">
+                <ellipse cx="18" cy="40" rx="7" ry="5" transform="rotate(-20 18 40)" fill="#2b2620"/>
+                <line x1="24" y1="38" x2="24" y2="6" stroke="#2b2620" stroke-width="2.4"/>
+                <path d="M24 6 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+                <path d="M24 14 q12 4 9 16" fill="none" stroke="#2b2620" stroke-width="2.4"/>
+              </svg>
+              <div class="bg-label" style="color:#806000">¼박</div>
+            </div>
+          </div>
+          <div class="syllable-row">
+            <div class="syl-cell syl-long" style="color:#c06020">즈~이이</div>
+            <div class="syl-cell syl-short" style="color:#b09000">를</div>
+          </div>
+          <div style="text-align:center;font-size:13px;color:#9a8f7d;margin-top:4px;">길~~~고 짧 (빠른 버전)</div>
+        </div>
+        <div class="staff-desc">
+          <div class="line"><span class="tag long-tag" style="background:#EF8A3C">긴 음</span> 붓점 8분음표 = ¾박</div>
+          <div class="line"><span class="tag short-tag" style="background:#EFC42A;color:#5a4000">짧은 음</span> 16분음표 = ¼박</div>
+          <div class="total-line">합계 → 딱 1박 완성! ✅</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 리듬 느낌 설명 -->
+    <div style="margin-top:12px;background:#EFF8FF;border:2px solid #A8D4F0;border-radius:14px;padding:10px 16px;text-align:center;font-family:'Jua',sans-serif;font-size:16px;color:#1a5a8a;">
+      💡 붓점 리듬의 느낌 → <span style="color:#5BA7E0">길~~~고</span> <span style="color:#ED7A8E">짧</span> · <span style="color:#5BA7E0">길~~~고</span> <span style="color:#ED7A8E">짧</span> · <span style="color:#5BA7E0">길~~~고</span> <span style="color:#ED7A8E">짧</span>
+      <div style="font-size:14px;color:#5a7a9a;margin-top:4px;font-family:'Gaegu',sans-serif;">이 리듬이 익숙해지면 찬양 노래도 쉽게 칠 수 있어요!</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="font-family:'Jua',sans-serif;font-size:15px;color:#7a6f5d;text-align:center;max-width:794px;line-height:1.8">
+  이 방향이 맞나요? 조정할 부분 알려주세요 😊<br>
+  <span style="font-size:13px;color:#a99a82">· 붓점 기본 설명 (위) + 붓점 리듬 이어지기 (아래) 구성입니다</span>
+</div>
+
+</body>
+</html>
